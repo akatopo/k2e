@@ -1,0 +1,39 @@
+/*
+	Put anything you reference with "url()" in ../assets/
+	This way, you can minify your application, and just remove the "source" folder for production
+*/
+
+#app {
+	background-color: silver;
+}
+
+
+
+.fixme-sidebar {
+	background-color: gray;
+}
+
+.fixme-clip-body {
+	background-color: purple;
+}
+
+.k2e-document-selector-item {
+	border-bottom: 1px solid black;
+	/*padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	margin-top: 1px;
+	margin-bottom: 1px;*/
+	padding: 16px 12px;
+	overflow: hidden;
+	white-space: nowrap;
+	position: relative;
+}
+
+.k2e-document-selector-item-label {
+	vertical-align: middle; 
+	overflow: hidden; 
+	text-overflow: ellipsis;
+	width: 80%; /* hack */
+	padding-left: 5px;
+}
