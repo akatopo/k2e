@@ -37,64 +37,65 @@ namespace EvernoteWebQuickstart
 {
     public class EvernotePage : Page
     {
-        public EvernoteAuthHelper eah;
+        public EvernoteAuthHelper evernoteAuthHelper;
         // TODO - change this url to the production one when ready
         const string BASE_URL = "https://sandbox.evernote.com/";
-
-        public string callbackURL
+        public string callbackUrl
         {
             get;
             private set;
-        }
+        }    
 
         protected bool LoadPage()
         {
             // create a callback that Evernote servers will use to pass back the authorization token
             // this will return to the same page that called it
-            callbackURL = "http://" + Request.ServerVariables["SERVER_NAME"].ToString() + 
-                                Page.Request.FilePath;
+            callbackUrl = "http://" + 
+                    Request.ServerVariables["SERVER_NAME"].ToString() +
+                    ":" + Request.ServerVariables["SERVER_PORT"] +
+                    Page.Request.FilePath;
 
             // TODO - figure out the user for the app and pass
             // it to load that user's credentials from a data store
-            eah = EvernoteAuthHelper.LoadCredentials("me", callbackURL);
+            evernoteAuthHelper = EvernoteAuthHelper.LoadCredentials(callbackUrl);
             bool success = false;
 
             if (!Page.IsPostBack)
             {
-                if (eah.AppIsAuthenticated)
+                if (evernoteAuthHelper.AppIsAuthenticated)
                 {
                     // we're all the way through the oAuth process
                     success = true;
                 }
-                else if (!eah.UserIsAuthenticated)
+                else if (!evernoteAuthHelper.UserIsAuthenticated)
                 {
                     
 
                     // The user needs to log into Evernote and allow your app access
-                    string oAuthToken = eah.GetAccessToken(callbackURL);
+                    string oAuthToken = evernoteAuthHelper.GetRequestToken(callbackUrl);
 
                     // send the access token to Evernote to allow the user to authorize the app
                     // Evernote will use the callback to send the authorization token back
                     Response.Redirect(String.Format("{0}OAuth.action?{1}", BASE_URL, oAuthToken));
                 }
-                else if (eah.UserGrantedAccess && !eah.AppIsAuthenticated)
+                else if (evernoteAuthHelper.UserIsAuthenticated && !evernoteAuthHelper.AppIsAuthenticated)
                 {
                     // this is the call to the page from the callback specified above
                     // Evernote is sending us the user's authorization token
                     try
                     {
                         // get the app authorization token and shared id
-                        OAuthKey authKey = eah.GetAuthorizationToken(callbackURL);
+                        OAuthKey authKey = evernoteAuthHelper.GetAccessToken();
 
                         // we're all the way through... do stuff.
                         success = (authKey != null);
                     }
-                    catch (System.Net.WebException ex)
+                    catch (System.Net.WebException)
                     {
                         // the user clicked on Decline in the Evernote app authorization dialog if the code is in here... 
                         // show a message or something
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // some other server error, log it or do what ever you do on server errors :)
                         // show a message or something

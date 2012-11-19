@@ -40,11 +40,7 @@ enyo.kind({
 			method: "POST",
 			postBody: '{"q":' + JSON.stringify(array, null, 0) + '}'
 		}).go();
-		// send parameters the remote service using the 'go()' method
-		//ajax.go({
-		//	q: "hello"
-		//});
-		// attach responders to the transaction object
+
 		ajax.response(this, "processResponse");
 		// handle error
 		ajax.error(this, "processError");
@@ -54,7 +50,7 @@ enyo.kind({
 		alert(JSON.stringify(inResponse, null, 2));
 	},
 	processError: function(inSender, inResponse) {
-		alert("Error!");
+		alert("Error in exporting");
 	},
 	handlers: {
 		onDocumentSelected: "handleDocumentSelected"
@@ -79,7 +75,7 @@ enyo.kind({
 		testDocs = new Documents();
 		//testDocs.getDocArray().push(new Document({title: "sadsad"}));
 		
-
+		// FIXME: Get data by dnd or file chooser
 		if (!window.XMLHttpRequest)
 			return;
 
