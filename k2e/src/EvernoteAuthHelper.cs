@@ -42,23 +42,26 @@ namespace EvernoteWebQuickstart
         const string USER_EVERNOTE_CREDENTIALS = "userEvernoteCredentials";
         const string REQUEST_KEY_OAUTH_TOKEN = "oauth_token";
         const string REQUEST_KEY_OAUTH_VERIFIER = "oauth_verifier";
+        const string RESPONSE_KEY_EDAM_NOTESTORE_URL = "edam_noteStoreUrl";
+
         // TODO - replace this url with the production one when ready
         private Uri BaseUri = new Uri("https://sandbox.evernote.com/oauth");
+        private EvernoteCredentials evernoteCredentials;
 
         public EvernoteAuthHelper(EvernoteCredentials ec)
         {
-            this.ec = ec;
+            this.evernoteCredentials = ec;
         }
 
         public EvernoteAuthHelper(string publicKey, string secretKey, string callbackURL)
         {
-            this.ec = new EvernoteCredentials();
-            ec.ConsumerPublicKey = publicKey;
-            ec.ConsumerSecretKey = secretKey;
-            this.GetAccessToken(callbackURL);
+            this.evernoteCredentials = new EvernoteCredentials();
+            evernoteCredentials.ConsumerPublicKey = publicKey;
+            evernoteCredentials.ConsumerSecretKey = secretKey;
+            this.GetRequestToken(callbackURL);
         }
 
-        public static EvernoteAuthHelper LoadCredentials(string user, string callbackURL)
+        public static EvernoteAuthHelper LoadCredentials(string callbackURL="", string user="")
         {
             // TODO - implement code to pull this information from a datastore
             // based on the user name that is provided.
@@ -72,7 +75,7 @@ namespace EvernoteWebQuickstart
             {
                 // TODO - put your own credentials here:                
                 eah = new EvernoteAuthHelper("akatopo", "bf3076621fdd66b8", callbackURL);
-                ec = eah.ec;
+                ec = eah.evernoteCredentials;
             }
             else
             {
@@ -84,8 +87,10 @@ namespace EvernoteWebQuickstart
                 HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_TOKEN] != null &&
                 HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_VERIFIER] != null)
             {
-                eah.SetAuthToken(HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_TOKEN].ToString());
-                eah.SetAuthVerifier(HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_VERIFIER].ToString());
+                eah.SetResponseRequestToken(
+                        HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_TOKEN].ToString());
+                eah.SetOauthVerifier(
+                        HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_VERIFIER].ToString());
             }
 
             HttpContext.Current.Session[USER_EVERNOTE_CREDENTIALS] = ec;
@@ -93,96 +98,92 @@ namespace EvernoteWebQuickstart
             return eah;
         }
 
-        private EvernoteCredentials ec;
-
-        public void SetAuthToken(string authToken)
+        public void SetResponseRequestToken(string authToken)
         {
-            this.ec.UserAuthorizationToken = authToken;
+            this.evernoteCredentials.ResponseRequestToken = authToken;
         }
 
-        public void SetAuthVerifier(string authVerifier)
+        public void SetOauthVerifier(string oauthVerifier)
         {
-            this.ec.OauthVerifier = authVerifier;
+            this.evernoteCredentials.OauthVerifier = oauthVerifier;
         }
 
         public bool UserIsAuthenticated
         {
-            get { return (ec.UserAuthorizationToken != null); }
+            get { return (evernoteCredentials.ResponseRequestToken != null); }
         }
 
         public bool AppIsAuthenticated
         {
-            get { return (ec.AppToken != null); }
+            get { return (evernoteCredentials.AccessToken != null); }
         }
 
-        public bool UserGrantedAccess
+        public bool UserRequestedLogin
         {
-            get { return (ec.UserAccessToken != null); }
+            get { return (evernoteCredentials.RequestToken != null); }
         }
 
-
-
-        public string GetAccessToken(string callbackURL)
+        public string GetRequestToken(string callbackURL)
         {
-            if (this.ec.UserAccessToken == null)
+            if (this.evernoteCredentials.RequestToken == null)
             {
                 WebClient client = new WebClient();
-                this.ec.UserAccessToken = client.DownloadString(GenerateOAuthAccessUri(callbackURL));
+                // FIXME: This is actually not the request token, just the whole server answer
+                this.evernoteCredentials.RequestToken = client.DownloadString(GetRequestTokenUri(callbackURL));
             }
 
-            return this.ec.UserAccessToken;
+            return this.evernoteCredentials.RequestToken;
         }
 
-        private Uri GenerateOAuthAccessUri(string callbackURL)
+        private Uri GetRequestTokenUri(string callbackURL)
         {
-            return new Uri(this.GetBaseOAuthUrl(callbackURL));
-        }
-
-        public OAuthKey GetAuthorizationToken(string callbackURL)
-        {
-            if (ec.AppToken == null)
-            {
-                WebClient client = new WebClient();
-                string fromURI = client.DownloadString(this.GetAuthorizationUri(callbackURL));
-
-                string[] amp = fromURI.Split(new char[1] { '&' });
-                /*
-                if (amp.Length == 4)
-                {
-                    ec.AppToken = new OAuthKey();
-                    ec.AppToken.AuthToken = amp[0].Substring(amp[0].IndexOf("=") + 1);
-                    ec.AppToken.SharedId = amp[2].Substring(amp[2].IndexOf("=") + 1);
-                    ec.AppToken.NoteStoreUrl = amp[2].Substring(amp[2].IndexOf("=") + 1);
-                }*/
-                ec.AppToken = new OAuthKey();
-                for (int i = 0; i < amp.Length; ++i)
-                {
-                    string fieldName = amp[i].Substring(0, amp[i].IndexOf("="));
-                    if (fieldName == "oauth_token")
-                    {
-                        ec.AppToken.AuthToken = HttpUtility.UrlDecode(amp[i].Substring(amp[i].IndexOf("=") + 1));
-                    }
-                    else if (fieldName == "edam_noteStoreUrl")
-                    {
-                        ec.AppToken.NoteStoreUrl = HttpUtility.UrlDecode(amp[i].Substring(amp[i].IndexOf("=") + 1));
-                    }
-                }
-            }
-
-            return ec.AppToken;
-        }
-
-        private Uri GetAuthorizationUri(string callbackURL)
-        {
-            StringBuilder sb = new StringBuilder(this.GetBaseOAuthUrl2());
-            sb.AppendFormat("oauth_token={0}&oauth_verifier={1}", 
-                this.ec.UserAuthorizationToken,
-                this.ec.OauthVerifier);
+            StringBuilder sb = new StringBuilder(this.GetBaseOAuthUrl());
+            sb.AppendFormat("&oauth_callback={0}", callbackURL);
 
             return new Uri(sb.ToString());
         }
 
-        private string GetBaseOAuthUrl2()
+        public OAuthKey GetAccessToken()
+        {
+            if (evernoteCredentials.AccessToken == null)
+            {
+                WebClient client = new WebClient();
+                string fromURI = client.DownloadString(this.GetAccessTokenUri());
+
+                string[] urlParams = fromURI.Split(new char[1] { '&' });
+
+                evernoteCredentials.AccessToken = new OAuthKey();
+                for (int i = 0; i < urlParams.Length; ++i)
+                {
+                    int paramNameLength = urlParams[i].IndexOf("=");
+                    string fieldName = urlParams[i].Substring(0, paramNameLength);
+                    if (fieldName == REQUEST_KEY_OAUTH_TOKEN)
+                    {
+                        evernoteCredentials.AccessToken.AuthToken =
+                                HttpUtility.UrlDecode(urlParams[i].Substring(paramNameLength + 1));
+                    }
+                    else if (fieldName == RESPONSE_KEY_EDAM_NOTESTORE_URL)
+                    {
+                        evernoteCredentials.AccessToken.NoteStoreUrl =
+                                HttpUtility.UrlDecode(urlParams[i].Substring(paramNameLength + 1));
+                    }
+                }
+            }
+
+            return evernoteCredentials.AccessToken;
+        }
+
+        private Uri GetAccessTokenUri()
+        {
+            StringBuilder sb = new StringBuilder(this.GetBaseOAuthUrl());
+            sb.AppendFormat("&oauth_token={0}&oauth_verifier={1}", 
+                this.evernoteCredentials.ResponseRequestToken,
+                this.evernoteCredentials.OauthVerifier);
+
+            return new Uri(sb.ToString());
+        }
+
+        private string GetBaseOAuthUrl()
         {
             OAuthBase oAuth = new OAuthBase();
             string nonce = oAuth.GenerateNonce();
@@ -191,56 +192,36 @@ namespace EvernoteWebQuickstart
             string normalizedUrl = String.Empty;
             string normalizedRequestParameters = String.Empty;
 
-            string sig = oAuth.GenerateSignature(BaseUri, this.ec.ConsumerPublicKey, 
-                this.ec.ConsumerSecretKey, String.Empty, String.Empty, 
+            string sig = oAuth.GenerateSignature(BaseUri, this.evernoteCredentials.ConsumerPublicKey, 
+                this.evernoteCredentials.ConsumerSecretKey, String.Empty, String.Empty, 
                 "GET", timeStamp, nonce, OAuth.OAuthBase.SignatureTypes.PLAINTEXT, 
                 out normalizedUrl, out normalizedRequestParameters);
 
-            return String.Format("{0}?oauth_consumer_key={1}&oauth_signature={4}&oauth_signature_method=PLAINTEXT&oauth_timestamp={3}&oauth_nonce={2}&", 
-                BaseUri, this.ec.ConsumerPublicKey, nonce, timeStamp, sig);
+            return String.Format(@"{0}?oauth_consumer_key={1}&oauth_signature={4}
+                    &oauth_signature_method=PLAINTEXT&oauth_timestamp={3}&oauth_nonce={2}", 
+                    BaseUri, this.evernoteCredentials.ConsumerPublicKey, nonce, timeStamp, sig);
 
 
-        }
-
-        private string GetBaseOAuthUrl(string callbackURL)
-        {
-            OAuthBase oAuth = new OAuthBase();
-            string nonce = oAuth.GenerateNonce();
-            string timeStamp = oAuth.GenerateTimeStamp();
-
-            string normalizedUrl = String.Empty;
-            string normalizedRequestParameters = String.Empty;
-            /*
-             * 
-             * 
-/oauth?oauth_consumer_key=<>&oauth_signature=<>&oauth_signature_method=PLAINTEXT&oauth_timestamp=<>&oauth_nonce=<>&oauth_callback=<>
-             */
-
-
-            // send the access token to Evernote to allow the user to authorize the app
-            // Evernote will use the callback to send the authorization token back
-            //Response.Redirect(String.Format("{0}OAuth.action?{1}&oauth_callback={2}", BASE_URL, oAuthToken, callbackURL));
-
-            string sig = oAuth.GenerateSignature(BaseUri, this.ec.ConsumerPublicKey, this.ec.ConsumerSecretKey, String.Empty, String.Empty, "GET", timeStamp, nonce, OAuth.OAuthBase.SignatureTypes.PLAINTEXT, out normalizedUrl, out normalizedRequestParameters);
-
-            return String.Format("{0}?oauth_consumer_key={1}&oauth_nonce={2}&oauth_timestamp={3}&oauth_signature_method=PLAINTEXT&oauth_signature={4}&oauth_callback={5}", BaseUri, this.ec.ConsumerPublicKey, nonce, timeStamp, sig, callbackURL);
         }
     }
 
     public class EvernoteCredentials
     {
-        public string OauthVerifier { get; set; }
         public string ConsumerPublicKey { get; set; }
         public string ConsumerSecretKey { get; set; }
-        public string UserAccessToken { get; set; }
-        public string UserAuthorizationToken { get; set; }
-        public OAuthKey AppToken { get; set; }
+        
+        public string RequestToken { get; set; }
+        
+        public string ResponseRequestToken { get; set; }
+        public string OauthVerifier { get; set; }
+
+        public OAuthKey AccessToken { get; set; }
     }
 
     public class OAuthKey
     {
         public string AuthToken { get; set; }
         public string NoteStoreUrl { get; set; }
-        public string SharedId { get; set; }
+        public string UserId { get; set; }
     }
 }

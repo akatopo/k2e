@@ -1,9 +1,0 @@
-c:\users\katopod\documents\visual studio 2010\Projects\k2e\k2e\bin\k2e.dll
-c:\users\katopod\documents\visual studio 2010\Projects\k2e\k2e\bin\k2e.pdb
-c:\users\katopod\documents\visual studio 2010\Projects\k2e\k2e\obj\Debug\ResolveAssemblyReference.cache
-c:\users\katopod\documents\visual studio 2010\Projects\k2e\k2e\obj\Debug\k2e.dll
-c:\users\katopod\documents\visual studio 2010\Projects\k2e\k2e\obj\Debug\k2e.pdb
-c:\users\katopod\documents\visual studio 2010\Projects\k2e\k2e\bin\Evernote.dll
-c:\users\katopod\documents\visual studio 2010\Projects\k2e\k2e\bin\Thrift.dll
-c:\users\katopod\documents\visual studio 2010\Projects\k2e\k2e\bin\Evernote.pdb
-c:\users\katopod\documents\visual studio 2010\Projects\k2e\k2e\bin\Thrift.pdb

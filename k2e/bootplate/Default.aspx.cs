@@ -31,7 +31,7 @@ namespace k2e
             // FIXME
             if (authSuccess && false)
             {
-                OAuthKey authTokenContainer = eah.GetAuthorizationToken(callbackURL);
+                OAuthKey authTokenContainer = evernoteAuthHelper.GetAccessToken();
 
                 // Real applications authenticate with Evernote using OAuth, but for the
                 // purpose of exploring the API, you can get a developer token that allows
@@ -205,53 +205,30 @@ namespace k2e
                 sb.Append(d.Str);
                 sb.Append(d.Arr[0].Str2);
             }
-            //return sb.ToString();
             
-            
-            OAuthKey authTokenContainer = 
-                EvernoteAuthHelper.LoadCredentials("me", "xxx").GetAuthorizationToken("xxx");
+            OAuthKey accessTokenContainer = 
+                EvernoteAuthHelper.LoadCredentials().GetAccessToken();
 
             // Real applications authenticate with Evernote using OAuth, but for the
             // purpose of exploring the API, you can get a developer token that allows
             // you to access your own Evernote account. To get a developer token, visit 
             // https://sandbox.evernote.com/api/DeveloperToken.action
             //String authToken = "S=s1:U=3a833:E=14238614830:C=13ae0b01c30:P=1cd:A=en-devtoken:H=adb2900def4d0a9c8b5fd1d4d9f8423e";
-            string authToken = authTokenContainer.AuthToken;
-
-            if (authToken == "your developer token")
-            {
-                Console.WriteLine("Please fill in your developer token");
-                Console.WriteLine("To get a developer token, visit https://sandbox.evernote.com/api/DeveloperToken.action");
-                return "";
-            }
+            string authToken = accessTokenContainer.AuthToken;
 
             // Initial development is performed on our sandbox server. To use the production 
             // service, change "sandbox.evernote.com" to "www.evernote.com" and replace your
             // developer token above with a token from 
             // https://www.evernote.com/api/DeveloperToken.action
-            String evernoteHost = "sandbox.evernote.com";
+            //String evernoteHost = "sandbox.evernote.com";
             //String evernoteHost = "www.evernote.com";
 
-            Uri userStoreUrl = new Uri("https://" + evernoteHost + "/edam/user");
-            TTransport userStoreTransport = new THttpClient(userStoreUrl);
-            TProtocol userStoreProtocol = new TBinaryProtocol(userStoreTransport);
-            UserStore.Client userStore = new UserStore.Client(userStoreProtocol);
-
-            bool versionOK =
-                userStore.checkVersion("Evernote EDAMTest (C#)",
-                   Evernote.EDAM.UserStore.Constants.EDAM_VERSION_MAJOR,
-                   Evernote.EDAM.UserStore.Constants.EDAM_VERSION_MINOR);
-            Console.WriteLine("Is my Evernote API version up to date? " + versionOK);
-            if (!versionOK)
-            {
-                return "";
-            }
 
             // Get the URL used to interact with the contents of the user's account
             // When your application authenticates using OAuth, the NoteStore URL will
             // be returned along with the auth token in the final OAuth request.
             // In that case, you don't need to make this call.
-            String noteStoreUrl = userStore.getNoteStoreUrl(authToken);
+            String noteStoreUrl = accessTokenContainer.NoteStoreUrl;
 
             TTransport noteStoreTransport = new THttpClient(new Uri(noteStoreUrl));
             TProtocol noteStoreProtocol = new TBinaryProtocol(noteStoreTransport);
@@ -289,7 +266,7 @@ namespace k2e
             List<Note> notes = (List<Note>)noteList.Notes;
             string noteContent =
                 "<h1>A title</h1><p>Some content<br/>and some more</p>" +
-                "<h1>Another title</h1><p>Some content<br/>and some more updated__</p>";
+                "<h1>Another title</h1><p>Some content<br/>and some more updated__+++</p>";
             if (notes.Count == 1) // update note
             {
                 /*
