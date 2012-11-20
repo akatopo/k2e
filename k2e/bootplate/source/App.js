@@ -25,20 +25,14 @@ enyo.kind({
 	],
 	export: function (inSender, inEvent) {
 		var loc = location.protocol + '//' + location.host + location.pathname;
-		
-		var d3 = { Str2: "d2_1" };
-		var d4 = { Str2: "d2_2" };
 
-		var d1 = { Str: "hello", Arr: [d3] };
-		var d2 = { Str: " World", Arr: [d4] };
-		
-		var array = [ d1, d2 ];
 		console.log(loc);
+
 		var ajax = new enyo.Ajax({
 			url: loc + "/Export",
 			contentType: "application/json; charset=utf-8",
 			method: "POST",
-			postBody: '{"q":' + JSON.stringify(array, null, 0) + '}'
+			postBody: '{"q":' + JSON.stringify(testDocs.exportObject(), null, 0) + '}'
 		}).go();
 
 		ajax.response(this, "processResponse");
@@ -50,7 +44,7 @@ enyo.kind({
 		alert(JSON.stringify(inResponse, null, 2));
 	},
 	processError: function(inSender, inResponse) {
-		alert("Error in exporting");
+		this.error("Error in exporting");
 	},
 	handlers: {
 		onDocumentSelected: "handleDocumentSelected"
@@ -108,11 +102,17 @@ enyo.kind({
 		            var title = res[1];
 		            var author = res[2];
 		            var subtitle = res[3].split(/\s+\|\s+/);
-		            var loc = subtitle[0];
+		            var type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
+		            var loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
 		            var timeStamp = subtitle[subtitle.length - 1];
 		            var content = res[4];
 	            	
-		            testDocs.addClippingToDocument(title, author, new Clipping({loc: loc, timeStamp: timeStamp, content: content}));
+	            	// Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
+	            	if (type === "Bookmark" || type === "Clipping") {
+	            		continue;
+	            	}
+
+		            testDocs.addClippingToDocument(title, author, new Clipping({type: type, loc: loc, timeStamp: timeStamp, content: content}));
 
 	            }
 

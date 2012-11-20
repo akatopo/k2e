@@ -7,12 +7,24 @@ enyo.kind({
 		author: "",
 		clippings: undefined
 	},
-	addClipping: function(clipping) {
+	addClipping: function (clipping) {
 		this.getClippings().push(clipping);
 	},
-	create: function() {
+	create: function () {
 		this.inherited(arguments);
 		this.clippings = [];
+	},
+	exportObject: function () {
+		clipExportArray = [];
+		for (var i = 0; i < this.clippings.length; ++i) {
+			var clipExport = this.clippings[i].exportObject();
+			clipExportArray.push(clipExport);
+		}
+		return {
+			title: this.title,
+			author: this.author,
+			clippings: clipExportArray
+		};
 	}
 });
 
@@ -24,6 +36,14 @@ enyo.kind({
 		loc: "",
 		timeStamp: "",
 		content: ""
+	},
+	exportObject: function () {
+		return { 
+			type: this.type,
+			loc: this.loc,
+			timeStamp: this.timeStamp,
+			content: this.content
+		};
 	}
 })
 
@@ -35,7 +55,7 @@ enyo.kind({
 		keyArray: undefined,
 		length: 0
 	},
-	addClippingToDocument: function(title, author, clipping) {
+	addClippingToDocument: function (title, author, clipping) {
 		var key = title + author;
 		
 		if (!this.docMap[key]) {
@@ -46,12 +66,21 @@ enyo.kind({
 
 		this.docMap[key].addClipping(clipping);
 	},
-	getDocumentByIndex: function(index) {
+	getDocumentByIndex: function (index) {
 		return this.docMap[this.keyArray[index]];
 	},
 	create: function() {
 		this.inherited(arguments);
 		this.docMap = {};
 		this.keyArray = [];
+	},
+	exportObject: function () {
+		var documentsExport = { documents: [] };
+		for (var i = 0; i < this.keyArray.length; ++i) {
+			var docExport = this.docMap[this.keyArray[i]].exportObject();
+			documentsExport.documents.push(docExport);
+		}
+
+		return documentsExport;
 	}
 })

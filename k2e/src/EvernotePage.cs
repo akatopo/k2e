@@ -35,16 +35,18 @@ using System.Web.UI;
 
 namespace EvernoteWebQuickstart
 {
+    /// <summary>
+    /// A class for an evernote authenticated page.
+    /// <para>
+    /// Uses <see cref="EvernoteWebQuickstart.EvernoteAuthHelper" /> for oauth requests.
+    /// </para>
+    /// </summary>
     public class EvernotePage : Page
     {
         public EvernoteAuthHelper evernoteAuthHelper;
         // TODO - change this url to the production one when ready
         const string BASE_URL = "https://sandbox.evernote.com/";
-        public string callbackUrl
-        {
-            get;
-            private set;
-        }    
+        private string callbackUrl { get; set; }    
 
         protected bool LoadPage()
         {
@@ -55,7 +57,7 @@ namespace EvernoteWebQuickstart
                     ":" + Request.ServerVariables["SERVER_PORT"] +
                     Page.Request.FilePath;
 
-            // TODO - figure out the user for the app and pass
+            // WILLNOTDO - figure out the user for the app and pass
             // it to load that user's credentials from a data store
             evernoteAuthHelper = EvernoteAuthHelper.LoadCredentials(callbackUrl);
             bool success = false;
@@ -76,7 +78,7 @@ namespace EvernoteWebQuickstart
 
                     // send the access token to Evernote to allow the user to authorize the app
                     // Evernote will use the callback to send the authorization token back
-                    Response.Redirect(String.Format("{0}OAuth.action?{1}", BASE_URL, oAuthToken));
+                    Response.Redirect(String.Format("{0}OAuth.action?oauth_token={1}", BASE_URL, oAuthToken));
                 }
                 else if (evernoteAuthHelper.UserIsAuthenticated && !evernoteAuthHelper.AppIsAuthenticated)
                 {

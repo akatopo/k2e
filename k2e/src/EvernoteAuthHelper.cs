@@ -37,6 +37,9 @@ using OAuth;
 
 namespace EvernoteWebQuickstart
 {
+    /// <summary>
+    /// A helper class for making oauth requests to evernote.
+    /// </summary>
     public class EvernoteAuthHelper
     {
         const string USER_EVERNOTE_CREDENTIALS = "userEvernoteCredentials";
@@ -44,16 +47,16 @@ namespace EvernoteWebQuickstart
         const string REQUEST_KEY_OAUTH_VERIFIER = "oauth_verifier";
         const string RESPONSE_KEY_EDAM_NOTESTORE_URL = "edam_noteStoreUrl";
 
-        // TODO - replace this url with the production one when ready
+        // TODO: replace this url with the production one when ready
         private Uri BaseUri = new Uri("https://sandbox.evernote.com/oauth");
         private EvernoteCredentials evernoteCredentials;
 
-        public EvernoteAuthHelper(EvernoteCredentials ec)
+        private EvernoteAuthHelper(EvernoteCredentials ec)
         {
             this.evernoteCredentials = ec;
         }
 
-        public EvernoteAuthHelper(string publicKey, string secretKey, string callbackURL)
+        private EvernoteAuthHelper(string publicKey, string secretKey, string callbackURL)
         {
             this.evernoteCredentials = new EvernoteCredentials();
             evernoteCredentials.ConsumerPublicKey = publicKey;
@@ -61,9 +64,18 @@ namespace EvernoteWebQuickstart
             this.GetRequestToken(callbackURL);
         }
 
-        public static EvernoteAuthHelper LoadCredentials(string callbackURL="", string user="")
+        /// <summary>
+        /// Creates an EvernoteAuthHelper depending on the oauth authentication phase we are in.
+        /// </summary>
+        /// <param name="callbackUrl">
+        /// The url that evernote will redirect to after the user grants access to the app.
+        /// It is needed if there is no existing EvernoteAuthHelper object in the current session.
+        /// </param>
+        /// <param name="user">Not used</param>
+        /// <returns>An EvernoteAuthHelper with the relevant credentials.</returns>
+        public static EvernoteAuthHelper LoadCredentials(string callbackUrl="", string user="")
         {
-            // TODO - implement code to pull this information from a datastore
+            // WILLNOTDO: implement code to pull this information from a datastore
             // based on the user name that is provided.
             // this sample just pulls it from Session, so every time you stop the
             // webserver you'll have to authorize again.
@@ -73,8 +85,8 @@ namespace EvernoteWebQuickstart
 
             if (HttpContext.Current.Session[USER_EVERNOTE_CREDENTIALS] == null)
             {
-                // TODO - put your own credentials here:                
-                eah = new EvernoteAuthHelper("akatopo", "bf3076621fdd66b8", callbackURL);
+                // TODO: put your own credentials here:                
+                eah = new EvernoteAuthHelper("akatopo", "bf3076621fdd66b8", callbackUrl);
                 ec = eah.evernoteCredentials;
             }
             else
@@ -87,10 +99,10 @@ namespace EvernoteWebQuickstart
                 HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_TOKEN] != null &&
                 HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_VERIFIER] != null)
             {
-                eah.SetResponseRequestToken(
-                        HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_TOKEN].ToString());
-                eah.SetOauthVerifier(
-                        HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_VERIFIER].ToString());
+                eah.evernoteCredentials.ResponseRequestToken =
+                        HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_TOKEN].ToString();
+                eah.evernoteCredentials.OauthVerifier =
+                        HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_VERIFIER].ToString();
             }
 
             HttpContext.Current.Session[USER_EVERNOTE_CREDENTIALS] = ec;
@@ -98,38 +110,60 @@ namespace EvernoteWebQuickstart
             return eah;
         }
 
-        public void SetResponseRequestToken(string authToken)
-        {
-            this.evernoteCredentials.ResponseRequestToken = authToken;
-        }
-
-        public void SetOauthVerifier(string oauthVerifier)
-        {
-            this.evernoteCredentials.OauthVerifier = oauthVerifier;
-        }
-
+        /// <summary>
+        /// True if the user has passed the grant access to app phase (callback url loaded).
+        /// </summary>
         public bool UserIsAuthenticated
         {
             get { return (evernoteCredentials.ResponseRequestToken != null); }
         }
 
+        /// <summary>
+        /// True if the app has successfully received its access token.
+        /// </summary>
         public bool AppIsAuthenticated
         {
             get { return (evernoteCredentials.AccessToken != null); }
         }
 
+        /// <summary>
+        /// True if a request token has been received.
+        /// </summary>
         public bool UserRequestedLogin
         {
             get { return (evernoteCredentials.RequestToken != null); }
         }
 
+        /// <summary>
+        /// Makes a request for a request token. If the request token is
+        /// in the current session, it is returned immediately.
+        /// </summary>
+        /// <param name="callbackURL">The callback url that evernote will redirect to. Not
+        /// needed if the request token is in the current session.</param>
+        /// <returns>An oauth request token.</returns>
         public string GetRequestToken(string callbackURL)
         {
             if (this.evernoteCredentials.RequestToken == null)
             {
                 WebClient client = new WebClient();
-                // FIXME: This is actually not the request token, just the whole server answer
-                this.evernoteCredentials.RequestToken = client.DownloadString(GetRequestTokenUri(callbackURL));
+                string fromUri = client.DownloadString(GetRequestTokenUri(callbackURL));
+
+                string[] urlParams = fromUri.Split(new char[] { '&' });
+
+                foreach (string p in urlParams)
+                {
+                    int paramNameLength = p.IndexOf("=");
+                    string fieldName = p.Substring(0, paramNameLength);
+                    if (fieldName == REQUEST_KEY_OAUTH_TOKEN)
+                    {
+                        this.evernoteCredentials.RequestToken = p.Substring(paramNameLength + 1);
+                    }
+                }
+
+                if (this.evernoteCredentials.RequestToken == null)
+                {
+                    throw new Exception("oauth request token parameter not returned");
+                }
             }
 
             return this.evernoteCredentials.RequestToken;
@@ -143,30 +177,43 @@ namespace EvernoteWebQuickstart
             return new Uri(sb.ToString());
         }
 
+        /// <summary>
+        /// Makes a request for an access token. If the access token is
+        /// in the current session, it is returned immediately. 
+        /// </summary>
+        /// <returns>An oauth access token</returns>
         public OAuthKey GetAccessToken()
         {
             if (evernoteCredentials.AccessToken == null)
             {
                 WebClient client = new WebClient();
-                string fromURI = client.DownloadString(this.GetAccessTokenUri());
+                string fromUri = client.DownloadString(this.GetAccessTokenUri());
 
-                string[] urlParams = fromURI.Split(new char[1] { '&' });
+                string[] urlParams = fromUri.Split(new char[] { '&' });
+                int paramsFound = 0;
 
                 evernoteCredentials.AccessToken = new OAuthKey();
-                for (int i = 0; i < urlParams.Length; ++i)
+                foreach (string p in urlParams)
                 {
-                    int paramNameLength = urlParams[i].IndexOf("=");
-                    string fieldName = urlParams[i].Substring(0, paramNameLength);
+                    int paramNameLength = p.IndexOf("=");
+                    string fieldName = p.Substring(0, paramNameLength);
                     if (fieldName == REQUEST_KEY_OAUTH_TOKEN)
                     {
                         evernoteCredentials.AccessToken.AuthToken =
-                                HttpUtility.UrlDecode(urlParams[i].Substring(paramNameLength + 1));
+                                HttpUtility.UrlDecode(p.Substring(paramNameLength + 1));
+                        ++paramsFound;
                     }
                     else if (fieldName == RESPONSE_KEY_EDAM_NOTESTORE_URL)
                     {
                         evernoteCredentials.AccessToken.NoteStoreUrl =
-                                HttpUtility.UrlDecode(urlParams[i].Substring(paramNameLength + 1));
+                                HttpUtility.UrlDecode(p.Substring(paramNameLength + 1));
+                        ++paramsFound;
                     }
+                }
+
+                if (paramsFound != 2)
+                {
+                    throw new Exception("oauth_token and/or edam_noteStoreUrl parameters not found");
                 }
             }
 
@@ -205,6 +252,9 @@ namespace EvernoteWebQuickstart
         }
     }
 
+    /// <summary>
+    /// A container for oauth credentials.
+    /// </summary>
     public class EvernoteCredentials
     {
         public string ConsumerPublicKey { get; set; }
@@ -218,6 +268,9 @@ namespace EvernoteWebQuickstart
         public OAuthKey AccessToken { get; set; }
     }
 
+    /// <summary>
+    /// A container for oauth token credentials
+    /// </summary>
     public class OAuthKey
     {
         public string AuthToken { get; set; }

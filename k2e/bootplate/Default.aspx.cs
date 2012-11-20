@@ -183,28 +183,14 @@ namespace k2e
             }
         }
 
-        public class Data
-        {
-            public string Str { get; set; }
-            public Data2[] Arr { get; set; } 
-        }
-
-        public class Data2
-        {
-            public string Str2 { get; set; }
-        }
-
         [WebMethod]
-        public static string Export(Data[] q)
+        public static string Export(DocumentArrayExport q)
         {
+            /*
             Notebook ClippingNotebook = null;
 
             var sb = new StringBuilder("");
-            foreach (Data d in q)
-            {
-                sb.Append(d.Str);
-                sb.Append(d.Arr[0].Str2);
-            }
+            sb.Append(q.documents[0].clippings[0].content);
             
             OAuthKey accessTokenContainer = 
                 EvernoteAuthHelper.LoadCredentials().GetAccessToken();
@@ -266,19 +252,9 @@ namespace k2e
             List<Note> notes = (List<Note>)noteList.Notes;
             string noteContent =
                 "<h1>A title</h1><p>Some content<br/>and some more</p>" +
-                "<h1>Another title</h1><p>Some content<br/>and some more updated__+++</p>";
+                "<h1>Another title</h1><p>Some content<br/>and some more updated__@@@</p>";
             if (notes.Count == 1) // update note
             {
-                /*
-                sb = new StringBuilder();
-                foreach (Note note in notes)
-                {
-                    sb.AppendLine("<dl>");
-                    sb.AppendLine("<dt>" + note.Title + "</dt>");
-                }                
-                Clippings = sb.ToString();
-                */
-
                 var updatedNote = notes[0];
                 updatedNote.Content =
                     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -304,6 +280,20 @@ namespace k2e
             }
 
             return sb.ToString();
+             */
+
+            OAuthKey accessTokenContainer = 
+                EvernoteAuthHelper.LoadCredentials().GetAccessToken();
+            
+            var exporter = new EvernoteExporter(
+                accessTokenContainer: accessTokenContainer,
+                clippingNotebookName: "Kindle Clippings",
+                tags: new string[] { "k2e", "kindle_clippings" });
+
+            exporter.ExportClippings(q);
+
+            return ":-D";
+         
         }
         
     }
