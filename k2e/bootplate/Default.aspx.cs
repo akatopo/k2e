@@ -288,7 +288,9 @@ namespace k2e
             var exporter = new EvernoteExporter(
                 accessTokenContainer: accessTokenContainer,
                 clippingNotebookName: "Kindle Clippings",
-                tags: new string[] { "k2e", "kindle_clippings" });
+                tags: new string[] { "k2e", "kindle_clippings" },
+                replaceGenericTitles: true,
+                genericTitles: new string[] { "Instapaper" });
 
             exporter.ExportClippings(q);
 

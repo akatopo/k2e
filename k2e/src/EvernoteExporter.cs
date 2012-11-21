@@ -16,23 +16,37 @@ using Evernote.EDAM.Error;
 
 using EvernoteWebQuickstart;
 
+using Bing;
+
 namespace k2e
 {
     public class EvernoteExporter
     {
+        private bool ReplaceGenericTitles;
         private HashSet<string> TagSet = new HashSet<string>();
-        private Notebook ClippingNotebook { get; set; }
-        private OAuthKey AccessToken { get; set; }
+        private HashSet<string> GenericTitleSet = null;
+        private Notebook ClippingNotebook;
+        private OAuthKey AccessToken;
         public readonly string ClippingNotebookName;
 
 
         private EvernoteExporter() { }
         
-        public EvernoteExporter(OAuthKey accessTokenContainer, string clippingNotebookName, IEnumerable<string> tags)
+        public EvernoteExporter(
+                OAuthKey accessTokenContainer,
+                string clippingNotebookName,
+                IEnumerable<string> tags,
+                bool replaceGenericTitles = false,
+                IEnumerable<string> genericTitles = null)
         {
             this.AccessToken = accessTokenContainer;
             this.ClippingNotebookName = clippingNotebookName;
             this.TagSet = new HashSet<string>(tags);
+            this.ReplaceGenericTitles = replaceGenericTitles;
+            if (replaceGenericTitles && genericTitles != null)
+            {
+                this.GenericTitleSet = new HashSet<string>(genericTitles);
+            }
             this.ClippingNotebook = CreateOrGetNotebook(accessTokenContainer, clippingNotebookName);
         }
 
@@ -93,7 +107,7 @@ namespace k2e
             NoteStore.Client noteStore = new NoteStore.Client(noteStoreProtocol);
             
             filter.NotebookGuid = clippingNotebookGuid;
-            filter.Words = "intitle:" + noteTitle;
+            filter.Words = "intitle:" + "\"" + noteTitle + "\"";
             NoteList noteList = noteStore.findNotes(authToken, filter, 0, 1);
             List<Note> notes = (List<Note>)noteList.Notes;
 
@@ -149,19 +163,133 @@ namespace k2e
             foreach (DocumentExport d in documentArray)
             {
                 // TODO:
-                // Could check for generic titles at this point, and use
-                // heuristics to resolve proper title for each clipping
-                // Also maybe do hash comparisons between notes if possible
+                // maybe do hash comparisons between notes if possible
 
-                var noteTitle = new StringBuilder(d.title).Append(" by ").Append(d.author);
+
+                if (this.ReplaceGenericTitles &&
+                        this.GenericTitleSet != null &&
+                        this.GenericTitleSet.Contains(d.title))
+                {
+                    ExportGenericTitleClippings(d);
+                }
+                else
+                {
+                    ExportNoteToEvernote(d);
+                }
+            }
+        }
+
+        private void ExportNoteToEvernote(DocumentExport document)
+        {
+            var noteTitle = new StringBuilder(document.title)
+                    .Append(" by ")
+                    .Append(document.author);
+            var noteContent = new StringBuilder();
+
+            noteContent.Append("<h1>")
+                    .Append(noteTitle.ToString().HtmlEncode())
+                    .Append("</h1>\n");
+            foreach (ClippingExport c in document.clippings)
+            {
+                noteContent.Append("<h2>")
+                    .Append(c.type.HtmlEncode())
+                    .Append(" ").Append(c.timeStamp.HtmlEncode())
+                    .Append("</h2>\n");
+                noteContent.Append("<p>")
+                        .Append(c.content.HtmlEncode())
+                        .Append("</p>\n");
+            }
+
+            CreateOrUpdateNote(
+                    accessTokenContainer: this.AccessToken,
+                    clippingNotebookGuid: this.ClippingNotebook.Guid,
+                    noteTitle: noteTitle.ToString(),
+                    noteContent: noteContent.ToString(),
+                    tags: this.TagSet);
+        }
+
+        public void ExportGenericTitleClippings(DocumentExport document)
+        {
+            const int MAX_QUERY_CHAR_LIMIT = 128; 
+            var bingData = new BingData();
+            var UrlDocumentMap = 
+                new Dictionary<string, Tuple<string, List<ClippingExport> > >();
+            var GenericTitleClippingList = new List<ClippingExport>();
+
+            string origTitle = document.title;
+            string origAuthor = document.author;
+
+            foreach (ClippingExport c in document.clippings)
+            {
+                string q = "";
+                if (c.content.IndexOf(" ") == -1) {
+                    q = c.content; // or maybe some other failsafe
+                }
+                else if (c.content.Length < MAX_QUERY_CHAR_LIMIT)
+                {
+                    q = c.content.Substring(0, c.content.LastIndexOf(" ") + 1);
+                }
+                else 
+                {
+                    int length = c.content.IndexOf(" ", MAX_QUERY_CHAR_LIMIT+1) != -1?
+                            c.content.IndexOf(" ", MAX_QUERY_CHAR_LIMIT+1):
+                            c.content.Length;
+                    q = c.content.Substring(0, length);
+                }
+                
+                IList<WebResult> results = bingData.GetBingData(
+                        Query: "\"" + q + "\"",
+                        Adult: "Off");
+
+                if (results != null && results.Count != 0) // Found a more suitable title and reference url
+                {
+                    string url = results[0].Url;
+                    string newTitle = results[0].Title;
+                    if (!UrlDocumentMap.ContainsKey(url))
+                    {
+                        UrlDocumentMap.Add(url,
+                                Tuple.Create(newTitle,
+                                        new List<ClippingExport>()));
+                    }
+                    UrlDocumentMap[url].Item2.Add(c);
+                }
+                else // keep generic title
+                {
+                    GenericTitleClippingList.Add(c);
+                }
+                
+            }
+
+            /////////////////////
+
+            foreach (var kv in UrlDocumentMap)
+            {
+                string url = kv.Key;
+                string title = kv.Value.Item1;
+                var clippings = kv.Value.Item2;
+
+                var noteTitle = new StringBuilder(title)
+                        .Append(" from ")
+                        .Append(url)
+                        .Append(" originally in ")
+                        .Append(origTitle)
+                        .Append(" by ")
+                        .Append(origAuthor);
                 var noteContent = new StringBuilder();
 
-                noteContent.Append("<h1>").Append(noteTitle.ToString().HtmlEncode()).Append("</h1>\n");
-                foreach (ClippingExport c in d.clippings)
+                noteContent.Append("<h1>")
+                        .Append(noteTitle.ToString().HtmlEncode())
+                        .Append("</h1>\n");
+                
+                foreach (ClippingExport c in clippings)
                 {
-                    noteContent.Append("<h2>").Append(c.type.HtmlEncode()).
-                        Append(" ").Append(c.timeStamp.HtmlEncode()).Append("</h2>\n");
-                    noteContent.Append("<p>").Append(c.content.HtmlEncode()).Append("</p>\n");
+                    noteContent.Append("<h2>")
+                        .Append(c.type.HtmlEncode())
+                        .Append(" ").Append(c.timeStamp.HtmlEncode())
+                        .Append("</h2>\n");
+                    noteContent.Append("<p>")
+                            .Append(c.content.HtmlEncode())
+                            .Append("</p>\n");
                 }
 
                 CreateOrUpdateNote(
@@ -172,6 +300,16 @@ namespace k2e
                         tags: this.TagSet);
             }
 
+            // Export any leftovers with the original generic title
+            if (GenericTitleClippingList.Count != 0)
+            {
+                var GenericTitleDocument = new DocumentExport();
+                GenericTitleDocument.author = document.author;
+                GenericTitleDocument.title = document.title;
+                GenericTitleDocument.clippings = GenericTitleClippingList.ToArray();
+
+                ExportNoteToEvernote(GenericTitleDocument);
+            }
         }
     }
 }
