@@ -1,3 +1,5 @@
+var DELETEME = {};
+
 enyo.kind({
 	name: "Document",
 	kind: "enyo.Component",
@@ -5,7 +7,14 @@ enyo.kind({
 		index: -1,
 		title: "",
 		author: "",
+		isPeriodical: false,
 		clippings: undefined
+	},
+	events: {
+		onExportBegin: "",
+		onExportEnd: "",
+		onQueryBegin: "",
+		onQueryEnd: ""
 	},
 	addClipping: function (clipping) {
 		this.getClippings().push(clipping);
@@ -13,6 +22,27 @@ enyo.kind({
 	create: function () {
 		this.inherited(arguments);
 		this.clippings = [];
+	},
+	googleTmp: function (obj) {
+		// move this to a method
+			 //var MAX_QUERY_LENGTH = 128;
+			 //var q = "2. Bubble Bobble Item generation mechanism, vast assortment of items,";
+			//  var s = "";
+			
+			// if (clipExport.content.length > MAX_QUERY_LENGTH) {
+			// 	s = clipExport.content.substring(0, MAX_QUERY_LENGTH)
+			// }
+			// else {
+			// 	s = clipExport.content;
+			// }
+
+			// var index = s.lastIndexOf(" ");
+			// if (index != -1) {
+			// 	q = s.substring(0, index);
+			// }
+			// else {
+			// 	q = s;
+			// }
 	},
 	exportObject: function () {
 		clipExportArray = [];
@@ -23,6 +53,7 @@ enyo.kind({
 		return {
 			title: this.title,
 			author: this.author,
+			isPeriodical: this.isPeriodical,
 			clippings: clipExportArray
 		};
 	}
@@ -35,14 +66,18 @@ enyo.kind({
 		type: "",
 		loc: "",
 		timeStamp: "",
-		content: ""
+		content: "",
+		suggestedTitle: "",
+		suggestedUrl: ""
 	},
 	exportObject: function () {
 		return { 
 			type: this.type,
 			loc: this.loc,
 			timeStamp: this.timeStamp,
-			content: this.content
+			content: this.content,
+			suggestedTitle: this.suggestedTitle,
+			suggestedUrl: this.suggestedUrl
 		};
 	}
 })
@@ -58,8 +93,11 @@ enyo.kind({
 	addClippingToDocument: function (title, author, clipping) {
 		var key = title + author;
 		
-		if (!this.docMap[key]) {
-			this.docMap[key] = new Document({title: title, author: author});
+		if (!this.docMap[key]) {			
+			this.docMap[key] =
+					new Document({
+							title: title, 
+							author: author});
 			++this.length;
 			this.keyArray.push(key);
 		}

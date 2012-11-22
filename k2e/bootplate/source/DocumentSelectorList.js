@@ -33,12 +33,6 @@ enyo.kind({
 			this.items[i].setMultiSelected(false);
 		}
 	},
-	tmp: function(inSender, inEvent) {
-		console.log("tapped");
-		console.log(inSender);
-		console.log(inEvent);
-		this.doDocumentSelected();
-	},
 	populate: function(documents) {
 		this.documentsRef = documents;
 		this.$.DocumentSelectorRepeater.setCount(this.documentsRef.length);
@@ -61,7 +55,7 @@ enyo.kind({
 		{name: "label", classes: "enyo-inline k2e-document-selector-item-label"}
 	],
 	events: {
-		onDocumentSelected: ""
+		onDocumentSelected: "",
 	},
 	handlers: {
 		ontap: "doDocumentSelected"
@@ -73,12 +67,12 @@ enyo.kind({
 		return this.$.label.getContent();
 	},
 	setMultiSelected: function(bool) {
-		if (bool == true) {
+		if (bool === true) {
 			multiSelected = true;
 			this.$.checkbox.setChecked(false);
 			this.$.checkbox.show();		
 		}
-		else if (bool == false) {
+		else if (bool === false) {
 			multiSelected = false;
 			this.$.checkbox.hide();
 			this.$.checkbox.setChecked(false);
