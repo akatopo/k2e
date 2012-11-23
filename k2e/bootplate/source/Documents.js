@@ -23,27 +23,6 @@ enyo.kind({
 		this.inherited(arguments);
 		this.clippings = [];
 	},
-	googleTmp: function (obj) {
-		// move this to a method
-			 //var MAX_QUERY_LENGTH = 128;
-			 //var q = "2. Bubble Bobble Item generation mechanism, vast assortment of items,";
-			//  var s = "";
-			
-			// if (clipExport.content.length > MAX_QUERY_LENGTH) {
-			// 	s = clipExport.content.substring(0, MAX_QUERY_LENGTH)
-			// }
-			// else {
-			// 	s = clipExport.content;
-			// }
-
-			// var index = s.lastIndexOf(" ");
-			// if (index != -1) {
-			// 	q = s.substring(0, index);
-			// }
-			// else {
-			// 	q = s;
-			// }
-	},
 	exportObject: function () {
 		clipExportArray = [];
 		for (var i = 0; i < this.clippings.length; ++i) {

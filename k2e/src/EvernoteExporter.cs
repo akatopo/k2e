@@ -222,27 +222,6 @@ namespace k2e
 
             foreach (ClippingExport c in document.clippings)
             {
-                //string q = "";
-                //if (c.content.IndexOf(" ") == -1) {
-                //    q = c.content; // or maybe some other failsafe
-                //}
-                //else if (c.content.Length < MAX_QUERY_CHAR_LIMIT)
-                //{
-                //    q = c.content.Substring(0, c.content.LastIndexOf(" ") + 1);
-                //}
-                //else 
-                //{
-                //    int length = c.content.IndexOf(" ", MAX_QUERY_CHAR_LIMIT+1) != -1?
-                //            c.content.IndexOf(" ", MAX_QUERY_CHAR_LIMIT+1):
-                //            c.content.Length;
-                //    q = c.content.Substring(0, length);
-                //}
-                
-                //IList<WebResult> results = bingData.GetBingData(
-                //        Query: "\"" + q + "\"",
-                //        Adult: "Off");
-
-                //if (results != null && results.Count != 0) // Found a more suitable title and reference url
                 if (c.suggestedTitle != "" && c.suggestedUrl != "")
                 {
                     string url = c.suggestedUrl; //results[0].Url;

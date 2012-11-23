@@ -36,8 +36,8 @@ enyo.kind({
 		docsExport: undefined
 	},
 	export: function (inSender, inEvent) {
-		this.log("Done.");
-		/*
+		this.log("Export proccessing done");
+		
 		var loc = location.protocol + '//' + location.host + location.pathname;
 
 		console.log(loc);
@@ -52,7 +52,6 @@ enyo.kind({
 
 		ajax.response(this, "processExportResponse");
 		ajax.error(this, "processExportError");
-		*/
 	},
 	processExportResponse: function(inSender, inResponse) {
 		// do something with it
@@ -143,26 +142,27 @@ enyo.kind({
 				}
 			}
 		});
-		ajax.response(processQueryResponse);
-        var processQueryErrorTmp = (function (inSender, inResponse) {
-        	var inResponse = {  }
-			var cEx = clippingExport;
-			if (inResponse.items && inResponse.items.length) {
-				cEx.suggestedTitle = inResponse.items[0].title;
-				cEx.suggestedUrl = inResponse.items[0].link;
-				originator.log("Got title: " + inResponse.items[0].title);
-				originator.handleQueryEnd();
-			}
-			else {
-				//send one additional query without quotes
-				originator.handleQueryEnd();
-				if (retry) {
-					originator.setSuggestedDataToClipping(cEx, false, false);
-				}
-			}
-		});
-		ajax.error(processQueryErrorTmp);
-        //ajax.error(this, "processQueryError");
+		// ajax.response(processQueryResponse);
+		// 	var processQueryErrorTmp = (function (inSender, inResponse) {
+		// 	var inResponse = {  }
+		// 	var cEx = clippingExport;
+		// 	if (inResponse.items && inResponse.items.length) {
+		// 		cEx.suggestedTitle = inResponse.items[0].title;
+		// 		cEx.suggestedUrl = inResponse.items[0].link;
+		// 		originator.log("Got title: " + inResponse.items[0].title);
+		// 		originator.handleQueryEnd();
+		// 	}
+		// 	else {
+		// 		//send one additional query without quotes
+		// 		originator.handleQueryEnd();
+		// 		if (retry) {
+		// 			originator.setSuggestedDataToClipping(cEx, false, false);
+		// 		}
+		// 	}
+		// });
+		// ajax.error(processQueryErrorTmp);
+
+        ajax.error(this, "processQueryError");
 	},
 	processQueryError: function (inSender, inResponse) {
 		this.error("Error in google search request");
