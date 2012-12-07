@@ -4,16 +4,29 @@ enyo.kind({
 	style: "height: 100%",
 	components: [
 		{fit:true, name: "DocumentSelectorRepeater", kind: "enyo.Repeater",
-		onSetupItem: "setDocumentSelectorItem", count: 0,
+		onSetupItem: "handleSetupItem", count: 0,
 		components: [
 			{kind: "DocumentSelectorItem"}
 		]}
 	],
 	published: {
-		documentsRef: undefined
+		documentsRef: undefined,
+		selDocumentSelectorItem: null
 	},
 	items: undefined,
-	setDocumentSelectorItem: function(inSender, inEvent) {
+	handlers: {
+		onDocumentSelected: "handleDocumentSelected"
+	},
+	handleDocumentSelected: function (inSender, inEvent) {
+		var docSelector = inEvent.originator;
+		
+		docSelector.setSelected(true);
+		if (this.selDocumentSelectorItem) {
+			this.selDocumentSelectorItem.setSelected(false);
+		}
+		this.selDocumentSelectorItem = docSelector;
+	},
+	handleSetupItem: function (inSender, inEvent) {
 	    var index = inEvent.index;
 	    var item = inEvent.item;
 	    var docMap = this.documentsRef.getDocMap();
@@ -48,17 +61,22 @@ enyo.kind({
 	classes: "k2e-document-selector-item enyo-border-box",
 	published: {
 		index: -1,
-		multiSelected: false
+		multiSelected: false,
+		selected: false
 	},
 	components: [
 		{name: "checkbox", kind: "onyx.Checkbox", showing: false},
 		{name: "label", classes: "enyo-inline k2e-document-selector-item-label"}
 	],
 	events: {
-		onDocumentSelected: "",
+		onDocumentSelected: ""
 	},
 	handlers: {
 		ontap: "doDocumentSelected"
+	},
+	setSelected: function (bool) {
+		this.selected = bool;
+		this.addRemoveClass("onyx-selected", this.selected);
 	},
 	setTitle: function (titleString) {
 		this.$.label.setContent(titleString);

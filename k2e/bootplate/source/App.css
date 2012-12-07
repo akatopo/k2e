@@ -13,7 +13,7 @@
 	background-color: gray;
 }
 
-.fixme-clip-body {
+.fixme-clip-scroller {
 	background-color: purple;
 }
 
@@ -28,6 +28,11 @@
 	overflow: hidden;
 	white-space: nowrap;
 	position: relative;
+}
+
+.k2e-document-selector-item.onyx-selected
+{
+	background-color: MidnightBlue;
 }
 
 .k2e-document-selector-item-label {

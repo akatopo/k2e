@@ -16,17 +16,22 @@ using Evernote.EDAM.Error;
 
 using EvernoteWebQuickstart;
 
-using Bing;
+//using Bing;
 
 namespace k2e
 {
     public class EvernoteExporter
     {
         private bool ReplaceGenericTitles;
+
         private HashSet<string> TagSet = new HashSet<string>();
+
         private HashSet<string> GenericTitleSet = null;
+
         private Notebook ClippingNotebook;
+
         private OAuthKey AccessToken;
+
         public readonly string ClippingNotebookName;
 
 
@@ -171,16 +176,16 @@ namespace k2e
                 //        this.GenericTitleSet.Contains(d.title))
                 if (d.isPeriodical)
                 {
-                    ExportGenericTitleClippings(d);
+                    ExportPeriodicalDocument(d);
                 }
                 else
                 {
-                    ExportNoteToEvernote(d);
+                    ExportDocumentToEvernote(d);
                 }
             }
         }
 
-        private void ExportNoteToEvernote(DocumentExport document)
+        private void ExportDocumentToEvernote(DocumentExport document)
         {
             var noteTitle = new StringBuilder(document.title)
                     .Append(" by ")
@@ -209,7 +214,7 @@ namespace k2e
                     tags: this.TagSet);
         }
 
-        public void ExportGenericTitleClippings(DocumentExport document)
+        public void ExportPeriodicalDocument(DocumentExport document)
         {
             //const int MAX_QUERY_CHAR_LIMIT = 128; 
             //var bingData = new BingData();
@@ -289,7 +294,7 @@ namespace k2e
                 GenericTitleDocument.title = document.title;
                 GenericTitleDocument.clippings = GenericTitleClippingList.ToArray();
 
-                ExportNoteToEvernote(GenericTitleDocument);
+                ExportDocumentToEvernote(GenericTitleDocument);
             }
         }
     }

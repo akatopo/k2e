@@ -18,11 +18,10 @@ enyo.kind({
 				{fit:true, name: "fixmeSelList", kind: "DocumentSelectorList"}
 			]},
 			{name: "fixme_clip_panel", kind: "FittableRows", fit: true, components: [
-				{style:"position:relative", fit: true, components: [
-					{name: "fixme_clip_body", style: "height: 100%", classes: "fixme-clip-body", },
-					{kind: "onyx.Button", content: "to top", style:"position: absolute; bottom: 10px; right: 10px;"}
+				{kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "fixme-clip-scroller", components: [
+					{name: "fixme_clip_body", fit: true}//,
+					//{kind: "onyx.Button", content: "to top", style:"position: absolute; bottom: 10px; right: 10px;"}
 				]},
-				
 				{kind: "onyx.Toolbar", components: [
 					{content: "clip toolbar"}
 				]}
@@ -34,6 +33,9 @@ enyo.kind({
 		periodicalTitleSet: { Instapaper: true }, // FIXME: initialize from local storage
 												  // and/or set from options
 		docsExport: undefined
+	},
+	handlers: {
+		onDocumentSelected: "handleDocumentSelected"
 	},
 	export: function (inSender, inEvent) {
 		this.log("Export proccessing done");
@@ -123,7 +125,7 @@ enyo.kind({
 			key: key,
 			cx: cx,
 			q: q
-		})
+		});
 
 		var originator = this;
 		var processQueryResponse = (function (inSender, inResponse) {
@@ -142,7 +144,7 @@ enyo.kind({
 				}
 			}
 		});
-		// ajax.response(processQueryResponse);
+		ajax.response(processQueryResponse);
 		// 	var processQueryErrorTmp = (function (inSender, inResponse) {
 		// 	var inResponse = {  }
 		// 	var cEx = clippingExport;
@@ -168,14 +170,14 @@ enyo.kind({
 		this.error("Error in google search request");
 		this.handleQueryEnd();
 	},
-	handlers: {
-		onDocumentSelected: "handleDocumentSelected"
-	},
 	handleDocumentSelected: function (inSender, inEvent) {
 		var docSelector = inEvent.originator;
 		console.log(docSelector.getTitle());
 		console.log(docSelector.getIndex());
-		console.log(testDocs.getDocumentByIndex(docSelector.getIndex()));
+		var doc = testDocs.getDocumentByIndex(docSelector.getIndex())
+		console.log(doc);
+		this.$.fixme_clip_body.setContent(doc.clippings[0].getContent());
+
 	},
 	handleExportBegin: function (inSender, inEvent) {
 		this.log("handleExportBegin");

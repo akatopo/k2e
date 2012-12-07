@@ -10,7 +10,7 @@ enyo.kind({
     },
     p: function () {
         this.lock--;
-        if(this.lock==0 && this.func) {
+        if (this.lock == 0 && this.func) {
             this.func();
         }
     }

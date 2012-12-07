@@ -1,5 +1,3 @@
-var DELETEME = {};
-
 enyo.kind({
 	name: "Document",
 	kind: "enyo.Component",
