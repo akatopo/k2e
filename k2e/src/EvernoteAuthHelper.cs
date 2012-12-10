@@ -85,8 +85,8 @@ namespace EvernoteWebQuickstart
 
             if (HttpContext.Current.Session[USER_EVERNOTE_CREDENTIALS] == null)
             {
-                // TODO: put your own credentials here:                
-                eah = new EvernoteAuthHelper("akatopo", "bf3076621fdd66b8", callbackUrl);
+                eah = new EvernoteAuthHelper(k2e.KeyHolder.PublicKey, 
+                        k2e.KeyHolder.SecretKey, callbackUrl);
                 ec = eah.evernoteCredentials;
             }
             else
