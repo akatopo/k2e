@@ -2,12 +2,6 @@ enyo.kind({
 	name: "App",
 	kind: "FittableRows",
 	components:[
-		{kind: "Signals",
-			onExportBegin: "handleExportBegin",
-			onExportEnd: "handleExportEnd",
-			onQueryBegin: "handleQueryBegin",
-			onQueryEnd: "handleQueryEnd"
-		},
 		{kind: "onyx.Toolbar", components: [
 			{content: "k2e toolbar"},
 			{fit: true},
@@ -19,7 +13,7 @@ enyo.kind({
 			]},
 			{name: "fixme_clip_panel", kind: "FittableRows", fit: true, components: [
 				{kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "fixme-clip-scroller", components: [
-					{name: "fixme_clip_body", fit: true}//,
+					{name: "fixme_clip_body", kind: "DocumentDisplay", fit: true}//,
 					//{kind: "onyx.Button", content: "to top", style:"position: absolute; bottom: 10px; right: 10px;"}
 				]},
 				{kind: "onyx.Toolbar", components: [
@@ -176,7 +170,8 @@ enyo.kind({
 		console.log(docSelector.getIndex());
 		var doc = testDocs.getDocumentByIndex(docSelector.getIndex())
 		console.log(doc);
-		this.$.fixme_clip_body.setContent(doc.clippings[0].getContent());
+		//this.$.fixme_clip_body.setContent(doc.clippings[0].getContent());
+		this.$.fixme_clip_body.displayDocument(doc);
 
 	},
 	handleExportBegin: function (inSender, inEvent) {
