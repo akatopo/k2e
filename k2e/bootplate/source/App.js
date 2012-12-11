@@ -12,7 +12,7 @@ enyo.kind({
 				{fit:true, name: "fixmeSelList", kind: "DocumentSelectorList"}
 			]},
 			{name: "fixme_clip_panel", kind: "FittableRows", fit: true, components: [
-				{kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "fixme-clip-scroller", components: [
+				{name: "fixme_clip_scroller", kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "fixme-clip-scroller k2e-document-display-dark", components: [
 					{name: "fixme_clip_body", kind: "DocumentDisplay", fit: true}//,
 					//{kind: "onyx.Button", content: "to top", style:"position: absolute; bottom: 10px; right: 10px;"}
 				]},
@@ -42,7 +42,6 @@ enyo.kind({
 			url: loc + "/Export",
 			contentType: "application/json; charset=utf-8",
 			method: "POST",
-			//postBody: '{"q":' + JSON.stringify(testDocs.exportObject(), null, 0) + '}'
 			postBody: '{"q":' + JSON.stringify(this.docsExport, null, 0) + '}'
 		}).go();
 
@@ -168,10 +167,11 @@ enyo.kind({
 		var docSelector = inEvent.originator;
 		console.log(docSelector.getTitle());
 		console.log(docSelector.getIndex());
-		var doc = testDocs.getDocumentByIndex(docSelector.getIndex())
+		var doc = testDocs.getDocumentByIndex(docSelector.getIndex());
 		console.log(doc);
 		//this.$.fixme_clip_body.setContent(doc.clippings[0].getContent());
 		this.$.fixme_clip_body.displayDocument(doc);
+		this.$.fixme_clip_scroller.scrollToTop();
 
 	},
 	handleExportBegin: function (inSender, inEvent) {
@@ -223,8 +223,9 @@ enyo.kind({
 	            // If we get here, we got a complete valid HTTP response
 	            var clippingRegExp = new RegExp(/^\s*(.+)\s\((.+)\)\s+-\s+(.+)\s+(.*)/);
 	            var response = req.responseText;
+	            var delimeter = "==========";
 				testClippings = response;
-	            testClippings = testClippings.split("\n==========");
+	            testClippings = testClippings.split("\n" + delimeter);
 
 	            //assert(clippingRegExp.test(testClippings[73]));
 		        

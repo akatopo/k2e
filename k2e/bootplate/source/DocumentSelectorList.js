@@ -18,13 +18,18 @@ enyo.kind({
 		onDocumentSelected: "handleDocumentSelected"
 	},
 	handleDocumentSelected: function (inSender, inEvent) {
-		var docSelector = inEvent.originator;
+		var docSelectorItem = inEvent.originator;
 		
-		docSelector.setSelected(true);
-		if (this.selDocumentSelectorItem) {
-			this.selDocumentSelectorItem.setSelected(false);
+		if (this.selDocumentSelectorItem != docSelectorItem) {
+			docSelectorItem.setSelected(true);
+			if (this.selDocumentSelectorItem) {
+				this.selDocumentSelectorItem.setSelected(false);
+			}
+			this.selDocumentSelectorItem = docSelectorItem;
 		}
-		this.selDocumentSelectorItem = docSelector;
+		else {
+			return true;
+		}
 	},
 	handleSetupItem: function (inSender, inEvent) {
 	    var index = inEvent.index;

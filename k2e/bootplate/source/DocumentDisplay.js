@@ -5,7 +5,11 @@ enyo.kind({
     displayDocument: function (doc) {
         this.clearDocument();
 
-        this.createComponent({tag: "h1", content: doc.title + " by " + doc.author});
+        this.createComponent({tag: "h1", content: doc.title});
+        this.createComponent({classes: "k2e-document-display-subtitle", components: [
+                {tag: "i", content: "by "},
+                {tag: "span", content: doc.author }
+                ]});
 
         for (var i = 0; i < doc.clippings.length; ++i) {
             var loc = doc.clippings[i].loc;

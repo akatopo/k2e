@@ -41,9 +41,55 @@
 	padding-left: 5px;
 }
 
+.k2e-document-display-dark {
+	background-color: #333; /* #323A40; */
+	color: #D6DBDF;
+}
+
+.k2e-document-display-dark .k2e-document-display-subtitle {
+	border-color: #4E5358;
+	color: #A6B5C2;
+}
+
+.k2e-document-display {
+	/*"minion-pro", Palatino,*/
+
+	font-size: 100%;
+	font-family: Georgia, serif;
+
+	box-sizing: border-box;
+	margin: 0 auto;
+	max-width: 940px;
+	padding: 1.2em 1.2em 1.2em 1.2em;
+}
+
 .k2e-document-display h1 {
 	font-size: 2em;
-	color: white;
+	font-weight: 700;
+	line-height: 1.3;
+	-webkit-font-smoothing: antialiased;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	/*font: inherit;*/
+	vertical-align: baseline;
+}
+
+.k2e-document-display-subtitle {
+	border-top: 1px solid #CDCDCC; /* from theme */
+	color: #707065; /* from theme */
+	font-size: 0.8em;
+	letter-spacing: 0.09em;
+	margin-top: 1.8em;
+	overflow: hidden;
+	padding-top: 0.9em;
+}
+
+.k2e-document-display h2 {
+	font-size: 1.2em;
+	font-weight: 600;
+	margin: 0.8em 0 0.0455em 0;
+
 }
 
 .k2e-document-display p {
