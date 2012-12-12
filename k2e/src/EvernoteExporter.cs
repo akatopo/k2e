@@ -100,7 +100,7 @@ namespace k2e
         private void CreateOrUpdateNote(OAuthKey accessTokenContainer,
                 string clippingNotebookGuid,
                 string noteTitle,
-                string noteContent,
+                string noteBody,
                 IEnumerable<string> tags)
         {
             string authToken = accessTokenContainer.AuthToken;
@@ -122,7 +122,7 @@ namespace k2e
                 updatedNote.Content =
                     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                     "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">" +
-                    "<en-note>" + noteContent +
+                    "<en-note>" + noteBody +
                     "</en-note>";
                 noteStore.updateNote(authToken, updatedNote);
             }
@@ -133,7 +133,7 @@ namespace k2e
                 note.Content =
                     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                     "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">" +
-                    "<en-note>" + noteContent +
+                    "<en-note>" + noteBody +
                     "</en-note>";
                 note.TagNames = new List<string>(tags);
                 note.NotebookGuid = clippingNotebookGuid;
@@ -190,27 +190,13 @@ namespace k2e
             var noteTitle = new StringBuilder(document.title)
                     .Append(" by ")
                     .Append(document.author);
-            var noteContent = new StringBuilder();
-
-            noteContent.Append("<h1>")
-                    .Append(noteTitle.ToString().HtmlEncode())
-                    .Append("</h1>\n");
-            foreach (ClippingExport c in document.clippings)
-            {
-                noteContent.Append("<h2>")
-                    .Append(c.type.HtmlEncode())
-                    .Append(" ").Append(c.timeStamp.HtmlEncode())
-                    .Append("</h2>\n");
-                noteContent.Append("<p>")
-                        .Append(c.content.HtmlEncode())
-                        .Append("</p>\n");
-            }
+            string noteBody = NoteEnmlBuilder.NoteBodyFromDocumentExport(document);
 
             CreateOrUpdateNote(
                     accessTokenContainer: this.AccessToken,
                     clippingNotebookGuid: this.ClippingNotebook.Guid,
                     noteTitle: noteTitle.ToString(),
-                    noteContent: noteContent.ToString(),
+                    noteBody: noteBody,
                     tags: this.TagSet);
         }
 
@@ -261,19 +247,19 @@ namespace k2e
                         .Append(origTitle)
                         .Append(" by ")
                         .Append(origAuthor);
-                var noteContent = new StringBuilder();
+                var noteBody = new StringBuilder();
 
-                noteContent.Append("<h1>")
+                noteBody.Append("<h1>")
                         .Append(noteTitle.ToString().HtmlEncode())
                         .Append("</h1>\n");
                 
                 foreach (ClippingExport c in clippings)
                 {
-                    noteContent.Append("<h2>")
+                    noteBody.Append("<h2>")
                         .Append(c.type.HtmlEncode())
                         .Append(" ").Append(c.timeStamp.HtmlEncode())
                         .Append("</h2>\n");
-                    noteContent.Append("<p>")
+                    noteBody.Append("<p>")
                             .Append(c.content.HtmlEncode())
                             .Append("</p>\n");
                 }
@@ -282,7 +268,7 @@ namespace k2e
                         accessTokenContainer: this.AccessToken,
                         clippingNotebookGuid: this.ClippingNotebook.Guid,
                         noteTitle: noteTitle.ToString(),
-                        noteContent: noteContent.ToString(),
+                        noteBody: noteBody.ToString(),
                         tags: this.TagSet);
             }
 

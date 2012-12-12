@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="src\Extensions.cs" />
     <Compile Include="src\KeyHolder.cs" />
+    <Compile Include="src\NoteEnmlBuilder.cs" />
     <Compile Include="src\OAuthBase.cs" />
   </ItemGroup>
   <ItemGroup>

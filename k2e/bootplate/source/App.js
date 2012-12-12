@@ -60,17 +60,18 @@ enyo.kind({
 
 		var docs = testDocs; // FIXME
 		this.docsExport = testDocs.exportObject();
-		var docExArray = this.docsExport.documents;
+		var docExportArray = this.docsExport.documents;
 
-		for (var i = 0; i < docExArray.length; ++i) {
-			var dEx = docExArray[i];			
-			if (dEx.title in this.periodicalTitleSet) {
-				dEx.isPeriodical = true;
-				for (var j = 0; j < dEx.clippings.length; ++j) {
-					var cEx = dEx.clippings[j];
-					this.setSuggestedDataToClipping(cEx);
-				}
-			}
+		for (var i = 0; i < docExportArray.length; ++i) {
+			var dEx = docExportArray[i];
+			// FIXME			
+			// if (dEx.title in this.periodicalTitleSet) {
+			// 	dEx.isPeriodical = true;
+			// 	for (var j = 0; j < dEx.clippings.length; ++j) {
+			// 		var cEx = dEx.clippings[j];
+			// 		this.setSuggestedDataToClipping(cEx);
+			// 	}
+			// }
 		}
 
 		this.handleExportEnd()

@@ -3,6 +3,21 @@ enyo.kind({
     classes: "k2e-document-display",
     components: [],
     displayDocument: function (doc) {
+        var documentDisplay = this;
+        function appendClippingToDisplay(doc, i) {
+            var loc = doc.clippings[i].loc;
+            var type = doc.clippings[i].type;
+            var timestamp = doc.clippings[i].timeStamp;
+            var content = doc.clippings[i].content;
+
+            documentDisplay.createComponent({classes: "k2e-document-display-clip-header", components: [
+                    {tag: "i", content: type + ", " + loc},
+                    {tag: "span", content: " | "},
+                    {tag: "i", content: timestamp }
+                    ]});
+            documentDisplay.createComponent({tag: "p", content: content});
+        };
+
         this.clearDocument();
 
         this.createComponent({tag: "h1", content: doc.title});
@@ -11,13 +26,12 @@ enyo.kind({
                 {tag: "span", content: doc.author }
                 ]});
 
-        for (var i = 0; i < doc.clippings.length; ++i) {
-            var loc = doc.clippings[i].loc;
-            var type = doc.clippings[i].type;
-            var timestamp = doc.clippings[i].timeStamp;
-            var content = doc.clippings[i].content;
-            this.createComponent({tag: "h2", content: type + " " + timestamp});
-            this.createComponent({tag: "p", content: content});
+        if (doc.clippings.length != 0) {
+            appendClippingToDisplay(doc, 0);
+            for (var i = 1; i < doc.clippings.length; ++i) {
+                this.createComponent({classes:"k2e-document-display-clip-separator"});
+                appendClippingToDisplay(doc, i);
+            }
         }
 
         this.render();
