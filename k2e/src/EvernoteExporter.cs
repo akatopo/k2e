@@ -15,6 +15,7 @@ using Evernote.EDAM.NoteStore;
 using Evernote.EDAM.Error;
 
 using EvernoteWebQuickstart;
+using System.Security.Cryptography;
 
 //using Bing;
 
@@ -100,8 +101,9 @@ namespace k2e
         private void CreateOrUpdateNote(OAuthKey accessTokenContainer,
                 string clippingNotebookGuid,
                 string noteTitle,
-                string noteBody,
-                IEnumerable<string> tags)
+                string noteContent,
+                IEnumerable<string> tags,
+                Resource faviconResource = null)
         {
             string authToken = accessTokenContainer.AuthToken;
             NoteFilter filter = new NoteFilter();
@@ -119,24 +121,30 @@ namespace k2e
             if (notes.Count == 1) // update note
             {
                 var updatedNote = notes[0];
-                updatedNote.Content =
-                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                    "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">" +
-                    "<en-note>" + noteBody +
-                    "</en-note>";
+                updatedNote.Content = noteContent;
+
+                // in case of a favicon update
+                if (faviconResource != null)
+                {
+                    updatedNote.Resources = new List<Resource>();
+                    updatedNote.Resources.Add(faviconResource);
+                }
+
                 noteStore.updateNote(authToken, updatedNote);
             }
             else // create note
             {
                 var note = new Note();
                 note.Title = noteTitle;
-                note.Content =
-                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                    "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">" +
-                    "<en-note>" + noteBody +
-                    "</en-note>";
+                note.Content = noteContent;
                 note.TagNames = new List<string>(tags);
                 note.NotebookGuid = clippingNotebookGuid;
+
+                if (faviconResource != null)
+                {
+                    note.Resources = new List<Resource>();
+                    note.Resources.Add(faviconResource);
+                }
 
                 Note createdNote = noteStore.createNote(authToken, note);
             }
@@ -190,13 +198,13 @@ namespace k2e
             var noteTitle = new StringBuilder(document.title)
                     .Append(" by ")
                     .Append(document.author);
-            string noteBody = NoteEnmlBuilder.NoteBodyFromDocumentExport(document);
+            string noteContent = NoteEnmlBuilder.NoteContentFromDocumentExport(document);
 
             CreateOrUpdateNote(
                     accessTokenContainer: this.AccessToken,
                     clippingNotebookGuid: this.ClippingNotebook.Guid,
                     noteTitle: noteTitle.ToString(),
-                    noteBody: noteBody,
+                    noteContent: noteContent,
                     tags: this.TagSet);
         }
 
@@ -204,12 +212,14 @@ namespace k2e
         {
             //const int MAX_QUERY_CHAR_LIMIT = 128; 
             //var bingData = new BingData();
-            var UrlDocumentMap = 
+            var UrlClippingsMap = 
                 new Dictionary<string, Tuple<string, List<ClippingExport> > >();
             var GenericTitleClippingList = new List<ClippingExport>();
 
             string origTitle = document.title;
             string origAuthor = document.author;
+
+            // Separate clippings that belong to an article from a periodical
 
             foreach (ClippingExport c in document.clippings)
             {
@@ -217,13 +227,13 @@ namespace k2e
                 {
                     string url = c.suggestedUrl; //results[0].Url;
                     string newTitle = c.suggestedTitle; //results[0].Title;
-                    if (!UrlDocumentMap.ContainsKey(url))
+                    if (!UrlClippingsMap.ContainsKey(url))
                     {
-                        UrlDocumentMap.Add(url,
+                        UrlClippingsMap.Add(url,
                                 Tuple.Create(newTitle,
                                         new List<ClippingExport>()));
                     }
-                    UrlDocumentMap[url].Item2.Add(c);
+                    UrlClippingsMap[url].Item2.Add(c);
                 }
                 else // keep generic title
                 {
@@ -232,13 +242,38 @@ namespace k2e
                 
             }
 
-            /////////////////////
+            // Export periodial articles by url
 
-            foreach (var kv in UrlDocumentMap)
+            foreach (var kv in UrlClippingsMap)
             {
                 string url = kv.Key;
                 string title = kv.Value.Item1;
-                var clippings = kv.Value.Item2;
+                List<ClippingExport> clippings 
+                        = kv.Value.Item2;
+
+
+                string imgMimeType = "";
+                byte[] imgBytes = 
+                        FaviconFetcher.GetBytes(new Uri(url), out imgMimeType);
+                byte[] imgHash =
+                        new MD5CryptoServiceProvider().ComputeHash(imgBytes);
+
+                var imgData = new Data()
+                {
+                    Size = imgBytes.Length,
+                    BodyHash = imgHash,
+                    Body = imgBytes
+                };
+
+                var imgResource = new Resource()
+                {
+                    Mime = imgMimeType,
+                    Data = imgData
+                };
+
+                string imgHashHex =
+                    BitConverter.ToString(imgHash).Replace("-", "").ToLower();
+                
 
                 var noteTitle = new StringBuilder(title)
                         .Append(" from ")
@@ -247,29 +282,23 @@ namespace k2e
                         .Append(origTitle)
                         .Append(" by ")
                         .Append(origAuthor);
-                var noteBody = new StringBuilder();
 
-                noteBody.Append("<h1>")
-                        .Append(noteTitle.ToString().HtmlEncode())
-                        .Append("</h1>\n");
-                
-                foreach (ClippingExport c in clippings)
-                {
-                    noteBody.Append("<h2>")
-                        .Append(c.type.HtmlEncode())
-                        .Append(" ").Append(c.timeStamp.HtmlEncode())
-                        .Append("</h2>\n");
-                    noteBody.Append("<p>")
-                            .Append(c.content.HtmlEncode())
-                            .Append("</p>\n");
-                }
+                string noteContent =
+                        NoteEnmlBuilder.NoteContentFromPeriodical(
+                                title,
+                                url,
+                                origTitle,
+                                origAuthor, 
+                                clippings,
+                                imgHashHex, imgMimeType);
 
                 CreateOrUpdateNote(
                         accessTokenContainer: this.AccessToken,
                         clippingNotebookGuid: this.ClippingNotebook.Guid,
                         noteTitle: noteTitle.ToString(),
-                        noteBody: noteBody.ToString(),
-                        tags: this.TagSet);
+                        noteContent: noteContent,
+                        tags: this.TagSet,
+                        faviconResource: imgResource);
             }
 
             // Export any leftovers with the original generic title

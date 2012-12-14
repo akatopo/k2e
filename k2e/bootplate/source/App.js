@@ -64,14 +64,15 @@ enyo.kind({
 
 		for (var i = 0; i < docExportArray.length; ++i) {
 			var dEx = docExportArray[i];
-			// FIXME			
-			// if (dEx.title in this.periodicalTitleSet) {
-			// 	dEx.isPeriodical = true;
-			// 	for (var j = 0; j < dEx.clippings.length; ++j) {
-			// 		var cEx = dEx.clippings[j];
-			// 		this.setSuggestedDataToClipping(cEx);
-			// 	}
-			// }
+			// FIXME: uncomment to enable periodical article url and title search.
+			
+			if (dEx.title in this.periodicalTitleSet) {
+				dEx.isPeriodical = true;
+				for (var j = 0; j < dEx.clippings.length; ++j) {
+					var cEx = dEx.clippings[j];
+					this.setSuggestedDataToClipping(cEx);
+				}
+			}
 		}
 
 		this.handleExportEnd()
