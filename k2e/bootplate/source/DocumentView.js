@@ -1,7 +1,10 @@
 enyo.kind({
-    name: "DocumentDisplay",
-    classes: "k2e-document-display",
+    name: "DocumentView",
+
+    classes: "k2e-document-view",
+
     components: [],
+    
     displayDocument: function (doc) {
         var documentDisplay = this;
         function appendClippingToDisplay(doc, i) {
@@ -10,7 +13,7 @@ enyo.kind({
             var timestamp = doc.clippings[i].timeStamp;
             var content = doc.clippings[i].content;
 
-            documentDisplay.createComponent({classes: "k2e-document-display-clip-header", components: [
+            documentDisplay.createComponent({classes: "k2e-document-view-clip-header", components: [
                     {tag: "i", content: type + ", " + loc},
                     {tag: "span", content: " | "},
                     {tag: "i", content: timestamp }
@@ -21,7 +24,7 @@ enyo.kind({
         this.clearDocument();
 
         this.createComponent({tag: "h1", content: doc.title});
-        this.createComponent({classes: "k2e-document-display-subtitle", components: [
+        this.createComponent({classes: "k2e-document-view-subtitle", components: [
                 {tag: "i", content: "by "},
                 {tag: "span", content: doc.author }
                 ]});
@@ -29,13 +32,14 @@ enyo.kind({
         if (doc.clippings.length != 0) {
             appendClippingToDisplay(doc, 0);
             for (var i = 1; i < doc.clippings.length; ++i) {
-                this.createComponent({classes:"k2e-document-display-clip-separator"});
+                this.createComponent({classes:"k2e-document-view-clip-separator"});
                 appendClippingToDisplay(doc, i);
             }
         }
 
         this.render();
     },
+
     clearDocument: function () {
         this.destroyComponents();
     }

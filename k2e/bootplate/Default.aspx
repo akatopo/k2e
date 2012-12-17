@@ -20,7 +20,7 @@
 	</head>
 	<body class="enyo-unselectable">
 		<script>
-		    var app = new App().renderInto(document.body);
+		    var app = new k2e.App().renderInto(document.body);
 		</script>
 	</body>
 </html>

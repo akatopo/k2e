@@ -1,5 +1,5 @@
 enyo.kind({
-	name: "App",
+	name: "k2e.App",
 	kind: "FittableRows",
 	components:[
 		{kind: "onyx.Toolbar", components: [
@@ -8,12 +8,12 @@ enyo.kind({
 			{kind: "onyx.Button", content: "Export", ontap: "prepareDocumentsForExport"}
 		]},
 		{kind: "Panels", name: "fixme_panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
-			{name: "fixme_sidebar", classes: "fixme-sidebar", style: "width: 20%", components:[
-				{fit:true, name: "fixmeSelList", kind: "DocumentSelectorList"}
+			{classes: "k2e-sidebar", style: "width: 20%", components:[
+				{fit:true, name: "document_selector_list", kind: "DocumentSelectorList"}
 			]},
-			{name: "fixme_clip_panel", kind: "FittableRows", fit: true, components: [
-				{name: "fixme_clip_scroller", kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "fixme-clip-scroller k2e-document-display-dark", components: [
-					{name: "fixme_clip_body", kind: "DocumentDisplay", fit: true}//,
+			{kind: "FittableRows", fit: true, components: [
+				{name: "document_scroller", kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "k2e-document-scroller k2e-document-view-dark", components: [
+					{name: "document_view", kind: "DocumentView", fit: true}//,
 					//{kind: "onyx.Button", content: "to top", style:"position: absolute; bottom: 10px; right: 10px;"}
 				]},
 				{kind: "onyx.Toolbar", components: [
@@ -171,9 +171,9 @@ enyo.kind({
 		console.log(docSelector.getIndex());
 		var doc = testDocs.getDocumentByIndex(docSelector.getIndex());
 		console.log(doc);
-		//this.$.fixme_clip_body.setContent(doc.clippings[0].getContent());
-		this.$.fixme_clip_body.displayDocument(doc);
-		this.$.fixme_clip_scroller.scrollToTop();
+		//this.$.document_view.setContent(doc.clippings[0].getContent());
+		this.$.document_view.displayDocument(doc);
+		this.$.document_scroller.scrollToTop();
 
 	},
 	handleExportBegin: function (inSender, inEvent) {
@@ -195,10 +195,10 @@ enyo.kind({
 	reflow: function() {
 		this.inherited(arguments);
 		if (enyo.Panels.isScreenNarrow()) {
-			this.$.fixme_clip_body.setContent("isScreenNarrow");
+			this.$.document_view.setContent("isScreenNarrow");
 		}
 		else {
-			this.$.fixme_clip_body.setContent("notScreenNarrow");
+			this.$.document_view.setContent("notScreenNarrow");
 		}
 	},
 	create: function() {
@@ -259,7 +259,7 @@ enyo.kind({
 
 	            }
 
-	            app.$.fixmeSelList.populate(testDocs);
+	            app.$.document_selector_list.populate(testDocs);
 
 	        }
 	    }
