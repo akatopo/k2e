@@ -20,19 +20,20 @@ namespace k2e
 {
     public partial class _Default : EvernoteWebQuickstart.EvernotePage
     {
-        public string Notebooks { get; set; }
-        public string Clippings{ get; set; }
-        private Notebook ClippingNotebook { get; set;}
-        protected const string clippingNotebookName = "Kindle Clippings";
+        //public string Notebooks { get; set; }
+
+        //public string Clippings{ get; set; }
+
+        //private Notebook ClippingNotebook { get; set; }
+
+        protected const string CLIPPING_NOTEBOOK_NAME = "Kindle Clippings";
+
+        protected readonly static string[] DEFAULT_TAGS = 
+                new string[] { "k2e", "kindle_clippings" };
 
         protected void Page_Load(object sender, EventArgs e)
         {
             bool authSuccess = base.LoadPage();
-            // FIXME
-            if (authSuccess && false)
-            {
- 
-            }
         }
 
         [WebMethod]
@@ -43,10 +44,8 @@ namespace k2e
             
             var exporter = new EvernoteExporter(
                 accessTokenContainer: accessTokenContainer,
-                clippingNotebookName: "Kindle Clippings",
-                tags: new string[] { "k2e", "kindle_clippings" },
-                replaceGenericTitles: true,
-                genericTitles: new string[] { "Instapaper" });
+                clippingNotebookName: CLIPPING_NOTEBOOK_NAME,
+                defaultTags: DEFAULT_TAGS);
 
             exporter.ExportClippings(q);
 

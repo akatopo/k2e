@@ -23,11 +23,7 @@ namespace k2e
 {
     public class EvernoteExporter
     {
-        private bool ReplaceGenericTitles;
-
-        private HashSet<string> TagSet = new HashSet<string>();
-
-        private HashSet<string> GenericTitleSet = null;
+        private HashSet<string> DefaultTagSet = new HashSet<string>();
 
         private Notebook ClippingNotebook;
 
@@ -41,18 +37,11 @@ namespace k2e
         public EvernoteExporter(
                 OAuthKey accessTokenContainer,
                 string clippingNotebookName,
-                IEnumerable<string> tags,
-                bool replaceGenericTitles = false,
-                IEnumerable<string> genericTitles = null)
+                IEnumerable<string> defaultTags)
         {
             this.AccessToken = accessTokenContainer;
             this.ClippingNotebookName = clippingNotebookName;
-            this.TagSet = new HashSet<string>(tags);
-            this.ReplaceGenericTitles = replaceGenericTitles;
-            if (replaceGenericTitles && genericTitles != null)
-            {
-                this.GenericTitleSet = new HashSet<string>(genericTitles);
-            }
+            this.DefaultTagSet = new HashSet<string>(defaultTags);
             this.ClippingNotebook = CreateOrGetNotebook(accessTokenContainer, clippingNotebookName);
         }
 
@@ -150,19 +139,19 @@ namespace k2e
             }
         }
 
-        public bool AddTag(string tag)
+        public bool AddDefaultTag(string tag)
         {
-            return TagSet.Add(tag);
+            return DefaultTagSet.Add(tag);
         }
 
-        public bool RemoveTag(string tag)
+        public bool RemoveDefaultTag(string tag)
         {
-            return TagSet.Remove(tag);
+            return DefaultTagSet.Remove(tag);
         }
 
         public string[] GetTagArray()
         {
-            return TagSet.ToArray();
+            return DefaultTagSet.ToArray();
         }
 
         public Notebook GetClippingNotebook()
@@ -178,10 +167,6 @@ namespace k2e
                 // TODO:
                 // maybe do hash comparisons between notes if possible
 
-
-                //if (this.ReplaceGenericTitles &&
-                //        this.GenericTitleSet != null &&
-                //        this.GenericTitleSet.Contains(d.title))
                 if (d.isPeriodical)
                 {
                     ExportPeriodicalDocument(d);
@@ -199,13 +184,15 @@ namespace k2e
                     .Append(" by ")
                     .Append(document.author);
             string noteContent = NoteEnmlBuilder.NoteContentFromDocumentExport(document);
+            var tags = new List<string>(this.DefaultTagSet);
+            tags.Add(document.author.Replace(" ", "_"));
 
             CreateOrUpdateNote(
                     accessTokenContainer: this.AccessToken,
                     clippingNotebookGuid: this.ClippingNotebook.Guid,
                     noteTitle: noteTitle.ToString(),
                     noteContent: noteContent,
-                    tags: this.TagSet);
+                    tags: tags);
         }
 
         public void ExportPeriodicalDocument(DocumentExport document)
@@ -216,8 +203,8 @@ namespace k2e
                 new Dictionary<string, Tuple<string, List<ClippingExport> > >();
             var GenericTitleClippingList = new List<ClippingExport>();
 
-            string origTitle = document.title;
-            string origAuthor = document.author;
+            string periodicalTitle = document.title;
+            string periodicalAuthor = document.author;
 
             // Separate clippings that belong to an article from a periodical
 
@@ -279,25 +266,28 @@ namespace k2e
                         .Append(" from ")
                         .Append(url)
                         .Append(" originally in ")
-                        .Append(origTitle)
+                        .Append(periodicalTitle)
                         .Append(" by ")
-                        .Append(origAuthor);
+                        .Append(periodicalAuthor);
 
                 string noteContent =
                         NoteEnmlBuilder.NoteContentFromPeriodical(
                                 title,
                                 url,
-                                origTitle,
-                                origAuthor, 
+                                periodicalTitle,
+                                periodicalAuthor, 
                                 clippings,
                                 imgHashHex, imgMimeType);
+
+                var tags = new List<string>(this.DefaultTagSet);
+                tags.Add(periodicalTitle.Replace(" ", "_"));
 
                 CreateOrUpdateNote(
                         accessTokenContainer: this.AccessToken,
                         clippingNotebookGuid: this.ClippingNotebook.Guid,
                         noteTitle: noteTitle.ToString(),
                         noteContent: noteContent,
-                        tags: this.TagSet,
+                        tags: tags,
                         faviconResource: imgResource);
             }
 
