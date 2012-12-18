@@ -8,5 +8,6 @@ enyo.depends(
 	"DocumentSelectorList.js",
 	"Documents.js",
     "DocumentView.js",
+    "SettingsPanel.js",
 	"assert.js"
 );

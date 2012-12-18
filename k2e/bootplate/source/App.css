@@ -127,3 +127,22 @@
 }
 
 /***********************************************************************************************/
+/* Settings panel */
+
+.k2e-settings-panel {
+	width: 400px;
+}
+
+.k2e-settings-panel > * {
+	padding: 10px;
+	min-height: 30px;
+	line-height: 30px;
+}
+
+.k2e-settings-item {
+	padding: 8px;
+}
+
+.k2e-settings-item-label-disabled {
+	color: gray;
+}

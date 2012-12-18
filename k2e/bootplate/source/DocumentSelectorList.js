@@ -59,7 +59,7 @@ enyo.kind({
 		this.inherited(arguments);
 		this.items = [];
 	}
-})
+});
 
 enyo.kind({
 	name: "DocumentSelectorItem",
@@ -86,10 +86,10 @@ enyo.kind({
 	setTitle: function (titleString) {
 		this.$.label.setContent(titleString);
 	},
-	getTitle: function() {
+	getTitle: function () {
 		return this.$.label.getContent();
 	},
-	setMultiSelected: function(bool) {
+	setMultiSelected: function (bool) {
 		if (bool === true) {
 			multiSelected = true;
 			this.$.checkbox.setChecked(false);
@@ -102,4 +102,4 @@ enyo.kind({
 		}
 	}
 
-})
+});

@@ -1,36 +1,48 @@
 enyo.kind({
 	name: "k2e.App",
+
 	kind: "FittableRows",
+
 	components:[
 		{kind: "onyx.Toolbar", components: [
 			{content: "k2e toolbar"},
 			{fit: true},
 			{kind: "onyx.Button", content: "Export", ontap: "prepareDocumentsForExport"}
 		]},
-		{kind: "Panels", name: "fixme_panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
-			{classes: "k2e-sidebar", style: "width: 20%", components:[
-				{fit:true, name: "document_selector_list", kind: "DocumentSelectorList"}
-			]},
-			{kind: "FittableRows", fit: true, components: [
-				{name: "document_scroller", kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "k2e-document-scroller k2e-document-view-dark", components: [
-					{name: "document_view", kind: "DocumentView", fit: true}//,
-					//{kind: "onyx.Button", content: "to top", style:"position: absolute; bottom: 10px; right: 10px;"}
+		{kind: "FittableColumns", fit: true, components: [
+			{kind: "enyo.Scroller", components: [
+				{name: "settings_drawer", orient: "h", kind: "onyx.Drawer", open: true/*FIXME */, components: [					
+						{kind: "SettingsPanel", fit: true}
 				]},
-				{kind: "onyx.Toolbar", components: [
-					{content: "clip toolbar"}
+			]},
+			{kind: "Panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
+				{classes: "k2e-sidebar", style: "width: 20%", components:[
+					{fit:true, name: "document_selector_list", kind: "DocumentSelectorList"}
+				]},
+				{kind: "FittableRows", fit: true, components: [
+					{name: "document_scroller", kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "k2e-document-scroller k2e-document-view-dark", components: [
+						{name: "document_view", kind: "DocumentView", fit: true}//,
+						//{kind: "onyx.Button", content: "to top", style:"position: absolute; bottom: 10px; right: 10px;"}
+					]},
+					{kind: "onyx.Toolbar", components: [
+						{content: "clip toolbar"}
+					]}
 				]}
 			]}
 		]}
 	],
+
 	published: {
 		asyncSem: undefined,
 		periodicalTitleSet: { Instapaper: true }, // FIXME: initialize from local storage
 												  // and/or set from options
 		docsExport: undefined
 	},
+
 	handlers: {
 		onDocumentSelected: "handleDocumentSelected"
 	},
+
 	export: function (inSender, inEvent) {
 		this.log("Export proccessing done");
 		

@@ -14,4 +14,4 @@ enyo.kind({
             this.func();
         }
     }
-})
+});

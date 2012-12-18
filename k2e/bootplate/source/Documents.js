@@ -98,4 +98,4 @@ enyo.kind({
 
 		return documentsExport;
 	}
-})
+});
