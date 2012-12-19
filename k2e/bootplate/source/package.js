@@ -9,5 +9,6 @@ enyo.depends(
 	"Documents.js",
     "DocumentView.js",
     "SettingsPanel.js",
+    "Settings.js",
 	"assert.js"
 );

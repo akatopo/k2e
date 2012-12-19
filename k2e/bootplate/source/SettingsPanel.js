@@ -10,32 +10,41 @@ enyo.kind({
     components: [
         {kind: "onyx.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "Appearance"},
-            {name: "themeName", kind: "SettingsItem", defaultInputKind: "SettingsThemeRadioGroup", label: "Theme"}
+            {name: "themeName", kind: "SettingsValueItem", inputComponent: 
+                    { kind: "SettingsThemeRadioGroup" },
+            label: "Theme"}
 
         ]},
         {kind: "onyx.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "Export"},
-            {name: "ignoredTitleList", kind: "SettingsItem", defaultInputKind: "SettingsTextInput", label: "Titles to ignore"},
+            {name: "ignoredTitleList", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Titles to Ignore"},
         ]},
         {kind: "onyx.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "Article extraction"},
-            {name: "articleExtraction", kind: "SettingsItem", defaultInputKind: "SettingsToggleButton", label: "Periodical article extraction"/*, onSettingChanged: "handleExtractionSettingChanged"*/},
-            {name: "periodicalTitleList", kind: "SettingsItem", defaultInputKind: "SettingsTextInput", label: "Periodical tiles", disabled: localStorage["articleExtraction"]?!JSON.parse(localStorage["articleExtraction"]):true},
-            {name: "googleSearchApiKey", kind: "SettingsItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Key", disabled: localStorage["articleExtraction"]?!JSON.parse(localStorage["articleExtraction"]):true},
-            {name: "googleSearchApiCx", kind: "SettingsItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Cx", disabled: localStorage["articleExtraction"]?!JSON.parse(localStorage["articleExtraction"]):true},
-            {name: "googleSearchApiLoc", kind: "SettingsItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Url", disabled: localStorage["articleExtraction"]?!JSON.parse(localStorage["articleExtraction"]):true}
+            {name: "articleExtraction", kind: "SettingsValueItem", defaultInputKind: "SettingsToggleButton", label: "Periodical Article Extraction",
+                    onSettingChanged: "handleExtractionSettingChanged"},
+            {name: "periodicalTitleList", kind: "SettingsValueItem", inputComponent: 
+                    {kind: "SettingsTextInput"},
+                    label: "Periodical tiles",
+                    disabled: localStorage["articleExtraction"]?
+                            !JSON.parse(localStorage["articleExtraction"]):!JSON.parse(new DefaultSettings().getArticleExtraction())},
+            {name: "googleSearchApiKey", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Key",
+                    disabled: localStorage["articleExtraction"]?
+                            !JSON.parse(localStorage["articleExtraction"]):!JSON.parse(new DefaultSettings().getArticleExtraction())},
+            {name: "googleSearchApiCx", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Cx",
+                    disabled: localStorage["articleExtraction"]?
+                            !JSON.parse(localStorage["articleExtraction"]):!JSON.parse(new DefaultSettings().getArticleExtraction())},
+            {name: "googleSearchApiLoc", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Url",
+                    disabled: localStorage["articleExtraction"]?
+                            !JSON.parse(localStorage["articleExtraction"]):!JSON.parse(new DefaultSettings().getArticleExtraction())}
+        ]},
+        {kind: "onyx.Groupbox", components: [
+            {kind: "onyx.GroupboxHeader", content: "Local Storage"},
+            {name: "clearSettings", kind: "SettingsActionItem", label: "Restore defaults", buttonLabel: "Restore" },
+            {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear" }
         ]}
     ],
 
-    defaultSettings: {
-        themeName: "Dark",
-        ignoredTitleList: "",
-        articleExtraction: "false",
-        periodicalTitleList: "",
-        googleSearchApiKey: "",
-        googleSearchApiCx: "",
-        googleSearchApiLoc: ""
-    },
 
     handleSettingChanged: function (inSender, inEvent) {
         var settingsItem = inEvent.originator;
@@ -47,10 +56,16 @@ enyo.kind({
     },
 
     handleExtractionSettingChanged: function (inSender, inEvent) {
-        this.$.periodicalTitleList.setDisabled(!inEvent.originator.getValue());
-        this.$.googleSearchApiKey.setDisabled(!inEvent.originator.getValue());
-        this.$.googleSearchApiCx.setDisabled(!inEvent.originator.getValue());
-        this.$.googleSearchApiLoc.setDisabled(!inEvent.originator.getValue());
+        if (this.$.periodicalTitleList &&
+                this.$.googleSearchApiKey &&
+                this.$.googleSearchApiCx &&
+                this.$.googleSearchApiLoc)
+        {
+            this.$.periodicalTitleList.setDisabled(!inEvent.originator.getValue());
+            this.$.googleSearchApiKey.setDisabled(!inEvent.originator.getValue());
+            this.$.googleSearchApiCx.setDisabled(!inEvent.originator.getValue());
+            this.$.googleSearchApiLoc.setDisabled(!inEvent.originator.getValue());
+        }
     },
 
     create: function () {
@@ -66,11 +81,63 @@ enyo.kind({
 
     classes: "onyx-toolbar-inline k2e-settings-item",
 
-
     published: {
-        value: "",
         label: "",
         disabled: false
+    },
+
+    components: [
+        {name: "label", kind: "Control"}
+    ],
+
+    labelChanged: function() {
+        this.$.label.setContent(this.label);
+    },
+
+    disabledChanged: function () {
+        this.$.label.addRemoveClass("k2e-settings-item-label-disabled", this.disabled);
+        //this.$.input.setDisabled(this.disabled);
+    },
+
+    create: function () {
+        this.inherited(arguments);
+    },
+
+    rendered: function () {
+        this.inherited(arguments);
+        this.labelChanged();
+        this.disabledChanged();
+    }
+});
+
+enyo.kind({
+    name: "SettingsActionItem",
+
+    kind: "SettingsItem",
+
+    published: {
+        buttonLabel: ""
+    },
+
+    create: function() {
+        this.inherited(arguments);
+        this.createComponent({fit: true});
+        this.createComponent({kind:"onyx.Button", classes: "onyx-red k2e-settings-action-item-button", content: this.buttonLabel});
+    },
+
+    rendered: function () {
+        this.inherited(arguments);
+        this.resized(); // hack to correct layout
+    }
+});
+
+enyo.kind({
+    name: "SettingsValueItem",
+
+    kind: "SettingsItem",
+
+    published: {
+        value: ""
     },
 
     events: {
@@ -81,27 +148,21 @@ enyo.kind({
         onInputValueChanged: "handleInputValueChanged"
     },
 
-    components: [
-        {name: "label", kind: "Control"},
-        {fit: true},
-    ],
-
     defaultInputKind: "onyx.Checkbox",
 
-    labelChanged: function() {
-        this.$.label.setContent(this.label);
-    },
+    inputComponent: null,
 
     getValue: function() {
         return this.$.input.getValue();
     },
 
     valueChanged: function () {
+        this.log(this);
         this.$.input.setValue(this.value);
     },
 
     disabledChanged: function () {
-        this.$.label.addRemoveClass("k2e-settings-item-label-disabled", this.disabled);
+        this.inherited(arguments);
         this.$.input.setDisabled(this.disabled);
     },
 
@@ -112,15 +173,32 @@ enyo.kind({
 
     create: function () {
         this.inherited(arguments);
-        //this.createComponent({fit: true});
-        this.createComponent({name: "input", kind: this.defaultInputKind});
-        this.labelChanged();
+
+        this.createComponent({fit: true});
+        if (this.inputComponent) {
+
+            this.inputComponent.name = "input";
+            this.createComponent(this.inputComponent);
+        }
+        else {
+            this.createComponent({name: "input", kind: this.defaultInputKind});    
+        }
+        
         if (localStorage[this.getName()]) {
             this.log(JSON.parse(localStorage[this.getName()]));
             this.value = JSON.parse(localStorage[this.getName()]);
-            this.valueChanged();
         }
-        this.disabledChanged();
+        else {
+            var unparsed = new DefaultSettings()[this.getName()];
+            this.value = JSON.parse(unparsed);
+        }
+
+        this.valueChanged();
+    },
+
+    rendered: function () {
+        this.inherited(arguments);
+        this.resized(); // hack to correct layout
     }
 });
 
@@ -190,7 +268,7 @@ enyo.kind({
     kind: "Control",
     
     published: {
-        value: "Dark",
+        value: "",
         disabled: "false"
     },
 
@@ -199,13 +277,12 @@ enyo.kind({
     },
 
     components: [
-        {name: "group", kind: "onyx.RadioGroup", onActivate: "handleActivate", components: [
-            {name: "dark", content: "Dark", active: true},
+        {name: "group", kind: "onyx.RadioGroup", ontap: "handleActivate", components: [
+            {name: "dark", content: "Dark"},
             {name: "light", content: "Light"}
         ]}
     ],
     
-    // Two events will be fired during initialization
     handleActivate: function (inSender, inEvent) {
         if (inEvent.originator.getActive()) {
             this.log(inEvent.originator.getContent());
@@ -246,6 +323,4 @@ enyo.kind({
              comps[i].setDisabled(this.disabled);        
         }
     }
-
-
 });
