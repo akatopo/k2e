@@ -1,6 +1,8 @@
 enyo.kind({
     name: "SettingsPanel",
     
+    kind: "enyo.Control",
+
     classes: "k2e-settings-panel",
 
     handlers: {
@@ -24,19 +26,14 @@ enyo.kind({
             {name: "articleExtraction", kind: "SettingsValueItem", defaultInputKind: "SettingsToggleButton", label: "Periodical Article Extraction",
                     onSettingChanged: "handleExtractionSettingChanged"},
             {name: "periodicalTitleList", kind: "SettingsValueItem", inputComponent: 
-                    {kind: "SettingsTextInput"},
-                    label: "Periodical tiles",
-                    disabled: localStorage["articleExtraction"]?
-                            !JSON.parse(localStorage["articleExtraction"]):!JSON.parse(new DefaultSettings().getArticleExtraction())},
+                    {kind: "SettingsTextInput"}, label: "Periodical tiles",
+                    disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
             {name: "googleSearchApiKey", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Key",
-                    disabled: localStorage["articleExtraction"]?
-                            !JSON.parse(localStorage["articleExtraction"]):!JSON.parse(new DefaultSettings().getArticleExtraction())},
+                    disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
             {name: "googleSearchApiCx", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Cx",
-                    disabled: localStorage["articleExtraction"]?
-                            !JSON.parse(localStorage["articleExtraction"]):!JSON.parse(new DefaultSettings().getArticleExtraction())},
+                    disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
             {name: "googleSearchApiLoc", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Url",
-                    disabled: localStorage["articleExtraction"]?
-                            !JSON.parse(localStorage["articleExtraction"]):!JSON.parse(new DefaultSettings().getArticleExtraction())}
+                    disabled: !SettingsSingletonInstance().getSetting("articleExtraction")}
         ]},
         {kind: "onyx.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "Local Storage"},
@@ -96,7 +93,6 @@ enyo.kind({
 
     disabledChanged: function () {
         this.$.label.addRemoveClass("k2e-settings-item-label-disabled", this.disabled);
-        //this.$.input.setDisabled(this.disabled);
     },
 
     create: function () {
@@ -122,7 +118,7 @@ enyo.kind({
     create: function() {
         this.inherited(arguments);
         this.createComponent({fit: true});
-        this.createComponent({kind:"onyx.Button", classes: "onyx-red k2e-settings-action-item-button", content: this.buttonLabel});
+        this.createComponent({kind:"onyx.Button", classes: "k2e-settings-action-item-button", content: this.buttonLabel});
     },
 
     rendered: function () {
@@ -184,15 +180,7 @@ enyo.kind({
             this.createComponent({name: "input", kind: this.defaultInputKind});    
         }
         
-        if (localStorage[this.getName()]) {
-            this.log(JSON.parse(localStorage[this.getName()]));
-            this.value = JSON.parse(localStorage[this.getName()]);
-        }
-        else {
-            var unparsed = new DefaultSettings()[this.getName()];
-            this.value = JSON.parse(unparsed);
-        }
-
+        this.value = SettingsSingletonInstance().getSetting(this.getName());
         this.valueChanged();
     },
 
@@ -205,15 +193,16 @@ enyo.kind({
 enyo.kind({
     name: "SettingsTextInput",
 
-    kind: "onyx.InputDecorator",
+    //kind: "onyx.InputDecorator",
 
-    style: "display: inline-block; margin: 0; width: 140px;",
+    //classes: "k2e-settings-text-input",
 
-    alwaysLooksFocused: true,
+    //style: "display: inline-block; width: 140px;",
 
     published: {
         value: "",
-        disabled: "false"
+        disabled: "false",
+        placeholder: ""
     },
 
     events: {
@@ -221,11 +210,14 @@ enyo.kind({
     },
 
     handlers: {
+        onchange: "handleKeyUp",
         onkeyup: "handleKeyUp"
     },
 
     components: [
-        {name: "text", kind: "onyx.Input", placeholder: "Enter text here"}
+        {kind: "onyx.InputDecorator", style: "width: 140px", alwaysLooksFocused: true, components: [
+            {name: "text", kind: "onyx.Input", placeholder: this.placeholder, style: "width: 100%"}
+        ]}
     ],
 
     valueChanged: function () {
@@ -234,6 +226,10 @@ enyo.kind({
 
     disabledChanged: function () {
         this.$.text.setDisabled(this.disabled);
+    },
+
+    placeholderChanged: function () {
+        this.$.text.setPlaceholder(this.placeholder);
     },
 
     getValue: function () {

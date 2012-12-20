@@ -129,9 +129,9 @@
 /***********************************************************************************************/
 /* Settings panel */
 
-.k2e-settings-panel {
+/*.k2e-settings-panel {
 	width: 400px;
-}
+}*/
 
 .k2e-settings-panel > * {
 	padding: 10px;
@@ -145,4 +145,21 @@
 
 .k2e-settings-item-label-disabled {
 	color: gray;
+}
+
+.k2e-settings-text-input {
+	display: inline-block;
+	width: 140px;
+}
+
+.k2e-settings-action-item-button {
+	width: 100px;
+}
+
+.pullout {
+	position: absolute;
+	top: 57px; /* main toolbar height */
+	left: 0;
+	bottom: 0;
+	background: #D8D8D8;
 }

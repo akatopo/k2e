@@ -5,12 +5,12 @@ enyo.kind({
     
     published: {
         themeName: '"Dark"',
-        ignoredTitleList: '"works"',
+        ignoredTitleList: '""',
         articleExtraction: "false",
-        periodicalTitleList: '"like a charm"',
+        periodicalTitleList: '""',
         googleSearchApiKey: '""',
         googleSearchApiCx: '""',
-        googleSearchApiLoc: '""'
+        googleSearchApiLoc: '"https://www.googleapis.com/customsearch/v1?"'
     }
 });
 
@@ -27,12 +27,12 @@ function SettingsSingleton() {
                 JSON.parse(localStorage[settingName]):
                 JSON.parse(this.defaultSettings[settingName]);
         return settingValue;
-    };
+    }
 
     this.getDefaultSetting = function (settingName) {
         var settingValue = JSON.parse(this.defaultSettings[settingName]);
         return settingValue;
-    };
+    }
 }
 
 function SettingsSingletonInstance() {

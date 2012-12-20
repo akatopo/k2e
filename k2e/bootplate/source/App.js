@@ -9,12 +9,20 @@ enyo.kind({
 			{fit: true},
 			{kind: "onyx.Button", content: "Export", ontap: "prepareDocumentsForExport"}
 		]},
+		{kind: "Slideable", classes: "pullout", min:-100, max: 0, value: -100, unit: "%", style: "z-index:1; width: 480px", components: [
+			{kind: "enyo.Scroller", fit: true, style: "height: 100%", components: [	
+				{kind: "SettingsPanel"}
+			]}
+		]},
 		{kind: "FittableColumns", fit: true, components: [
-			{kind: "enyo.Scroller", components: [
-				{name: "settings_drawer", orient: "h", kind: "onyx.Drawer", open: true/*FIXME */, components: [					
-						{kind: "SettingsPanel", fit: true}
-				]},
-			]},
+			// {kind: "enyo.Scroller", components: [
+				// {name: "settings_drawer", orient: "h", kind: "onyx.Drawer", open: true/*FIXME */, style: "width: 480px", components: [					
+				// 	{kind: "enyo.Scroller", fit: true,  components: [	
+						// {kind: "SettingsPanel"}
+				// 	]}
+				// ]},
+			// ]},
+
 			{kind: "Panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
 				{classes: "k2e-sidebar", style: "width: 20%", components:[
 					{fit:true, name: "document_selector_list", kind: "DocumentSelectorList"}

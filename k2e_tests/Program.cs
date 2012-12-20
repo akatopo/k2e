@@ -42,7 +42,7 @@ namespace k2e_tests
                     timeStamp = "November 13, 2011, 06:56 PM",
                     type = "Highlight"},
             new ClippingExport() { 
-                    content = "Some morerer content",
+                    content = "Some morerericious content",
                     loc = "Loc. 471-43",
                     suggestedTitle = "Article Title",
                     suggestedUrl = "http://www.example.com/file/path.html",
@@ -60,7 +60,8 @@ namespace k2e_tests
         static string test_orig_author = "Orig Author";
 
         static void Main(string[] args)
-        {// Real applications authenticate with Evernote using OAuth, but for the
+        {
+            // Real applications authenticate with Evernote using OAuth, but for the
             // purpose of exploring the API, you can get a developer token that allows
             // you to access your own Evernote account. To get a developer token, visit 
             // https://sandbox.evernote.com/api/DeveloperToken.action
@@ -120,7 +121,7 @@ namespace k2e_tests
 
             // To create a new note, simply create a new Note object and fill in 
             // attributes such as the note's title.
-            Note note = new Note();
+            var note = new Note();
             note.Title = "Test note from EDAMTest.cs";
 
             string mimeType = "";
@@ -164,14 +165,45 @@ namespace k2e_tests
                             hashHex,
                             mimeType) +
                     "</en-note>";
-                    
+
+
+            var noteAttributes = new NoteAttributes();
+            noteAttributes.Author = test_orig_author;
+            noteAttributes.SourceApplication = "k2e";
+            noteAttributes.SourceURL = test_article_url;
+
+            note.Attributes = noteAttributes;
+
+            ///////////
+            NoteFilter filter = new NoteFilter();
+
+            filter.NotebookGuid = noteStore.getDefaultNotebook(authToken).Guid;
+            filter.Words = "intitle:" + "\"" + note.Title + "\"";
+            NoteList noteList = noteStore.findNotes(authToken, filter, 0, 1);
+            List<Note> notes = (List<Note>)noteList.Notes;
+
+            Note createdNote = null;
+            if (notes.Count == 1) // update note
+            {
+                Console.WriteLine("Updating note");
+                var updatedNote = notes[0];
+                updatedNote.Content = note.Content;
+
+                createdNote = noteStore.updateNote(authToken, updatedNote);
+            }
+            else // create note
+            {
+                Console.WriteLine("Creating note");
+                createdNote = noteStore.createNote(authToken, note);
+            }
+            ///////////
 
             // Finally, send the new note to Evernote using the createNote method
             // The new Note object that is returned will contain server-generated
             // attributes such as the new note's unique GUID.
-            Note createdNote = noteStore.createNote(authToken, note);
+            
 
-            Console.WriteLine("Successfully created new note with GUID: " + createdNote.Guid);
+            Console.WriteLine("Successfully created/updated note with GUID: " + createdNote.Guid);
             Console.Read();
         }
     }
