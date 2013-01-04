@@ -32,14 +32,14 @@ enyo.kind({
 		}
 	},
 	handleSetupItem: function (inSender, inEvent) {
-	    var index = inEvent.index;
-	    var item = inEvent.item;
-	    var docMap = this.documentsRef.getDocMap();
-	    var key = this.documentsRef.getKeyArray()[index];
-	    item.$.documentSelectorItem.setTitle(docMap[key].getTitle());
-	    item.$.documentSelectorItem.setIndex(index);
-	    this.items.push(item.$.documentSelectorItem);
-	    return true;
+		var index = inEvent.index;
+		var item = inEvent.item;
+		var docMap = this.documentsRef.getDocMap();
+		var key = this.documentsRef.getKeyArray()[index];
+		item.$.documentSelectorItem.setTitle(docMap[key].getTitle());
+		item.$.documentSelectorItem.setIndex(index);
+		this.items.push(item.$.documentSelectorItem);
+		return true;
 	},
 	enableMultiSelection: function() {
 		for(var i = 0; i < this.items.length; ++i) {
@@ -82,6 +82,7 @@ enyo.kind({
 	setSelected: function (bool) {
 		this.selected = bool;
 		this.addRemoveClass("onyx-selected", this.selected);
+		this.addRemoveClass("k2e-document-selector-item-selected", this.selected);
 	},
 	setTitle: function (titleString) {
 		this.$.label.setContent(titleString);
@@ -93,7 +94,7 @@ enyo.kind({
 		if (bool === true) {
 			multiSelected = true;
 			this.$.checkbox.setChecked(false);
-			this.$.checkbox.show();		
+			this.$.checkbox.show();
 		}
 		else if (bool === false) {
 			multiSelected = false;

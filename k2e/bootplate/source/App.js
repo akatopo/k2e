@@ -1,31 +1,38 @@
-enyo.kind({
+enyo.kind(
+(function () {
+
+// Private data
+
+var _arrayToSet = function (array) {
+	var set = {};
+	for (var i in array) {
+		set[array[i]] = true;
+	}
+
+	return set;
+};
+
+var _exportPreparationSem;
+var _docsExport;
+
+// enyo kind definition
+
+return {
 	name: "k2e.App",
 
 	kind: "FittableRows",
 
 	components:[
-		{kind: "onyx.Toolbar", components: [
-			{content: "k2e toolbar"},
-			{fit: true},
-			{kind: "onyx.Button", content: "Export", ontap: "prepareDocumentsForExport"}
+		{kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
+			{kind: "onyx.Button", content: "Settings", ontap: "toggleSettings"},
+			{content: "k2e toolbar", fit: true, style: "text-align: center;"},
+			{kind: "onyx.Button", content: "Export", ontap: "prepareDocumentsAndExport"}
 		]},
-		{kind: "Slideable", classes: "pullout", min:-100, max: 0, value: -100, unit: "%", style: "z-index:1; width: 480px", components: [
-			{kind: "enyo.Scroller", fit: true, style: "height: 100%", components: [	
-				{kind: "SettingsPanel"}
-			]}
-		]},
+		{kind: "SettingsSlideable", name: "settings"},
 		{kind: "FittableColumns", fit: true, components: [
-			// {kind: "enyo.Scroller", components: [
-				// {name: "settings_drawer", orient: "h", kind: "onyx.Drawer", open: true/*FIXME */, style: "width: 480px", components: [					
-				// 	{kind: "enyo.Scroller", fit: true,  components: [	
-						// {kind: "SettingsPanel"}
-				// 	]}
-				// ]},
-			// ]},
-
 			{kind: "Panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
 				{classes: "k2e-sidebar", style: "width: 20%", components:[
-					{fit:true, name: "document_selector_list", kind: "DocumentSelectorList"}
+					{fit: true, name: "document_selector_list", kind: "DocumentSelectorList"}
 				]},
 				{kind: "FittableRows", fit: true, components: [
 					{name: "document_scroller", kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "k2e-document-scroller k2e-document-view-dark", components: [
@@ -41,68 +48,91 @@ enyo.kind({
 	],
 
 	published: {
-		asyncSem: undefined,
-		periodicalTitleSet: { Instapaper: true }, // FIXME: initialize from local storage
-												  // and/or set from options
-		docsExport: undefined
+		periodicalTitleSet: undefined,
+		ignoredTitleSet: undefined
 	},
 
 	handlers: {
 		onDocumentSelected: "handleDocumentSelected"
 	},
 
-	export: function (inSender, inEvent) {
+	exportDocuments: function (inSender, inEvent) {
 		this.log("Export proccessing done");
 		
 		var loc = location.protocol + '//' + location.host + location.pathname;
 
 		console.log(loc);
+		console.log(_docsExport);
+
+		return; // comment out to enable exporting
 
 		var ajax = new enyo.Ajax({
 			url: loc + "/Export",
 			contentType: "application/json; charset=utf-8",
 			method: "POST",
-			postBody: '{"q":' + JSON.stringify(this.docsExport, null, 0) + '}'
+			postBody: '{"q":' + JSON.stringify(_docsExport, null, 0) + '}'
 		}).go();
 
 		ajax.response(this, "processExportResponse");
 		ajax.error(this, "processExportError");
 	},
+
 	processExportResponse: function(inSender, inResponse) {
 		// do something with it
 		alert(JSON.stringify(inResponse, null, 2));
 	},
+
 	processExportError: function(inSender, inResponse) {
 		this.error("Error in exporting");
 	},
-	prepareDocumentsForExport: function () {
+
+	prepareDocumentsAndExport: function () {
 		this.handleExportBegin();
 
+		var settings = SettingsSingletonInstance();
+
+		var ignoredTitleSet = {};
+		var ignoredTitleList = settings.getSetting("ignoredTitleList");
+		if (ignoredTitleList.length > 0) {
+			ignoredTitleSet = _arrayToSet(ignoredTitleList.split(","));
+		}
+
 		var docs = testDocs; // FIXME
-		this.docsExport = testDocs.exportObject();
-		var docExportArray = this.docsExport.documents;
+		_docsExport = testDocs.exportObject(ignoredTitleSet);
+		var docExportArray = _docsExport.documents;
+		
+
+		var periodicalTitleSet = {};
+		var periodicalTitleList = settings.getSetting("periodicalTitleList");
+		if (periodicalTitleList.length > 0) {
+			periodicalTitleSet = _arrayToSet(periodicalTitleList.split(","));
+		}
 
 		for (var i = 0; i < docExportArray.length; ++i) {
 			var dEx = docExportArray[i];
-			// FIXME: uncomment to enable periodical article url and title search.
-			
-			if (dEx.title in this.periodicalTitleSet) {
-				dEx.isPeriodical = true;
-				for (var j = 0; j < dEx.clippings.length; ++j) {
-					var cEx = dEx.clippings[j];
-					this.setSuggestedDataToClipping(cEx);
+
+			// comment out to enable periodical article url and title search.
+			if (JSON.parse(settings.getSetting("articleExtraction")) === true) {
+				this.log("Tagging documents as periodicals");
+				if (dEx.title in periodicalTitleSet) {
+					dEx.isPeriodical = true;
+					for (var j = 0; j < dEx.clippings.length; ++j) {
+						var cEx = dEx.clippings[j];
+						this.setSuggestedDataToClipping(cEx);
+					}
 				}
 			}
 		}
 
-		this.handleExportEnd()
+		this.handleExportEnd();
 
 	},
+
 	setSuggestedDataToClipping: function (clippingExport, makeQuotedFlag, retryFlag) {
 		var quoted = (makeQuotedFlag === undefined)?true:makeQuotedFlag;
 		var retry = (retryFlag === undefined)?true:retryFlag;
 
-		var loc = "https://www.googleapis.com/customsearch/v1?"
+		var loc = "https://www.googleapis.com/customsearch/v1?";
 		var key = "AIzaSyCOmQoeVtIKV5xyAVIe3BnFFejQgHEjv0I"; // FIXME: init from local storage
 		var cx = "010892405042999130320:lrtm0dyni30";        // and/or options
 		//q =  '"' + q + '"';
@@ -112,13 +142,13 @@ enyo.kind({
 		var s = "";
 		
 		if (clippingExport.content.length > MAX_QUERY_LENGTH) {
-			s = clippingExport.content.substring(0, MAX_QUERY_LENGTH)
+			s = clippingExport.content.substring(0, MAX_QUERY_LENGTH);
 		}
 		else {
 			s = clippingExport.content;
 		}
 
-		var q = ""
+		var q = "";
 		var index = s.lastIndexOf(" ");
 		if (index != -1) {
 			q = s.substring(0, index);
@@ -142,38 +172,39 @@ enyo.kind({
 			q: q
 		});
 
-		var originator = this;
+		var self = this;
 		var processQueryResponse = (function (inSender, inResponse) {
 			var cEx = clippingExport;
 			if (inResponse.items && inResponse.items.length) {
 				cEx.suggestedTitle = inResponse.items[0].title;
 				cEx.suggestedUrl = inResponse.items[0].link;
-				originator.log("Got title: " + inResponse.items[0].title);
-				originator.handleQueryEnd();
+				self.log("Got title: " + inResponse.items[0].title);
+				self.handleQueryEnd();
 			}
 			else {
 				//send one additional query without quotes
-				originator.handleQueryEnd();
+				self.handleQueryEnd();
 				if (retry) {
-					originator.setSuggestedDataToClipping(cEx, false, false);
+					self.setSuggestedDataToClipping(cEx, false, false);
 				}
 			}
 		});
 		ajax.response(processQueryResponse);
-		// 	var processQueryErrorTmp = (function (inSender, inResponse) {
-		// 	var inResponse = {  }
+
+		// var processQueryErrorTmp = (function (inSender, inResponse) {
+		// 	inResponse = {  };
 		// 	var cEx = clippingExport;
 		// 	if (inResponse.items && inResponse.items.length) {
 		// 		cEx.suggestedTitle = inResponse.items[0].title;
 		// 		cEx.suggestedUrl = inResponse.items[0].link;
-		// 		originator.log("Got title: " + inResponse.items[0].title);
-		// 		originator.handleQueryEnd();
+		// 		self.log("Got title: " + inResponse.items[0].title);
+		// 		self.handleQueryEnd();
 		// 	}
 		// 	else {
 		// 		//send one additional query without quotes
-		// 		originator.handleQueryEnd();
+		// 		self.handleQueryEnd();
 		// 		if (retry) {
-		// 			originator.setSuggestedDataToClipping(cEx, false, false);
+		// 			self.setSuggestedDataToClipping(cEx, false, false);
 		// 		}
 		// 	}
 		// });
@@ -181,10 +212,12 @@ enyo.kind({
 
         ajax.error(this, "processQueryError");
 	},
+
 	processQueryError: function (inSender, inResponse) {
 		this.error("Error in google search request");
 		this.handleQueryEnd();
 	},
+
 	handleDocumentSelected: function (inSender, inEvent) {
 		var docSelector = inEvent.originator;
 		console.log(docSelector.getTitle());
@@ -196,22 +229,31 @@ enyo.kind({
 		this.$.document_scroller.scrollToTop();
 
 	},
+
 	handleExportBegin: function (inSender, inEvent) {
 		this.log("handleExportBegin");
-		this.asyncSem.v();
+		_exportPreparationSem.v();
 	},
+
 	handleExportEnd: function (inSender, inEvent) {
 		this.log("handleExportEnd");
-		this.asyncSem.p();
+		_exportPreparationSem.p();
 	},
+
 	handleQueryBegin: function (inSender, inEvent) {
 		this.log("handleQueryBegin");
-		this.asyncSem.v();
+		_exportPreparationSem.v();
 	},
+
 	handleQueryEnd: function (inSender, inEvent) {
 		this.log("handleQueryEnd");
-		this.asyncSem.p();
+		_exportPreparationSem.p();
 	},
+
+	toggleSettings: function(inSender, inEvent) {
+		this.$.settings.toggle();
+	},
+
 	reflow: function() {
 		this.inherited(arguments);
 		if (enyo.Panels.isScreenNarrow()) {
@@ -221,68 +263,71 @@ enyo.kind({
 			this.$.document_view.setContent("notScreenNarrow");
 		}
 	},
+
 	create: function() {
 		this.inherited(arguments);
-		var originator = this;
-		this.asyncSem = new AsyncSemaphore({func: function () { originator.export(); } });
+		var self = this;
+
+		_exportPreparationSem = new AsyncSemaphore({func: function () { self.exportDocuments(); } });
 		testDocs = new Documents();
 		
 		// FIXME: Get data by dnd or file chooser
 		if (!window.XMLHttpRequest)
 			return;
 
-     	var req = new XMLHttpRequest();
-    	req.open("GET", "assets/clippings.txt");
-    	req.send(null);                        
+		var req = new XMLHttpRequest();
+		req.open("GET", "assets/clippings.txt");
+		req.send(null);
 
 		// Before returning, register an event handler function that will be called
-	    // at some later time when the HTTP server's response arrives. This kind of 
-	    // asynchronous programming is very common in client-side JavaScript.
-	    var app = this;
-	    req.onreadystatechange = function() {
-	    	//var app = this;
-	        if (req.readyState == 4 && req.status == 200) {
-	            // If we get here, we got a complete valid HTTP response
-	            var clippingRegExp = new RegExp(/^\s*(.+)\s\((.+)\)\s+-\s+(.+)\s+(.*)/);
-	            var response = req.responseText;
-	            var delimeter = "==========";
+		// at some later time when the HTTP server's response arrives. This kind of
+		// asynchronous programming is very common in client-side JavaScript.
+		var app = this;
+		req.onreadystatechange = function () {
+			//var app = this;
+			if (req.readyState == 4 && req.status == 200) {
+				// If we get here, we got a complete valid HTTP response
+				var clippingRegExp = new RegExp(/^\s*(.+)\s\((.+)\)\s+-\s+(.+)\s+(.*)/);
+				var response = req.responseText;
+				var delimeter = "==========";
 				testClippings = response;
-	            testClippings = testClippings.split("\n" + delimeter);
+				testClippings = testClippings.split("\n" + delimeter);
 
-	            //assert(clippingRegExp.test(testClippings[73]));
-		        
-		        for (var i = 0; i < testClippings.length; ++i) {
-		        	if (!clippingRegExp.test(testClippings[i])) {
-		        		//console.log("***failed on " + testClippings[i] + "\n");
-		        		continue;
-		        	}
-		        	
-		            var res = clippingRegExp.exec(testClippings[i]);
-		            var title = res[1];
-		            var author = res[2];
-		            var subtitle = res[3].split(/\s+\|\s+/);
-		            var type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
-		            var loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
-		            var timeStamp = subtitle[subtitle.length - 1];
-		            var content = res[4];
-	            	
-	            	// Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
-	            	if (type === "Bookmark" || type === "Clipping") {
-	            		continue;
-	            	}	            	
+				//assert(clippingRegExp.test(testClippings[73]));
+
+				for (var i = 0; i < testClippings.length; ++i) {
+					if (!clippingRegExp.test(testClippings[i])) {
+						//console.log("***failed on " + testClippings[i] + "\n");
+						continue;
+					}
+
+					var res = clippingRegExp.exec(testClippings[i]);
+					var title = res[1];
+					var author = res[2];
+					var subtitle = res[3].split(/\s+\|\s+/);
+					var type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
+					var loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
+					var timeStamp = subtitle[subtitle.length - 1];
+					var content = res[4];
+
+					// Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
+					if (type === "Bookmark" || type === "Clipping") {
+						continue;
+					}
 
 
-		            testDocs.addClippingToDocument(
-		            		title, author, 
-		            		new Clipping({type: type, loc: loc, timeStamp: timeStamp,
-		            				content: content}));
+					testDocs.addClippingToDocument(
+							title, author,
+							new Clipping({type: type, loc: loc, timeStamp: timeStamp,
+									content: content}));
 
-	            }
+				}
 
-	            app.$.document_selector_list.populate(testDocs);
+				app.$.document_selector_list.populate(testDocs);
 
-	        }
-	    }
-
+			}
+		};
 	}
-});
+}; // enyo kind definition
+})() // (function () {
+); // enyo.kind(

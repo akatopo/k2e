@@ -19,7 +19,7 @@ enyo.kind({
                     {tag: "i", content: timestamp }
                     ]});
             documentDisplay.createComponent({tag: "p", content: content});
-        };
+        }
 
         this.clearDocument();
 
@@ -29,7 +29,7 @@ enyo.kind({
                 {tag: "span", content: doc.author }
                 ]});
 
-        if (doc.clippings.length != 0) {
+        if (doc.clippings.length !== 0) {
             appendClippingToDisplay(doc, 0);
             for (var i = 1; i < doc.clippings.length; ++i) {
                 this.createComponent({classes:"k2e-document-view-clip-separator"});

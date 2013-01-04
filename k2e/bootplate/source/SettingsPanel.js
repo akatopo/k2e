@@ -12,20 +12,20 @@ enyo.kind({
     components: [
         {kind: "onyx.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "Appearance"},
-            {name: "themeName", kind: "SettingsValueItem", inputComponent: 
+            {name: "themeName", kind: "SettingsValueItem", inputComponent:
                     { kind: "SettingsThemeRadioGroup" },
             label: "Theme"}
 
         ]},
         {kind: "onyx.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "Export"},
-            {name: "ignoredTitleList", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Titles to Ignore"},
+            {name: "ignoredTitleList", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Titles to Ignore"}
         ]},
         {kind: "onyx.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "Article extraction"},
             {name: "articleExtraction", kind: "SettingsValueItem", defaultInputKind: "SettingsToggleButton", label: "Periodical Article Extraction",
                     onSettingChanged: "handleExtractionSettingChanged"},
-            {name: "periodicalTitleList", kind: "SettingsValueItem", inputComponent: 
+            {name: "periodicalTitleList", kind: "SettingsValueItem", inputComponent:
                     {kind: "SettingsTextInput"}, label: "Periodical tiles",
                     disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
             {name: "googleSearchApiKey", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Key",
@@ -37,11 +37,10 @@ enyo.kind({
         ]},
         {kind: "onyx.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "Local Storage"},
-            {name: "clearSettings", kind: "SettingsActionItem", label: "Restore defaults", buttonLabel: "Restore" },
-            {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear" }
+            {name: "clearSettings", kind: "SettingsActionItem", label: "Restore defaults", buttonLabel: "Restore", ontap: "restoreDefaults"},
+            {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear", ontap: "clearCache" }
         ]}
     ],
-
 
     handleSettingChanged: function (inSender, inEvent) {
         var settingsItem = inEvent.originator;
@@ -65,9 +64,12 @@ enyo.kind({
         }
     },
 
-    create: function () {
-        this.inherited(arguments);
-        this.log("init now");
+    restoreDefaults: function() {
+      this.log("restore defaults");
+    },
+
+    clearCache: function() {
+      this.log("clear cache");
     }
 });
 
@@ -177,7 +179,7 @@ enyo.kind({
             this.createComponent(this.inputComponent);
         }
         else {
-            this.createComponent({name: "input", kind: this.defaultInputKind});    
+            this.createComponent({name: "input", kind: this.defaultInputKind});
         }
         
         this.value = SettingsSingletonInstance().getSetting(this.getName());
@@ -316,7 +318,7 @@ enyo.kind({
     disabledChanged: function () {
         var comps = this.getComponents();
         for (var i = 1; i < comps.length; ++i) {
-             comps[i].setDisabled(this.disabled);        
+             comps[i].setDisabled(this.disabled);
         }
     }
 });

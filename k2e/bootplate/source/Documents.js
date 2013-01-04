@@ -48,7 +48,7 @@ enyo.kind({
 		suggestedUrl: ""
 	},
 	exportObject: function () {
-		return { 
+		return {
 			type: this.type,
 			loc: this.loc,
 			timeStamp: this.timeStamp,
@@ -57,7 +57,7 @@ enyo.kind({
 			suggestedUrl: this.suggestedUrl
 		};
 	}
-})
+});
 
 enyo.kind({
 	name: "Documents",
@@ -70,10 +70,10 @@ enyo.kind({
 	addClippingToDocument: function (title, author, clipping) {
 		var key = title + author;
 		
-		if (!this.docMap[key]) {			
+		if (!this.docMap[key]) {
 			this.docMap[key] =
 					new Document({
-							title: title, 
+							title: title,
 							author: author});
 			++this.length;
 			this.keyArray.push(key);
@@ -89,10 +89,20 @@ enyo.kind({
 		this.docMap = {};
 		this.keyArray = [];
 	},
-	exportObject: function () {
+	exportObject: function (ignoredTitleSet) {
+		if (ignoredTitleSet === undefined) {
+			ignoredTitleSet = {};
+		}
+
 		var documentsExport = { documents: [] };
 		for (var i = 0; i < this.keyArray.length; ++i) {
-			var docExport = this.docMap[this.keyArray[i]].exportObject();
+			var doc = this.docMap[this.keyArray[i]];
+
+			if (doc.title in ignoredTitleSet) {
+				continue;
+			}
+
+			var docExport = doc.exportObject();
 			documentsExport.documents.push(docExport);
 		}
 

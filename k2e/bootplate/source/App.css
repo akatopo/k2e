@@ -34,7 +34,7 @@
 	position: relative;
 }
 
-.k2e-document-selector-item.onyx-selected
+.k2e-document-selector-item-selected
 {
 	background-color: MidnightBlue;
 }
@@ -97,7 +97,7 @@
 	font-size: 0.8em;
 	letter-spacing: 0.09em;
 	margin-top: 1.8em;
-	overflow: hidden;
+	/*overflow: hidden;*/
 	padding-top: 0.9em;
 	overflow: visible;
 }
@@ -116,7 +116,7 @@
 .k2e-document-view-clip-separator {
 	margin: 0 auto;
 	width: 20%;
-	height: 2px;
+	/*height: 2px;*/
 	border-top: 2px dotted gray; /* changed from theme */
 }
 
@@ -156,10 +156,12 @@
 	width: 100px;
 }
 
-.pullout {
+.k2e-settings {
 	position: absolute;
 	top: 57px; /* main toolbar height */
 	left: 0;
 	bottom: 0;
 	background: #D8D8D8;
+	z-index: 1;
+	width: 480px;
 }
