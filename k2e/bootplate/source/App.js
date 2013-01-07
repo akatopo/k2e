@@ -112,7 +112,7 @@ return {
 			var dEx = docExportArray[i];
 
 			// comment out to enable periodical article url and title search.
-			if (JSON.parse(settings.getSetting("articleExtraction")) === true) {
+			if (settings.getSetting("articleExtraction") === true) {
 				this.log("Tagging documents as periodicals");
 				if (dEx.title in periodicalTitleSet) {
 					dEx.isPeriodical = true;
@@ -129,13 +129,14 @@ return {
 	},
 
 	setSuggestedDataToClipping: function (clippingExport, makeQuotedFlag, retryFlag) {
+		var settings = SettingsSingletonInstance();
+
 		var quoted = (makeQuotedFlag === undefined)?true:makeQuotedFlag;
 		var retry = (retryFlag === undefined)?true:retryFlag;
 
-		var loc = "https://www.googleapis.com/customsearch/v1?";
-		var key = "AIzaSyCOmQoeVtIKV5xyAVIe3BnFFejQgHEjv0I"; // FIXME: init from local storage
-		var cx = "010892405042999130320:lrtm0dyni30";        // and/or options
-		//q =  '"' + q + '"';
+		var loc = settings.getSetting("googleSearchApiLoc"); // "https://www.googleapis.com/customsearch/v1?";
+		var key = settings.getSetting("googleSearchApiKey"); // "AIzaSyCOmQoeVtIKV5xyAVIe3BnFFejQgHEjv0I";
+		var cx = settings.getSetting("googleSearchApiCx"); // "010892405042999130320:lrtm0dyni30";
 
 		var MAX_QUERY_LENGTH = 128;
 		
@@ -164,7 +165,6 @@ return {
 			url: loc
 		});
 
-		//enyo.Signals.send("onQueryBegin");
 		this.handleQueryBegin();
 		ajax.go({
 			key: key,

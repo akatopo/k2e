@@ -25,10 +25,11 @@ enyo.kind({
             {kind: "onyx.GroupboxHeader", content: "Article extraction"},
             {name: "articleExtraction", kind: "SettingsValueItem", defaultInputKind: "SettingsToggleButton", label: "Periodical Article Extraction",
                     onSettingChanged: "handleExtractionSettingChanged"},
-            {name: "periodicalTitleList", kind: "SettingsValueItem", inputComponent:
-                    {kind: "SettingsTextInput"}, label: "Periodical tiles",
+            {name: "periodicalTitleList", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextInput"},
+                    label: "Periodical tiles",
                     disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
-            {name: "googleSearchApiKey", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Key",
+            {name: "googleSearchApiKey", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextInput", type: "password"},
+                    label: "Google Search Api Key",
                     disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
             {name: "googleSearchApiCx", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Cx",
                     disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
@@ -38,7 +39,9 @@ enyo.kind({
         {kind: "onyx.Groupbox", components: [
             {kind: "onyx.GroupboxHeader", content: "Local Storage"},
             {name: "clearSettings", kind: "SettingsActionItem", label: "Restore defaults", buttonLabel: "Restore", ontap: "restoreDefaults"},
-            {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear", ontap: "clearCache" }
+            {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear", ontap: "clearCache" },
+            {name: "exportSettings", kind: "SettingsActionItem", label: "Export Settings", buttonLabel: "Export", ontap: "exportSettings"},
+            {name: "importSettings", kind: "SettingsActionItem", label: "import Settings", buttonLabel: "import", ontap: "importSettings"}
         ]}
     ],
 
@@ -65,7 +68,25 @@ enyo.kind({
     },
 
     restoreDefaults: function() {
-      this.log("restore defaults");
+        this.log("restore defaults");
+
+        localStorage.clear();
+
+        var settings = SettingsSingletonInstance();
+        var defaultsArray = settings.defaultSettings.published;
+
+        for (var key in defaultsArray) {
+            this.$[key].setValue(settings.getDefaultSetting(key));
+        }
+ 
+    },
+
+    importSettings: function () {
+        this.log("Import settings");
+    },
+
+    exportSettings: function () {
+        this.log("Export settings");
     },
 
     clearCache: function() {
@@ -117,10 +138,14 @@ enyo.kind({
         buttonLabel: ""
     },
 
+    buttonLabelChanged: function () {
+        this.$.button.setContent(this.buttonLabel);
+    },
+
     create: function() {
         this.inherited(arguments);
         this.createComponent({fit: true});
-        this.createComponent({kind:"onyx.Button", classes: "k2e-settings-action-item-button", content: this.buttonLabel});
+        this.createComponent({name: "button", kind:"onyx.Button", classes: "k2e-settings-action-item-button", content: this.buttonLabel});
     },
 
     rendered: function () {
@@ -174,7 +199,6 @@ enyo.kind({
 
         this.createComponent({fit: true});
         if (this.inputComponent) {
-
             this.inputComponent.name = "input";
             this.createComponent(this.inputComponent);
         }
@@ -204,7 +228,8 @@ enyo.kind({
     published: {
         value: "",
         disabled: "false",
-        placeholder: ""
+        placeholder: "",
+        type: ""
     },
 
     events: {
@@ -218,7 +243,7 @@ enyo.kind({
 
     components: [
         {kind: "onyx.InputDecorator", style: "width: 140px", alwaysLooksFocused: true, components: [
-            {name: "text", kind: "onyx.Input", placeholder: this.placeholder, style: "width: 100%"}
+            {name: "text", kind: "onyx.Input", style: "width: 100%"}
         ]}
     ],
 
@@ -234,6 +259,10 @@ enyo.kind({
         this.$.text.setPlaceholder(this.placeholder);
     },
 
+    typeChanged: function() {
+        this.$.text.setType(this.type);
+    },
+
     getValue: function () {
         return this.$.text.getValue();
     },
@@ -241,6 +270,13 @@ enyo.kind({
     handleKeyUp: function () {
         this.value = this.getValue();
         this.doInputValueChanged();
+    },
+
+    create: function() {
+        this.inherited(arguments);
+
+        this.typeChanged();
+        this.placeholderChanged();
     }
 });
 
