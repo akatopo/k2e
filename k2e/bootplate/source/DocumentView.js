@@ -6,19 +6,21 @@ enyo.kind({
     components: [],
     
     displayDocument: function (doc) {
-        var documentDisplay = this;
+        var self = this;
         function appendClippingToDisplay(doc, i) {
             var loc = doc.clippings[i].loc;
             var type = doc.clippings[i].type;
             var timestamp = doc.clippings[i].timeStamp;
             var content = doc.clippings[i].content;
 
-            documentDisplay.createComponent({classes: "k2e-document-view-clip-header", components: [
+            self
+            .createComponent({classes: "k2e-document-view-clip-header", components: [
                     {tag: "i", content: type + ", " + loc},
                     {tag: "span", content: " | "},
                     {tag: "i", content: timestamp }
                     ]});
-            documentDisplay.createComponent({tag: "p", content: content});
+            self
+            .createComponent({tag: "p", content: content});
         }
 
         this.clearDocument();

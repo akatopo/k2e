@@ -64,7 +64,7 @@ return {
 		console.log(loc);
 		console.log(_docsExport);
 
-		return; // comment out to enable exporting
+		// return; // comment out to enable exporting
 
 		var ajax = new enyo.Ajax({
 			url: loc + "/Export",
@@ -112,7 +112,7 @@ return {
 			var dEx = docExportArray[i];
 
 			// comment out to enable periodical article url and title search.
-			if (JSON.parse(settings.getSetting("articleExtraction")) === true) {
+			if (settings.getSetting("articleExtraction") === true) {
 				this.log("Tagging documents as periodicals");
 				if (dEx.title in periodicalTitleSet) {
 					dEx.isPeriodical = true;
@@ -129,13 +129,14 @@ return {
 	},
 
 	setSuggestedDataToClipping: function (clippingExport, makeQuotedFlag, retryFlag) {
+		var settings = SettingsSingletonInstance();
+
 		var quoted = (makeQuotedFlag === undefined)?true:makeQuotedFlag;
 		var retry = (retryFlag === undefined)?true:retryFlag;
 
-		var loc = "https://www.googleapis.com/customsearch/v1?";
-		var key = "AIzaSyCOmQoeVtIKV5xyAVIe3BnFFejQgHEjv0I"; // FIXME: init from local storage
-		var cx = "010892405042999130320:lrtm0dyni30";        // and/or options
-		//q =  '"' + q + '"';
+		var loc = settings.getSetting("googleSearchApiLoc"); // "https://www.googleapis.com/customsearch/v1?";
+		var key = settings.getSetting("googleSearchApiKey"); // "AIzaSyCOmQoeVtIKV5xyAVIe3BnFFejQgHEjv0I";
+		var cx = settings.getSetting("googleSearchApiCx"); // "010892405042999130320:lrtm0dyni30";
 
 		var MAX_QUERY_LENGTH = 128;
 		
@@ -164,7 +165,6 @@ return {
 			url: loc
 		});
 
-		//enyo.Signals.send("onQueryBegin");
 		this.handleQueryBegin();
 		ajax.go({
 			key: key,
@@ -268,8 +268,47 @@ return {
 		this.inherited(arguments);
 		var self = this;
 
+		function parseKinldeClippings(kindleClippings) {
+			var docs = new Documents();
+			var clippingRegExp = new RegExp(/^\s*(.+)\s\((.+)\)\s+-\s+(.+)\s+(.*)/);
+			var delimeter = "==========";
+			kindleClippings = kindleClippings.split("\n" + delimeter);
+
+			//assert(clippingRegExp.test(kindleClippings[73]));
+
+			for (var i = 0; i < kindleClippings.length; ++i) {
+				if (!clippingRegExp.test(kindleClippings[i])) {
+					//console.log("***failed on " + kindleClippings[i] + "\n");
+					continue;
+				}
+
+				var res = clippingRegExp.exec(kindleClippings[i]);
+				var title = res[1];
+				var author = res[2];
+				var subtitle = res[3].split(/\s+\|\s+/);
+				var type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
+				var loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
+				var timeStamp = subtitle[subtitle.length - 1];
+				var content = res[4];
+
+				// Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
+				if (type === "Bookmark" || type === "Clipping") {
+					continue;
+				}
+
+
+				docs.addClippingToDocument(
+						title, author,
+						new Clipping({type: type, loc: loc, timeStamp: timeStamp,
+								content: content}));
+
+			}
+
+			return docs;
+		}
+
 		_exportPreparationSem = new AsyncSemaphore({func: function () { self.exportDocuments(); } });
-		testDocs = new Documents();
+		testDocs = undefined;// = new Documents();
 		
 		// FIXME: Get data by dnd or file chooser
 		if (!window.XMLHttpRequest)
@@ -279,53 +318,10 @@ return {
 		req.open("GET", "assets/clippings.txt");
 		req.send(null);
 
-		// Before returning, register an event handler function that will be called
-		// at some later time when the HTTP server's response arrives. This kind of
-		// asynchronous programming is very common in client-side JavaScript.
 		var app = this;
 		req.onreadystatechange = function () {
-			//var app = this;
-			if (req.readyState == 4 && req.status == 200) {
-				// If we get here, we got a complete valid HTTP response
-				var clippingRegExp = new RegExp(/^\s*(.+)\s\((.+)\)\s+-\s+(.+)\s+(.*)/);
-				var response = req.responseText;
-				var delimeter = "==========";
-				testClippings = response;
-				testClippings = testClippings.split("\n" + delimeter);
-
-				//assert(clippingRegExp.test(testClippings[73]));
-
-				for (var i = 0; i < testClippings.length; ++i) {
-					if (!clippingRegExp.test(testClippings[i])) {
-						//console.log("***failed on " + testClippings[i] + "\n");
-						continue;
-					}
-
-					var res = clippingRegExp.exec(testClippings[i]);
-					var title = res[1];
-					var author = res[2];
-					var subtitle = res[3].split(/\s+\|\s+/);
-					var type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
-					var loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
-					var timeStamp = subtitle[subtitle.length - 1];
-					var content = res[4];
-
-					// Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
-					if (type === "Bookmark" || type === "Clipping") {
-						continue;
-					}
-
-
-					testDocs.addClippingToDocument(
-							title, author,
-							new Clipping({type: type, loc: loc, timeStamp: timeStamp,
-									content: content}));
-
-				}
-
-				app.$.document_selector_list.populate(testDocs);
-
-			}
+			testDocs = parseKinldeClippings(req.responseText);
+			app.$.document_selector_list.populate(testDocs);
 		};
 	}
 }; // enyo kind definition
