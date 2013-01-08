@@ -23,6 +23,7 @@ return {
 	kind: "FittableRows",
 
 	components:[
+		{name: "clipping_picker_popup", kind: "ClippingPickerPopup"},
 		{kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
 			{kind: "onyx.Button", content: "Settings", ontap: "toggleSettings"},
 			{content: "k2e toolbar", fit: true, style: "text-align: center;"},
@@ -49,11 +50,13 @@ return {
 
 	published: {
 		periodicalTitleSet: undefined,
-		ignoredTitleSet: undefined
+		ignoredTitleSet: undefined,
+		documents: undefined
 	},
 
 	handlers: {
-		onDocumentSelected: "handleDocumentSelected"
+		onDocumentSelected: "handleDocumentSelected",
+		onClippingsTextChanged: "handleClippingsTextChanged"
 	},
 
 	exportDocuments: function (inSender, inEvent) {
@@ -97,8 +100,7 @@ return {
 			ignoredTitleSet = _arrayToSet(ignoredTitleList.split(","));
 		}
 
-		var docs = testDocs; // FIXME
-		_docsExport = testDocs.exportObject(ignoredTitleSet);
+		_docsExport = this.documents.exportObject(ignoredTitleSet);
 		var docExportArray = _docsExport.documents;
 		
 
@@ -222,7 +224,7 @@ return {
 		var docSelector = inEvent.originator;
 		console.log(docSelector.getTitle());
 		console.log(docSelector.getIndex());
-		var doc = testDocs.getDocumentByIndex(docSelector.getIndex());
+		var doc = this.documents.getDocumentByIndex(docSelector.getIndex());
 		console.log(doc);
 		//this.$.document_view.setContent(doc.clippings[0].getContent());
 		this.$.document_view.displayDocument(doc);
@@ -250,8 +252,55 @@ return {
 		_exportPreparationSem.p();
 	},
 
-	toggleSettings: function(inSender, inEvent) {
+	handleClippingsTextChanged: function (inSender, inEvent) {
+		this.log("handleClippingsTextChanged");
+		var clipText = this.$.clipping_picker_popup.getClippingsText();
+		this.documents = this.parseKinldeClippings(clipText);
+		this.$.document_selector_list.populate(this.documents);
+		this.$.clipping_picker_popup.hide();
+	},
+
+	toggleSettings: function (inSender, inEvent) {
 		this.$.settings.toggle();
+	},
+
+	parseKinldeClippings: function (kindleClippings) {
+		var docs = new Documents();
+		var clippingRegExp = new RegExp(/^\s*(.+)\s\((.+)\)\s+-\s+(.+)\s+(.*)/);
+		var delimeter = "==========";
+		kindleClippings = kindleClippings.split("\n" + delimeter);
+
+		//assert(clippingRegExp.test(kindleClippings[73]));
+
+		for (var i = 0; i < kindleClippings.length; ++i) {
+			if (!clippingRegExp.test(kindleClippings[i])) {
+				//console.log("***failed on " + kindleClippings[i] + "\n");
+				continue;
+			}
+
+			var res = clippingRegExp.exec(kindleClippings[i]);
+			var title = res[1];
+			var author = res[2];
+			var subtitle = res[3].split(/\s+\|\s+/);
+			var type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
+			var loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
+			var timeStamp = subtitle[subtitle.length - 1];
+			var content = res[4];
+
+			// Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
+			if (type === "Bookmark" || type === "Clipping") {
+				continue;
+			}
+
+
+			docs.addClippingToDocument(
+					title, author,
+					new Clipping({type: type, loc: loc, timeStamp: timeStamp,
+							content: content}));
+
+		}
+
+		return docs;
 	},
 
 	reflow: function() {
@@ -264,65 +313,30 @@ return {
 		}
 	},
 
+	// This is probably needed because of the hackery going on in SettingsPanel.js
+	rendered: function () {
+		this.inherited(arguments);
+		this.$.clipping_picker_popup.show();
+	},
+
 	create: function() {
 		this.inherited(arguments);
 		var self = this;
 
-		function parseKinldeClippings(kindleClippings) {
-			var docs = new Documents();
-			var clippingRegExp = new RegExp(/^\s*(.+)\s\((.+)\)\s+-\s+(.+)\s+(.*)/);
-			var delimeter = "==========";
-			kindleClippings = kindleClippings.split("\n" + delimeter);
-
-			//assert(clippingRegExp.test(kindleClippings[73]));
-
-			for (var i = 0; i < kindleClippings.length; ++i) {
-				if (!clippingRegExp.test(kindleClippings[i])) {
-					//console.log("***failed on " + kindleClippings[i] + "\n");
-					continue;
-				}
-
-				var res = clippingRegExp.exec(kindleClippings[i]);
-				var title = res[1];
-				var author = res[2];
-				var subtitle = res[3].split(/\s+\|\s+/);
-				var type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
-				var loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
-				var timeStamp = subtitle[subtitle.length - 1];
-				var content = res[4];
-
-				// Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
-				if (type === "Bookmark" || type === "Clipping") {
-					continue;
-				}
-
-
-				docs.addClippingToDocument(
-						title, author,
-						new Clipping({type: type, loc: loc, timeStamp: timeStamp,
-								content: content}));
-
-			}
-
-			return docs;
-		}
-
 		_exportPreparationSem = new AsyncSemaphore({func: function () { self.exportDocuments(); } });
-		testDocs = undefined;// = new Documents();
 		
 		// FIXME: Get data by dnd or file chooser
-		if (!window.XMLHttpRequest)
-			return;
+		// if (!window.XMLHttpRequest)
+		// 	return;
 
-		var req = new XMLHttpRequest();
-		req.open("GET", "assets/clippings.txt");
-		req.send(null);
+		// var req = new XMLHttpRequest();
+		// req.open("GET", "assets/clippings.txt");
+		// req.send(null);
 
-		var app = this;
-		req.onreadystatechange = function () {
-			testDocs = parseKinldeClippings(req.responseText);
-			app.$.document_selector_list.populate(testDocs);
-		};
+		// req.onreadystatechange = function () {
+		// 	this.documents = parseKinldeClippings(req.responseText);
+		// 	self.$.document_selector_list.populate(testDocs);
+		// };
 	}
 }; // enyo kind definition
 })() // (function () {

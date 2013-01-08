@@ -41,7 +41,7 @@ enyo.kind({
             {name: "clearSettings", kind: "SettingsActionItem", label: "Restore defaults", buttonLabel: "Restore", ontap: "restoreDefaults"},
             {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear", ontap: "clearCache" },
             {name: "exportSettings", kind: "SettingsActionItem", label: "Export Settings", buttonLabel: "Export", ontap: "exportSettings"},
-            {name: "importSettings", kind: "SettingsActionItem", label: "import Settings", buttonLabel: "import", ontap: "importSettings"}
+            {name: "importSettings", kind: "SettingsActionItem", label: "import Settings", buttonLabel: "Import", ontap: "importSettings"}
         ]}
     ],
 

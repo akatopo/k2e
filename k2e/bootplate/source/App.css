@@ -165,3 +165,14 @@
 	z-index: 1;
 	width: 480px;
 }
+
+/***********************************************************************************************/
+/* Clipping picker popup */
+
+.k2e-clipping-picker-popup {
+	/*width: 95%;*/
+	/*height: 95%;*/
+	/*vertical-align: middle;*/
+	/*text-align: center;*/
+	padding: 30px;
+}
