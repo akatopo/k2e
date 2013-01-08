@@ -42,14 +42,27 @@ enyo.kind({
 		return true;
 	},
 	enableMultiSelection: function() {
-		for(var i = 0; i < this.items.length; ++i) {
+		for (var i = 0; i < this.items.length; ++i) {
 			this.items[i].setMultiSelected(true);
 		}
 	},
 	disableMultiSelection: function() {
-		for(var i = 0; i < this.items.length; ++i) {
+		for (var i = 0; i < this.items.length; ++i) {
 			this.items[i].setMultiSelected(false);
 		}
+	},
+	selectNextDocument: function () {
+		if (this.items.length !== 0 && !this.selDocumentSelectorItem) {
+			this.selDocumentSelectorItem = this.items[0];
+			this.selDocumentSelectorItem.setSelected(true);
+			return;
+		}
+		else {
+			// there's a selected item, potentially select the next one.
+		}
+	},
+	selectPrevDocument: function () {
+		
 	},
 	populate: function(documents) {
 		this.documentsRef = documents;
@@ -82,7 +95,7 @@ enyo.kind({
 	setSelected: function (bool) {
 		this.selected = bool;
 		this.addRemoveClass("onyx-selected", this.selected);
-		this.addRemoveClass("k2e-document-selector-item-selected", this.selected);
+		this.addRemoveClass("onyx-blue", this.selected);
 	},
 	setTitle: function (titleString) {
 		this.$.label.setContent(titleString);

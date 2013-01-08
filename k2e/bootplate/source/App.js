@@ -23,11 +23,12 @@ return {
 	kind: "FittableRows",
 
 	components:[
+		{kind: enyo.Signals, onkeydown: "handleKeydown"},
 		{name: "clipping_picker_popup", kind: "ClippingPickerPopup"},
 		{kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
 			{kind: "onyx.Button", content: "Settings", ontap: "toggleSettings"},
-			{content: "k2e toolbar", fit: true, style: "text-align: center;"},
-			{kind: "onyx.Button", content: "Export", ontap: "prepareDocumentsAndExport"}
+			{content: "k2e", fit: true, style: "text-align: center;"},
+			{kind: "onyx.Button", content: "Export to Evernote", ontap: "prepareDocumentsAndExport"}
 		]},
 		{kind: "SettingsSlideable", name: "settings"},
 		{kind: "FittableColumns", fit: true, components: [
@@ -35,12 +36,13 @@ return {
 				{classes: "k2e-sidebar", style: "width: 20%", components:[
 					{fit: true, name: "document_selector_list", kind: "DocumentSelectorList"}
 				]},
-				{kind: "FittableRows", fit: true, components: [
+				{kind: "FittableRows", classes: "k2e-main-panel", fit: true, components: [
 					{name: "document_scroller", kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "k2e-document-scroller k2e-document-view-dark", components: [
 						{name: "document_view", kind: "DocumentView", fit: true}//,
 						//{kind: "onyx.Button", content: "to top", style:"position: absolute; bottom: 10px; right: 10px;"}
 					]},
 					{kind: "onyx.Toolbar", components: [
+						{kind: "onyx.Grabber"},
 						{content: "clip toolbar"}
 					]}
 				]}
@@ -260,6 +262,12 @@ return {
 		this.$.clipping_picker_popup.hide();
 	},
 
+	handleKeydown: function (inSender, inEvent) {
+		this.log(inSender);
+		this.log(inEvent);
+		return true;
+	},
+
 	toggleSettings: function (inSender, inEvent) {
 		this.$.settings.toggle();
 	},
@@ -301,6 +309,10 @@ return {
 		}
 
 		return docs;
+	},
+
+	enableKeyboardEvents: function () {
+		this.createComponent({kind: enyo.Signals, onkeydown: "handleKeyDown"});
 	},
 
 	reflow: function() {

@@ -238,7 +238,9 @@ enyo.kind({
 
     handlers: {
         onchange: "handleKeyUp",
-        onkeyup: "handleKeyUp"
+        onkeyup: "handleKeyUp",
+        onkeypress: "handleKeyPress",
+        onkeydown: "handleKeyDown"
     },
 
     components: [
@@ -267,9 +269,18 @@ enyo.kind({
         return this.$.text.getValue();
     },
 
-    handleKeyUp: function () {
+    handleKeyUp: function (inSender, inEvent) {
         this.value = this.getValue();
         this.doInputValueChanged();
+        return true;
+    },
+
+    handleKeyPress: function (inSender, inEvent) {
+        return true;
+    },
+
+    handleKeyDown: function (inSender, inEvent) {
+        return true;
     },
 
     create: function() {
