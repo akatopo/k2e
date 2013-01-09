@@ -3,9 +3,7 @@ enyo.kind({
 
     kind: "onyx.Popup",
 
-    classes: "k2e-clipping-picker-popup",
-
-    content: "Drag your kindle clippings here",
+    classes: "k2e-clipping-picker-popup onyx-toolbar-inline",
 
     modal: true,
     floating: true,
@@ -18,7 +16,10 @@ enyo.kind({
     },
 
     components: [
-        // Components
+        {content: "Drag your kindle clippings here or "},
+        {kind: "onyx.Button", content: "Load from File", ontap: "loadFile"},
+        {allowHtml: true,
+                content: '<input type="file" id="k2e_file_picker" style="display:none"/>'}
     ],
 
     events: {
@@ -29,6 +30,12 @@ enyo.kind({
         onShow: "handleOnShow"
     },
 
+    loadFile: function() {
+        this.log("loadfile");
+        var fp = document.getElementById("k2e_file_picker");
+        fp.click();
+    },
+
     clippingsTextChanged: function () {
         this.log('clippingsTextChanged');
         this.doClippingsTextChanged();
@@ -37,6 +44,7 @@ enyo.kind({
     handleOnShow: function () {
         var self = this;
         var elem = document.getElementById(this.getId());
+        var fp = document.getElementById("k2e_file_picker");
 
         var handleDragleave = function (ev) {
             self.log('handleDragleave');
@@ -51,15 +59,7 @@ enyo.kind({
             ev.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
         };
 
-        var handleDrop = function (ev) {
-            self.log('handleDrop');
-            ev.stopPropagation();
-            ev.preventDefault();
-
-            self.addRemoveClass("onyx-blue", false);
-            var files = ev.dataTransfer.files; // FileList object.
-            // self.log(files);
-
+        var handleFiles = function (files) {
             var reader = new FileReader();
 
             if (files.length > 0) {
@@ -71,6 +71,20 @@ enyo.kind({
             }
         };
 
+        var handleDrop = function (ev) {
+            self.log('handleDrop');
+            ev.stopPropagation();
+            ev.preventDefault();
+
+            self.addRemoveClass("onyx-blue", false);
+            handleFiles(ev.dataTransfer.files); // FileList object.
+        };
+
+        var handleFilePick = function () {
+            handleFiles(this.files); // FileList object.
+        };
+
+        fp.addEventListener('change', handleFilePick, false);
         elem.addEventListener('dragleave', handleDragleave, false);
         elem.addEventListener('dragover', handleDragover, false);
         elem.addEventListener('drop', handleDrop, false);
