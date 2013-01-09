@@ -13,5 +13,6 @@ enyo.depends(
     "SettingsSlideable.js",
     "SettingsPanel.js",
     "ClippingPickerPopup.js",
+    "ExportPopup.js",
 	"assert.js"
 );

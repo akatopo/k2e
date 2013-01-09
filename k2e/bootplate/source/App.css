@@ -6,10 +6,6 @@
 /***********************************************************************************************/
 
 #app {
-	background-color: silver;
-}
-
-.k2e-sidebar {
 	background-color: gray;
 	background: url(../assets/bg.png);
 }
@@ -22,6 +18,10 @@
 
 .k2e-document-scroller {
 	background-color: purple;
+}
+
+.onyx-toolbar .k2e-export-button {
+	background-color: #35A8EE;
 }
 
 
@@ -184,4 +184,10 @@
 	/*vertical-align: middle;*/
 	/*text-align: center;*/
 	padding: 30px;
+}
+
+
+.k2e-export-popup {
+	padding: 30px;
+	text-align: center;
 }

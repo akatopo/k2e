@@ -25,15 +25,16 @@ return {
 	components:[
 		{kind: enyo.Signals, onkeydown: "handleKeydown"},
 		{name: "clipping_picker_popup", kind: "ClippingPickerPopup"},
-		{kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
+		{name: "export_popup", kind: "ExportPopup" },
+		{name: "app_toolbar", kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
 			{kind: "onyx.Button", content: "Settings", ontap: "toggleSettings"},
 			{content: "k2e", fit: true, style: "text-align: center;"},
-			{kind: "onyx.Button", content: "Export to Evernote", ontap: "prepareDocumentsAndExport"}
+			{name: "export_button", kind: "onyx.Button", classes: "k2e-export-button", content: "Export to Evernote", ontap: "prepareDocumentsAndExport"}
 		]},
 		{kind: "SettingsSlideable", name: "settings"},
 		{kind: "FittableColumns", fit: true, components: [
 			{kind: "Panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
-				{classes: "k2e-sidebar", style: "width: 20%", components:[
+				{name: "sidebar", classes: "k2e-sidebar", style: "width: 20%", components:[
 					{fit: true, name: "document_selector_list", kind: "DocumentSelectorList"}
 				]},
 				{kind: "FittableRows", classes: "k2e-main-panel", fit: true, components: [
@@ -41,7 +42,7 @@ return {
 						{name: "document_view", kind: "DocumentView", fit: true}//,
 						//{kind: "onyx.Button", content: "to top", style:"position: absolute; bottom: 10px; right: 10px;"}
 					]},
-					{kind: "onyx.Toolbar", components: [
+					{name: "document_toolbar", kind: "onyx.Toolbar", components: [
 						{kind: "onyx.Grabber"},
 						{content: "clip toolbar"}
 					]}
@@ -61,15 +62,28 @@ return {
 		onClippingsTextChanged: "handleClippingsTextChanged"
 	},
 
+	toggleFullscreen: function () {
+		app.$.sidebar.setShowing(!app.$.sidebar.showing);
+		app.$.app_toolbar.setShowing(
+				!app.$.app_toolbar.showing);
+		app.$.document_toolbar.setShowing(
+				!app.$.document_toolbar.showing);
+		app.resized();
+	},
+
 	exportDocuments: function (inSender, inEvent) {
-		this.log("Export proccessing done");
+		this.log("Export processing done");
 		
 		var loc = location.protocol + '//' + location.host + location.pathname;
 
 		console.log(loc);
 		console.log(_docsExport);
 
-		// return; // comment out to enable exporting
+		// comment out to enable exporting
+		var self = this;
+		window.setTimeout(function () { self.$.export_popup.exportDone(); }, 2000 /* ms */);
+		window.setTimeout(function () { self.$.export_popup.hide(); }, 4000 /* ms */);
+		return;
 
 		var ajax = new enyo.Ajax({
 			url: loc + "/Export",
@@ -83,8 +97,10 @@ return {
 	},
 
 	processExportResponse: function(inSender, inResponse) {
-		// do something with it
+		var self = this;
 		alert(JSON.stringify(inResponse, null, 2));
+		this.$.export_popup.exportDone();
+		window.setTimeout(function () { self.$.export_popup.hide(); }, 2000 /* ms */);
 	},
 
 	processExportError: function(inSender, inResponse) {
@@ -92,6 +108,8 @@ return {
 	},
 
 	prepareDocumentsAndExport: function () {
+		this.$.export_popup.exportBegin();
+		this.$.export_popup.show();
 		this.handleExportBegin();
 
 		var settings = SettingsSingletonInstance();
@@ -309,10 +327,6 @@ return {
 		}
 
 		return docs;
-	},
-
-	enableKeyboardEvents: function () {
-		this.createComponent({kind: enyo.Signals, onkeydown: "handleKeyDown"});
 	},
 
 	reflow: function() {

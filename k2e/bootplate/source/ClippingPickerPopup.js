@@ -31,13 +31,11 @@ enyo.kind({
     },
 
     loadFile: function() {
-        this.log("loadfile");
         var fp = document.getElementById("k2e_file_picker");
         fp.click();
     },
 
     clippingsTextChanged: function () {
-        this.log('clippingsTextChanged');
         this.doClippingsTextChanged();
     },
 
@@ -47,12 +45,10 @@ enyo.kind({
         var fp = document.getElementById("k2e_file_picker");
 
         var handleDragleave = function (ev) {
-            self.log('handleDragleave');
             self.addRemoveClass("onyx-blue", false);
         };
 
         var handleDragover = function (ev) {
-            self.log('handleDragover');
             self.addRemoveClass("onyx-blue", true);
             ev.stopPropagation();
             ev.preventDefault();
@@ -72,7 +68,6 @@ enyo.kind({
         };
 
         var handleDrop = function (ev) {
-            self.log('handleDrop');
             ev.stopPropagation();
             ev.preventDefault();
 
