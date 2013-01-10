@@ -18,8 +18,7 @@ enyo.kind({
     components: [
         {content: "Drag your kindle clippings here or "},
         {kind: "onyx.Button", content: "Load from File", ontap: "loadFile"},
-        {allowHtml: true,
-                content: '<input type="file" id="k2e_file_picker" style="display:none"/>'}
+        {name: "file_picker", kind: "enyo.Input", type: "file", style: "display:none"}
     ],
 
     events: {
@@ -31,8 +30,11 @@ enyo.kind({
     },
 
     loadFile: function() {
-        var fp = document.getElementById("k2e_file_picker");
-        fp.click();
+        var pickerNode = this.$.file_picker.hasNode();
+        
+        if (pickerNode) {
+            pickerNode.click();
+        }
     },
 
     clippingsTextChanged: function () {
@@ -41,48 +43,50 @@ enyo.kind({
 
     handleOnShow: function () {
         var self = this;
-        var elem = document.getElementById(this.getId());
-        var fp = document.getElementById("k2e_file_picker");
+        var popupNode = this.hasNode();
+        var pickerNode = this.$.file_picker.hasNode();
 
-        var handleDragleave = function (ev) {
-            self.addRemoveClass("onyx-blue", false);
-        };
+        if (popupNode && pickerNode) {
+            var handleDragleave = function (ev) {
+                self.addRemoveClass("onyx-blue", false);
+            };
 
-        var handleDragover = function (ev) {
-            self.addRemoveClass("onyx-blue", true);
-            ev.stopPropagation();
-            ev.preventDefault();
-            ev.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-        };
+            var handleDragover = function (ev) {
+                self.addRemoveClass("onyx-blue", true);
+                ev.stopPropagation();
+                ev.preventDefault();
+                ev.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+            };
 
-        var handleFiles = function (files) {
-            var reader = new FileReader();
+            var handleFiles = function (files) {
+                var reader = new FileReader();
 
-            if (files.length > 0) {
-                reader.onload = function (e) {
-                    self.setClippingsText(e.target.result);                    
-                };
+                if (files.length > 0) {
+                    reader.onload = function (e) {
+                        self.setClippingsText(e.target.result);                    
+                    };
 
-                reader.readAsText(files[0]);
-            }
-        };
+                    reader.readAsText(files[0]);
+                }
+            };
 
-        var handleDrop = function (ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
+            var handleDrop = function (ev) {
+                ev.stopPropagation();
+                ev.preventDefault();
 
-            self.addRemoveClass("onyx-blue", false);
-            handleFiles(ev.dataTransfer.files); // FileList object.
-        };
+                self.addRemoveClass("onyx-blue", false);
+                handleFiles(ev.dataTransfer.files); // FileList object.
+            };
 
-        var handleFilePick = function () {
-            handleFiles(this.files); // FileList object.
-        };
+            var handleFilePick = function () {
+                handleFiles(this.files); // FileList object.
+            };
 
-        fp.addEventListener('change', handleFilePick, false);
-        elem.addEventListener('dragleave', handleDragleave, false);
-        elem.addEventListener('dragover', handleDragover, false);
-        elem.addEventListener('drop', handleDrop, false);
+            pickerNode.addEventListener('change', handleFilePick, false);
+            popupNode.addEventListener('dragleave', handleDragleave, false);
+            popupNode.addEventListener('dragover', handleDragover, false);
+            popupNode.addEventListener('drop', handleDrop, false);
+        }
     }
 
 
