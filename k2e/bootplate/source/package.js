@@ -14,5 +14,6 @@ enyo.depends(
     "SettingsPanel.js",
     "ClippingPickerPopup.js",
     "ExportPopup.js",
+    "Accordion.js",
 	"assert.js"
 );

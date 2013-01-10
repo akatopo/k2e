@@ -13,7 +13,12 @@ enyo.kind({
 
     components: [
         {name: "scroller", kind: "enyo.Scroller", fit: true, style: "height: 100%", components: [
-            {kind: "SettingsPanel"}
+            // {kind: "SettingsPanel"}
+            {kind: "AccordionItem"},
+            {kind: "AccordionItem"},
+            {kind: "AccordionItem"},
+            {kind: "AccordionItem"},
+            {kind: "AccordionItem"}
         ]}
     ],
 
