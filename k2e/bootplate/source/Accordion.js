@@ -1,55 +1,56 @@
 enyo.kind({
     name: "Accordion",
 
-    published: {
-    },
+    classes: "k2e-accordion",
 
-    components: [
-    ]
+    defaultKind: "AccordionItem"
 });
 
 enyo.kind({
     name: "AccordionItem",
 
     published: {
+        content: "Heading"
     },
 
-    components: [
+    childComponents: [
         {name: "header", classes: "onyx-toolbar-inline k2e-accordion-item-header", style:"height:36px", ontap: "toggleOpen", components:[
             {name: "animation", kind: "Animator", onStep: "animatorStep", onEnd: "animatorComplete"},
             {name: "expander", style: "background-color: inherit; width: 36px; height: 100%; margin: 0;", components: [
-                {tag: "img", src: "assets/placeholder.png"}
+                {tag: "img", src: "assets/accordion_collapsed.png"}
             ]},
             {classes: "k2e-accordion-item-content", style: "height: 100%; margin: 0;", components: [
-                {content: "Heading", style: "display: table-cell; vertical-align: middle; height: 36px"}
+                {name: "header_text", content: "Heading", style: "display: table-cell; vertical-align: middle; height: 36px"}
             ]}
         ]},
-        {name: "drawer", kind: "onyx.Drawer", open: false, orient: "v", animated: true, components:[
-            {kind: "onyx.Groupbox", components: [
-                {kind: "onyx.InputDecorator", components: [
-                    {kind: "onyx.Input", style: "width: 100%", placeholder: "Enter text here"}
-                ]},
-                {kind: "onyx.InputDecorator", components: [
-                    {kind: "onyx.Input", style: "width: 100%", value: "Middle"}
-                ]},
-                {kind: "onyx.InputDecorator", style: "background: lightblue;", components: [
-                    {kind: "onyx.Input", style: "width: 100%;", value: "Last"}
-                ]}
-            ]}
-        ]}
+        {name: "client", kind: "onyx.Drawer", open: false, orient: "v", animated: true}
     ],
 
+    initComponents: function () {
+        this.createComponents(this.childComponents, {isChrome: true});
+        this.inherited(arguments);
+    },
+
+    contentChanged: function () {
+        this.$.header_text.setContent(this.content);
+    },
+
+    create: function () {
+        this.inherited(arguments);
+        this.contentChanged();
+    },
+
     toggleOpen: function (inSender, inEvent) {
-        this.$.drawer.setOpen(!this.$.drawer.getOpen());
+        this.$.client.setOpen(!this.$.client.getOpen());
         if (this.$.animation.isAnimating()) {
             this.$.animation.reverse();
         }
         else {
-            if (this.$.drawer.getOpen()) {
-                this.$.animation.play({startValue: 0, endValue: 90, /*duration: 2000,*/ node: this.$.expander.hasNode()});
+            if (this.$.client.getOpen()) {
+                this.$.animation.play({startValue: 0, endValue: 90, node: this.$.expander.hasNode()});
             }
             else {
-                this.$.animation.play({startValue: 90, endValue: 0, /*duration: 2000,*/ node: this.$.expander.hasNode()});
+                this.$.animation.play({startValue: 90, endValue: 0, node: this.$.expander.hasNode()});
             }
         }
     },

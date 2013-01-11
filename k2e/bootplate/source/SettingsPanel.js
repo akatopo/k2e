@@ -9,39 +9,48 @@ enyo.kind({
         onSettingChanged: "handleSettingChanged"
     },
 
-    components: [
-        {kind: "onyx.Groupbox", components: [
-            {kind: "onyx.GroupboxHeader", content: "Appearance"},
-            {name: "themeName", kind: "SettingsValueItem", inputComponent:
-                    { kind: "SettingsThemeRadioGroup" },
-            label: "Theme"}
+    events: {
+        onFullscreenRequest: ""
+    },
 
-        ]},
-        {kind: "onyx.Groupbox", components: [
-            {kind: "onyx.GroupboxHeader", content: "Export"},
-            {name: "ignoredTitleList", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Titles to Ignore"}
-        ]},
-        {kind: "onyx.Groupbox", components: [
-            {kind: "onyx.GroupboxHeader", content: "Article extraction"},
-            {name: "articleExtraction", kind: "SettingsValueItem", defaultInputKind: "SettingsToggleButton", label: "Periodical Article Extraction",
-                    onSettingChanged: "handleExtractionSettingChanged"},
-            {name: "periodicalTitleList", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextInput"},
-                    label: "Periodical tiles",
-                    disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
-            {name: "googleSearchApiKey", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextInput", type: "password"},
-                    label: "Google Search Api Key",
-                    disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
-            {name: "googleSearchApiCx", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Cx",
-                    disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
-            {name: "googleSearchApiLoc", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Url",
-                    disabled: !SettingsSingletonInstance().getSetting("articleExtraction")}
-        ]},
-        {kind: "onyx.Groupbox", components: [
-            {kind: "onyx.GroupboxHeader", content: "Local Storage"},
-            {name: "clearSettings", kind: "SettingsActionItem", label: "Restore defaults", buttonLabel: "Restore", ontap: "restoreDefaults"},
-            {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear", ontap: "clearCache" },
-            {name: "exportSettings", kind: "SettingsActionItem", label: "Export Settings", buttonLabel: "Export", ontap: "exportSettings"},
-            {name: "importSettings", kind: "SettingsActionItem", label: "import Settings", buttonLabel: "Import", ontap: "importSettings"}
+    components: [
+        {kind: "Accordion", components: [
+            {content: "Appearance", components: [
+                {kind: "onyx.Groupbox", components: [
+                    {name: "themeName", kind: "SettingsValueItem",
+                            inputComponent: { kind: "SettingsThemeRadioGroup" }, label: "Theme"},
+                    {name: "fullscreen", kind: "SettingsActionItem", label: "Fullscreen", buttonLabel: "Toggle", ontap: "doFullscreenRequest"}
+                ]}
+            ]},
+            {content: "Export", components: [
+                {kind: "onyx.Groupbox", components: [
+                    {name: "ignoredTitleList", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Titles to Ignore"}
+                ]}
+            ]},
+            {content: "Article Extraction", components: [
+                {kind: "onyx.Groupbox", components: [
+                    {name: "articleExtraction", kind: "SettingsValueItem", defaultInputKind: "SettingsToggleButton", label: "Periodical Article Extraction",
+                            onSettingChanged: "handleExtractionSettingChanged"},
+                    {name: "periodicalTitleList", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextInput"},
+                            label: "Periodical tiles",
+                            disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
+                    {name: "googleSearchApiKey", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextInput", type: "password"},
+                            label: "Google Search Api Key",
+                            disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
+                    {name: "googleSearchApiCx", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Cx",
+                            disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
+                    {name: "googleSearchApiLoc", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Url",
+                            disabled: !SettingsSingletonInstance().getSetting("articleExtraction")}
+                ]}
+            ]},
+            {content: "Local Storage", components: [
+                {kind: "onyx.Groupbox", components: [
+                    {name: "clearSettings", kind: "SettingsActionItem", label: "Restore defaults", buttonLabel: "Restore", ontap: "restoreDefaults"},
+                    {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear", ontap: "clearCache" },
+                    {name: "exportSettings", kind: "SettingsActionItem", label: "Export Settings", buttonLabel: "Export", ontap: "exportSettings"},
+                    {name: "importSettings", kind: "SettingsActionItem", label: "import Settings", buttonLabel: "Import", ontap: "importSettings"}
+                ]}
+            ]}
         ]}
     ],
 

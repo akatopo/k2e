@@ -195,10 +195,19 @@
 /***********************************************************************************************/
 /* Accordion */
 
+.k2e-accordion {
+	padding: 10px;
+}
+
 .k2e-accordion-item-header {
 	margin-top: 10px;
 	margin-bottom: 5px;
 	background-color: #4C4C4C;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 14px;
+	border: none;
+	/*background: #4c4c4c url(../assets/gradient.png) repeat-x 0 10px;*/
 }
 
 .k2e-accordion-item-content {

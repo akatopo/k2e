@@ -31,7 +31,7 @@ return {
 			{content: "k2e", fit: true, style: "text-align: center;"},
 			{name: "export_button", kind: "onyx.Button", classes: "k2e-export-button", content: "Export to Evernote", ontap: "prepareDocumentsAndExport"}
 		]},
-		{kind: "SettingsSlideable", name: "settings"},
+		{name: "settings", kind: "SettingsSlideable"},
 		{kind: "FittableColumns", fit: true, components: [
 			{kind: "Panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
 				{name: "sidebar", classes: "k2e-sidebar", style: "width: 20%", components:[
@@ -59,10 +59,14 @@ return {
 
 	handlers: {
 		onDocumentSelected: "handleDocumentSelected",
-		onClippingsTextChanged: "handleClippingsTextChanged"
+		onClippingsTextChanged: "handleClippingsTextChanged",
+		onFullscreenRequest: "handleFullscreenRequest"
 	},
 
 	toggleFullscreen: function () {
+		if (this.$.settings.isAtMax()) {
+			this.$.settings.animateToMin();
+		}
 		app.$.sidebar.setShowing(!app.$.sidebar.showing);
 		app.$.app_toolbar.setShowing(
 				!app.$.app_toolbar.showing);
@@ -284,6 +288,10 @@ return {
 		this.log(inSender);
 		this.log(inEvent);
 		return true;
+	},
+
+	handleFullscreenRequest: function (inSender, inEvent) {
+		this.toggleFullscreen();
 	},
 
 	toggleSettings: function (inSender, inEvent) {
