@@ -67,12 +67,12 @@ return {
 		if (this.$.settings.isAtMax()) {
 			this.$.settings.animateToMin();
 		}
-		app.$.sidebar.setShowing(!app.$.sidebar.showing);
-		app.$.app_toolbar.setShowing(
-				!app.$.app_toolbar.showing);
-		app.$.document_toolbar.setShowing(
-				!app.$.document_toolbar.showing);
-		app.resized();
+		this.$.sidebar.setShowing(!this.$.sidebar.showing);
+		this.$.app_toolbar.setShowing(
+				!this.$.app_toolbar.showing);
+		this.$.document_toolbar.setShowing(
+				!this.$.document_toolbar.showing);
+		this.resized();
 	},
 
 	exportDocuments: function (inSender, inEvent) {
@@ -83,11 +83,11 @@ return {
 		console.log(loc);
 		console.log(_docsExport);
 
-		// comment out to enable exporting
-		var self = this;
-		window.setTimeout(function () { self.$.export_popup.exportDone(); }, 2000 /* ms */);
-		window.setTimeout(function () { self.$.export_popup.hide(); }, 4000 /* ms */);
-		return;
+		// // comment out to enable exporting
+		// var self = this;
+		// window.setTimeout(function () { self.$.export_popup.exportDone(); }, 2000 /* ms */);
+		// window.setTimeout(function () { self.$.export_popup.hide(); }, 4000 /* ms */);
+		// return;
 
 		var ajax = new enyo.Ajax({
 			url: loc + "/Export",
@@ -137,7 +137,6 @@ return {
 		for (var i = 0; i < docExportArray.length; ++i) {
 			var dEx = docExportArray[i];
 
-			// comment out to enable periodical article url and title search.
 			if (settings.getSetting("articleExtraction") === true) {
 				this.log("Tagging documents as periodicals");
 				if (dEx.title in periodicalTitleSet) {
@@ -160,9 +159,9 @@ return {
 		var quoted = (makeQuotedFlag === undefined)?true:makeQuotedFlag;
 		var retry = (retryFlag === undefined)?true:retryFlag;
 
-		var loc = settings.getSetting("googleSearchApiLoc"); // "https://www.googleapis.com/customsearch/v1?";
-		var key = settings.getSetting("googleSearchApiKey"); // "AIzaSyCOmQoeVtIKV5xyAVIe3BnFFejQgHEjv0I";
-		var cx = settings.getSetting("googleSearchApiCx"); // "010892405042999130320:lrtm0dyni30";
+		var loc = settings.getSetting("googleSearchApiLoc");
+		var key = settings.getSetting("googleSearchApiKey");
+		var cx = settings.getSetting("googleSearchApiCx");
 
 		var MAX_QUERY_LENGTH = 128;
 		
