@@ -4,37 +4,37 @@ enyo.kind({
     classes: "k2e-document-view",
 
     components: [],
-    
-    displayDocument: function (doc) {
-        var self = this;
-        function appendClippingToDisplay(doc, i) {
-            var loc = doc.clippings[i].loc;
-            var type = doc.clippings[i].type;
-            var timestamp = doc.clippings[i].timeStamp;
-            var content = doc.clippings[i].content;
 
-            self
-            .createComponent({classes: "k2e-document-view-clip-header", components: [
-                    {tag: "i", content: type + ", " + loc},
-                    {tag: "span", content: " | "},
-                    {tag: "i", content: timestamp }
-                    ]});
-            self
-            .createComponent({tag: "p", content: content});
+    displayDocument: function (doc) {
+        var self = this,
+            i;
+
+        function appendClippingToDisplay(doc, i) {
+            var loc = doc.clippings[i].loc,
+                type = doc.clippings[i].type,
+                timestamp = doc.clippings[i].timeStamp,
+                content = doc.clippings[i].content;
+
+            self.createComponent({classes: "k2e-document-view-clip-header", components: [
+                {tag: "i", content: type + ", " + loc},
+                {tag: "span", content: " | "},
+                {tag: "i", content: timestamp }
+            ]});
+            self.createComponent({tag: "p", content: content});
         }
 
         this.clearDocument();
 
         this.createComponent({tag: "h1", content: doc.title});
         this.createComponent({classes: "k2e-document-view-subtitle", components: [
-                {tag: "i", content: "by "},
-                {tag: "span", content: doc.author }
-                ]});
+            {tag: "i", content: "by "},
+            {tag: "span", content: doc.author }
+        ]});
 
         if (doc.clippings.length !== 0) {
             appendClippingToDisplay(doc, 0);
-            for (var i = 1; i < doc.clippings.length; ++i) {
-                this.createComponent({classes:"k2e-document-view-clip-separator"});
+            for (i = 1; i < doc.clippings.length; i += 1) {
+                this.createComponent({classes: "k2e-document-view-clip-separator"});
                 appendClippingToDisplay(doc, i);
             }
         }

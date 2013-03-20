@@ -5,7 +5,7 @@ enyo.kind({
 
     classes: "k2e-settings",
 
-    min:-100,
+    min: -100,
     max: 0,
     value: -100,
     unit: "%",
@@ -18,12 +18,13 @@ enyo.kind({
     ],
 
     toggle: function () {
-      if (this.isAtMin()) {
-        this.animateToMax();
-      }
-      else {
-        this.animateToMin();
-        this.$.scroller.scrollToTop();
-      }
+        this.addRemoveClass("k2e-settings-active", this.isAtMin());
+
+        if (this.isAtMin()) {
+            this.animateToMax();
+        } else {
+            this.animateToMin();
+            this.$.scroller.scrollToTop();
+        }
     }
 });

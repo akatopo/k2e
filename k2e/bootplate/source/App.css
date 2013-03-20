@@ -148,7 +148,14 @@
 	line-height: 30px;
 }
 
+.k2e-settings-item:first-child {
+    border-top-color: #555;
+}
+
 .k2e-settings-item {
+    background-color: #444;
+    border-color: #555;
+    color: white;
 	padding: 8px;
 }
 
@@ -170,9 +177,15 @@
 	top: 57px; /* main toolbar height */
 	left: 0;
 	bottom: 0;
-	background: #D8D8D8;
+	background: #333;
 	z-index: 1;
 	width: 480px;
+}
+
+.k2e-settings-active {
+    -moz-box-shadow: 4px 0 4px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 4px 0 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 4px 0 4px rgba(0, 0, 0, 0.3);
 }
 
 /***********************************************************************************************/
@@ -211,7 +224,7 @@
 }
 
 .k2e-accordion-item-content {
-	border-left: 1px solid gray;
+	border-left: 1px solid #555;
 	padding-left: 5px;
 	color: white;
 }

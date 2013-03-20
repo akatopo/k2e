@@ -14,7 +14,7 @@ enyo.kind({
     },
 
     childComponents: [
-        {name: "header", classes: "onyx-toolbar-inline k2e-accordion-item-header", style:"height:36px", ontap: "toggleOpen", components:[
+        {name: "header", classes: "onyx-toolbar-inline k2e-accordion-item-header", style: "height: 36px", ontap: "toggleOpen", components: [
             {name: "animation", kind: "Animator", onStep: "animatorStep", onEnd: "animatorComplete"},
             {name: "expander", style: "background-color: inherit; width: 36px; height: 100%; margin: 0;", components: [
                 {tag: "img", src: "assets/accordion_collapsed.png"}
@@ -44,12 +44,10 @@ enyo.kind({
         this.$.client.setOpen(!this.$.client.getOpen());
         if (this.$.animation.isAnimating()) {
             this.$.animation.reverse();
-        }
-        else {
+        } else {
             if (this.$.client.getOpen()) {
                 this.$.animation.play({startValue: 0, endValue: 90, node: this.$.expander.hasNode()});
-            }
-            else {
+            } else {
                 this.$.animation.play({startValue: 90, endValue: 0, node: this.$.expander.hasNode()});
             }
         }

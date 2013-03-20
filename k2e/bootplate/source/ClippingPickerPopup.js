@@ -29,9 +29,9 @@ enyo.kind({
         onShow: "handleOnShow"
     },
 
-    loadFile: function() {
+    loadFile: function () {
         var pickerNode = this.$.file_picker.hasNode();
-        
+
         if (pickerNode) {
             pickerNode.click();
         }
@@ -42,35 +42,40 @@ enyo.kind({
     },
 
     handleOnShow: function () {
-        var self = this;
-        var popupNode = this.hasNode();
-        var pickerNode = this.$.file_picker.hasNode();
+        var self = this,
+            popupNode = this.hasNode(),
+            pickerNode = this.$.file_picker.hasNode(),
+            handleDragleave,
+            handleDragover,
+            handleFiles,
+            handleDrop,
+            handleFilePick;
 
         if (popupNode && pickerNode) {
-            var handleDragleave = function (ev) {
+            handleDragleave = function (ev) {
                 self.addRemoveClass("onyx-blue", false);
             };
 
-            var handleDragover = function (ev) {
+            handleDragover = function (ev) {
                 self.addRemoveClass("onyx-blue", true);
                 ev.stopPropagation();
                 ev.preventDefault();
                 ev.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
             };
 
-            var handleFiles = function (files) {
+            handleFiles = function (files) {
                 var reader = new FileReader();
 
                 if (files.length > 0) {
                     reader.onload = function (e) {
-                        self.setClippingsText(e.target.result);                    
+                        self.setClippingsText(e.target.result);
                     };
 
                     reader.readAsText(files[0]);
                 }
             };
 
-            var handleDrop = function (ev) {
+            handleDrop = function (ev) {
                 ev.stopPropagation();
                 ev.preventDefault();
 
@@ -78,7 +83,7 @@ enyo.kind({
                 handleFiles(ev.dataTransfer.files); // FileList object.
             };
 
-            var handleFilePick = function () {
+            handleFilePick = function () {
                 handleFiles(this.files); // FileList object.
             };
 

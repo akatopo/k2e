@@ -6,11 +6,11 @@ enyo.kind({
         func: undefined
     },
     v: function () {
-        this.lock++;
+        this.lock += 1;
     },
     p: function () {
-        this.lock--;
-        if (this.lock == 0 && this.func) {
+        this.lock -= 1;
+        if (this.lock === 0 && this.func) {
             this.func();
         }
     }

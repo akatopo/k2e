@@ -23,6 +23,6 @@ enyo.kind({
 
     exportBegin: function () {
         this.$.spinner.show();
-        this.$.message.setContent("Exporting clippings...");  
+        this.$.message.setContent("Exporting clippings...");
     }
 });

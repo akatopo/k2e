@@ -1,6 +1,6 @@
 enyo.kind({
     name: "SettingsPanel",
-    
+
     kind: "enyo.Control",
 
     classes: "k2e-settings-panel",
@@ -64,11 +64,10 @@ enyo.kind({
     },
 
     handleExtractionSettingChanged: function (inSender, inEvent) {
-        if (this.$.periodicalTitleList &&
-                this.$.googleSearchApiKey &&
-                this.$.googleSearchApiCx &&
-                this.$.googleSearchApiLoc)
-        {
+        if (this.$.periodicalTitleList
+                && this.$.googleSearchApiKey
+                && this.$.googleSearchApiCx
+                && this.$.googleSearchApiLoc) {
             this.$.periodicalTitleList.setDisabled(!inEvent.originator.getValue());
             this.$.googleSearchApiKey.setDisabled(!inEvent.originator.getValue());
             this.$.googleSearchApiCx.setDisabled(!inEvent.originator.getValue());
@@ -76,18 +75,20 @@ enyo.kind({
         }
     },
 
-    restoreDefaults: function() {
+    restoreDefaults: function () {
         this.log("restore defaults");
 
         localStorage.clear();
 
-        var settings = SettingsSingletonInstance();
-        var defaultsArray = settings.defaultSettings.published;
+        var settings = SettingsSingletonInstance(),
+            defaultsArray = settings.defaultSettings.published,
+            key;
 
-        for (var key in defaultsArray) {
-            this.$[key].setValue(settings.getDefaultSetting(key));
+        for (key in defaultsArray) {
+            if (defaultsArray.hasOwnProperty(key)) {
+                this.$[key].setValue(settings.getDefaultSetting(key));
+            }
         }
- 
     },
 
     importSettings: function () {
@@ -98,8 +99,8 @@ enyo.kind({
         this.log("Export settings");
     },
 
-    clearCache: function() {
-      this.log("clear cache");
+    clearCache: function () {
+        this.log("clear cache");
     }
 });
 
@@ -119,7 +120,7 @@ enyo.kind({
         {name: "label", kind: "Control"}
     ],
 
-    labelChanged: function() {
+    labelChanged: function () {
         this.$.label.setContent(this.label);
     },
 
@@ -151,10 +152,10 @@ enyo.kind({
         this.$.button.setContent(this.buttonLabel);
     },
 
-    create: function() {
+    create: function () {
         this.inherited(arguments);
         this.createComponent({fit: true});
-        this.createComponent({name: "button", kind:"onyx.Button", classes: "k2e-settings-action-item-button", content: this.buttonLabel});
+        this.createComponent({name: "button", kind: "onyx.Button", classes: "k2e-settings-action-item-button", content: this.buttonLabel});
     },
 
     rendered: function () {
@@ -184,7 +185,7 @@ enyo.kind({
 
     inputComponent: null,
 
-    getValue: function() {
+    getValue: function () {
         return this.$.input.getValue();
     },
 
@@ -210,11 +211,10 @@ enyo.kind({
         if (this.inputComponent) {
             this.inputComponent.name = "input";
             this.createComponent(this.inputComponent);
-        }
-        else {
+        } else {
             this.createComponent({name: "input", kind: this.defaultInputKind});
         }
-        
+
         this.value = SettingsSingletonInstance().getSetting(this.getName());
         this.valueChanged();
     },
@@ -270,7 +270,7 @@ enyo.kind({
         this.$.text.setPlaceholder(this.placeholder);
     },
 
-    typeChanged: function() {
+    typeChanged: function () {
         this.$.text.setType(this.type);
     },
 
@@ -292,7 +292,7 @@ enyo.kind({
         return true;
     },
 
-    create: function() {
+    create: function () {
         this.inherited(arguments);
 
         this.typeChanged();
@@ -318,9 +318,9 @@ enyo.kind({
 
 enyo.kind({
     name: "SettingsThemeRadioGroup",
-    
+
     kind: "Control",
-    
+
     published: {
         value: "",
         disabled: "false"
@@ -336,7 +336,7 @@ enyo.kind({
             {name: "light", content: "Light"}
         ]}
     ],
-    
+
     handleActivate: function (inSender, inEvent) {
         if (inEvent.originator.getActive()) {
             this.log(inEvent.originator.getContent());
@@ -350,10 +350,11 @@ enyo.kind({
 
     valueChanged: function () {
         this.log(this.getComponents());
-        
-        var comps = this.getComponents();
-        for (var i = 1; i < comps.length; ++i) {
-            if (comps[i].getContent() == this.value) {
+
+        var comps = this.getComponents(),
+            i;
+        for (i = 1; i < comps.length; i += 1) {
+            if (comps[i].getContent() === this.value) {
                 comps[i].setActive(true);
                 this.doInputValueChanged();
                 return true;
@@ -363,8 +364,7 @@ enyo.kind({
         // value not found
         if (this.$.group.getActive()) {
             this.value = this.$.group.getActive().getContent();
-        }
-        else {
+        } else {
             this.value = "";
         }
 
@@ -372,9 +372,10 @@ enyo.kind({
     },
 
     disabledChanged: function () {
-        var comps = this.getComponents();
-        for (var i = 1; i < comps.length; ++i) {
-             comps[i].setDisabled(this.disabled);
+        var comps = this.getComponents(),
+            i;
+        for (i = 1; i < comps.length; i += 1) {
+            comps[i].setDisabled(this.disabled);
         }
     }
 });
