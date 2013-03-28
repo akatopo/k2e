@@ -1,3 +1,6 @@
+# Ignore sass cache
+.sass-cache
+
 # Don't include the KeyHolder struct in versioning
 KeyHolder.cs
 
