@@ -88,6 +88,29 @@
   <ItemGroup>
     <Content Include="bootplate\debug.html" />
     <Content Include="bootplate\Default.aspx" />
+    <Content Include="deploy\assets\accordion_collapsed.png" />
+    <Content Include="deploy\assets\bg.png" />
+    <Content Include="deploy\assets\clippings.txt" />
+    <Content Include="deploy\assets\favicon.ico" />
+    <Content Include="deploy\assets\gradient.png" />
+    <Content Include="deploy\build\app.css" />
+    <Content Include="deploy\build\app.js" />
+    <Content Include="deploy\build\enyo.css" />
+    <Content Include="deploy\build\enyo.js" />
+    <Content Include="deploy\icon.png" />
+    <Content Include="deploy\index.html" />
+    <Content Include="deploy\lib\onyx\images\checkbox.png" />
+    <Content Include="deploy\lib\onyx\images\grabbutton.png" />
+    <Content Include="deploy\lib\onyx\images\gradient-invert.png" />
+    <Content Include="deploy\lib\onyx\images\gradient.png" />
+    <Content Include="deploy\lib\onyx\images\more.png" />
+    <Content Include="deploy\lib\onyx\images\progress-button-cancel.png" />
+    <Content Include="deploy\lib\onyx\images\search-input-cancel.png" />
+    <Content Include="deploy\lib\onyx\images\search-input-search.png" />
+    <Content Include="deploy\lib\onyx\images\slider-handle.png" />
+    <Content Include="deploy\lib\onyx\images\spinner-dark.gif" />
+    <Content Include="deploy\lib\onyx\images\spinner-light.gif" />
+    <Content Include="deploy\lib\onyx\LICENSE-2.0.txt" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -137,7 +160,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EvernoteCredentials.config" />
+    <None Include="deploy\assets\fontawesome-webfont.afm" />
+    <None Include="deploy\assets\fontawesome-webfont.eot" />
+    <None Include="deploy\assets\fontawesome-webfont.ttf" />
+    <None Include="deploy\assets\fontawesome-webfont.woff" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
