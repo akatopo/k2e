@@ -54,7 +54,7 @@ namespace EvernoteWebQuickstart
             // this will return to the same page that called it
             callbackUrl = "http://" + 
                     Request.ServerVariables["SERVER_NAME"].ToString() +
-                    ":" + Request.ServerVariables["SERVER_PORT"] +
+                    // ":" + Request.ServerVariables["SERVER_PORT"] +
                     Page.Request.FilePath;
 
             // WILLNOTDO - figure out the user for the app and pass
