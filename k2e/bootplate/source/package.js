@@ -5,6 +5,7 @@ enyo.depends(
     "String_hashCode.js",
     "AsyncSemaphore.js",
     "Settings.js",
+    "fontawesome.css",
     "App.css",
     "App.js",
     "DocumentSelectorList.js",
@@ -15,5 +16,6 @@ enyo.depends(
     "ClippingPickerPopup.js",
     "ExportPopup.js",
     "Accordion.js",
+    "DocumentScroller.js",
     "assert.js"
 );

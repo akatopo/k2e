@@ -25,25 +25,27 @@ enyo.kind(
                 {name: "clipping_picker_popup", kind: "ClippingPickerPopup"},
                 {name: "export_popup", kind: "ExportPopup" },
                 {name: "app_toolbar", kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
-                    {kind: "onyx.Button", content: "Settings", ontap: "toggleSettings"},
+                    {name: "settings_button", kind: "onyx.Button", ontap: "toggleSettings", components: [ {tag: "i", classes: "icon-reorder icon-large", content: " "}, {tag: "span", content: "Settings" } ]},
                     {content: "k2e", fit: true, style: "text-align: center;"},
                     {name: "export_button", kind: "onyx.Button", classes: "k2e-export-button", content: "Export to Evernote", ontap: "prepareDocumentsAndExport"}
                 ]},
                 {name: "settings", kind: "SettingsSlideable"},
                 {kind: "FittableColumns", fit: true, components: [
                     {kind: "Panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
-                        {name: "sidebar", classes: "k2e-sidebar", style: "width: 20%", components: [
+                        {name: "sidebar", classes: "k2e-sidebar", components: [
                             {fit: true, name: "document_selector_list", kind: "DocumentSelectorList"}
                         ]},
                         {kind: "FittableRows", classes: "k2e-main-panel", fit: true, components: [
-                            {name: "document_scroller", kind: "enyo.Scroller", /*style:"position:relative",*/ fit: true, classes: "k2e-document-scroller k2e-document-view-dark", components: [
-                                {name: "document_view", kind: "DocumentView", fit: true}//,
-                                //{kind: "onyx.Button", content: "to top", style:"position: absolute; bottom: 10px; right: 10px;"}
+                            {name: "to_top_button", classes: "k2e-to-top-button", kind: "onyx.Button", ontap: "scrollDocumentToTop", components: [
+                                {tag: "i", classes: "icon-chevron-up icon-large"}
                             ]},
-                            {name: "document_toolbar", kind: "onyx.Toolbar", components: [
-                                {kind: "onyx.Grabber"},
-                                {content: "clip toolbar"}
-                            ]}
+                            {
+                                name: "document_scroller",
+                                kind: "DocumentScroller",
+                                components: [
+                                    {name: "document_view", kind: "DocumentView", fit: true}
+                                ]
+                            }
                         ]}
                     ]}
                 ]}
@@ -58,19 +60,18 @@ enyo.kind(
             handlers: {
                 onDocumentSelected: "handleDocumentSelected",
                 onClippingsTextChanged: "handleClippingsTextChanged",
-                onFullscreenRequest: "handleFullscreenRequest"
+                onFullscreenRequest: "handleFullscreenRequest",
+                onDocumentScrolled: "handleDocumentScrolled"
             },
 
             toggleDistractionFreeMode: function () {
                 if (this.$.settings.isAtMax()) {
-                    this.$.settings.animateToMin();
+                    // this.$.settings.animateToMin();
+                    this.toggleSettings();
                 }
                 this.$.sidebar.setShowing(!this.$.sidebar.showing);
                 this.$.app_toolbar.setShowing(
                     !this.$.app_toolbar.showing
-                );
-                this.$.document_toolbar.setShowing(
-                    !this.$.document_toolbar.showing
                 );
                 this.resized();
             },
@@ -270,6 +271,10 @@ enyo.kind(
                 this.handleQueryEnd();
             },
 
+            scrollDocumentToTop: function (inSender, inEvent) {
+                this.$.document_scroller.scrollToTop();
+            },
+
             handleDocumentSelected: function (inSender, inEvent) {
                 var docSelector,
                     doc;
@@ -281,8 +286,29 @@ enyo.kind(
                 console.log(doc);
                 //this.$.document_view.setContent(doc.clippings[0].getContent());
                 this.$.document_view.displayDocument(doc);
-                this.$.document_scroller.scrollToTop();
+                this.$.document_scroller.setScrollTop(0);
+                this.$.document_scroller.setScrollLeft(0);
 
+            },
+
+            handleDocumentScrolled: function (inSender, inEvent) {
+                var bounds = inEvent.bounds,
+                    scrollBounds = inEvent.scrollBounds,
+                    right,
+                    bottom,
+                    padding = 10;
+
+                right = bounds.width - scrollBounds.clientWidth + padding;
+                bottom = bounds.height - scrollBounds.clientHeight + padding;
+
+                this.$.to_top_button.applyStyle("right", right + "px");
+                this.$.to_top_button.applyStyle("bottom", bottom + "px");
+
+                if (scrollBounds.top === 0) {
+                    this.$.to_top_button.applyStyle("display", "none");
+                } else {
+                    this.$.to_top_button.applyStyle("display", "block");
+                }
             },
 
             handleExportBegin: function (inSender, inEvent) {
@@ -316,11 +342,13 @@ enyo.kind(
             handleKeydown: function (inSender, inEvent) {
                 this.log(inSender);
                 this.log(inEvent);
-                if (inEvent.keyCode === 70) {
+                if (inEvent.keyCode === 70) { // 'f'
                     this.toggleFullscreen();
-                } /*else if (inEvent.keyCode === 13) {
-                    return false;
-                }*/
+                } else if (inEvent.keyCode === 74) { // 'j'
+                    this.$.document_selector_list.selectNextDocument();
+                } else if (inEvent.keyCode === 75) { // 'k'
+                    this.$.document_selector_list.selectPrevDocument();
+                }
                 return true;
             },
 
@@ -329,6 +357,8 @@ enyo.kind(
             },
 
             toggleSettings: function (inSender, inEvent) {
+                var settingsButton = this.$.settings_button;
+                settingsButton.addRemoveClass("active", !settingsButton.hasClass("active"));
                 this.$.settings.toggle();
             },
 

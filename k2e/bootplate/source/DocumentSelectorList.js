@@ -54,15 +54,46 @@ enyo.kind({
         }
     },
     selectNextDocument: function () {
-        if (this.items.length !== 0 && !this.selDocumentSelectorItem) {
-            this.selDocumentSelectorItem = this.items[0];
-            this.selDocumentSelectorItem.setSelected(true);
-        } else {
-            // there's a selected item, potentially select the next one.
+        var curIndex,
+            selDocument;
+
+        if (this.items.length !== 0) {
+            if (!this.selDocumentSelectorItem) {
+                selDocument = this.items[0];
+                selDocument.doDocumentSelected();
+            } else {
+                curIndex = this.selDocumentSelectorItem.getIndex();
+                if (curIndex >= 0 && curIndex < this.items.length - 1) {
+                    curIndex += 1;
+
+                    selDocument = this.items[curIndex];
+                    selDocument.doDocumentSelected();
+                }
+
+                this.log(this.selDocumentSelectorItem.getIndex());
+            }
         }
     },
     selectPrevDocument: function () {
+        var curIndex,
+            selDocument;
 
+        if (this.items.length !== 0) {
+            if (!this.selDocumentSelectorItem) {
+                selDocument = this.items[this.items.length - 1];
+                selDocument.doDocumentSelected();
+            } else {
+                curIndex = this.selDocumentSelectorItem.getIndex();
+                if (curIndex >= 1 && curIndex < this.items.length) {
+                    curIndex -= 1;
+
+                    selDocument = this.items[curIndex];
+                    selDocument.doDocumentSelected();
+                }
+
+                this.log(this.selDocumentSelectorItem.getIndex());
+            }
+        }
     },
     populate: function (documents) {
         this.documentsRef = documents;

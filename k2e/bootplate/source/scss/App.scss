@@ -1,0 +1,251 @@
+/*
+	Put anything you reference with "url()" in ../assets/
+	This way, you can minify your application, and just remove the "source" folder for production
+*/
+
+/***********************************************************************************************/
+
+@mixin apply-box-shadow($offset-x, $offset-y, $blur-radius, $color) {
+    -moz-box-shadow: $offset-x $offset-y $blur-radius $color;
+    -webkit-box-shadow: $offset-x $offset-y $blur-radius $color;
+    box-shadow: $offset-x $offset-y $blur-radius $color;
+}
+
+#app {
+	background-color: gray;
+	background: url(../assets/bg.png);
+}
+
+.k2e-main-panel {
+	@include apply-box-shadow(-4px, 0, 4px, rgba(0, 0, 0, 0.3));
+}
+
+.k2e-document-scroller {
+	background-color: purple;
+}
+
+
+.k2e-export-button {
+   background-color: #35A8EE !important;
+}
+
+.k2e-sidebar {
+    width: 20%;
+}
+
+
+
+/***********************************************************************************************/
+/* Document selector list */
+
+.k2e-document-selector-item {
+	/*padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	margin-top: 1px;
+	margin-bottom: 1px;*/
+	border-bottom: 1px solid #0E0E0E;
+	background-color: #333;
+	color: white;
+	padding: 16px 12px;
+	overflow: hidden;
+	white-space: nowrap;
+	position: relative;
+}
+
+.k2e-document-selector-item.onyx-selected
+{
+	background-color: #226B9A;
+}
+
+.k2e-document-selector-item-label {
+	vertical-align: middle; 
+	overflow: hidden; 
+	text-overflow: ellipsis;
+	width: 80%; /* hack */
+	padding-left: 5px;
+}
+
+/***********************************************************************************************/
+/* Document Display */
+
+/** Dark theme **/
+.k2e-document-view-dark {
+	background-color: #333; /* #323A40; */
+	color: #D6DBDF;
+}
+
+.k2e-document-view-dark .k2e-document-view-subtitle,
+.k2e-document-view-dark .k2e-document-view-clip-separator,
+.k2e-document-view-dark .k2e-document-view-clip-header {
+	border-color: #4E5358;
+	color: #A6B5C2;
+}
+
+/** document display default styles **/
+$document-horizontal-padding: 100px;
+$document-max-width: 940px - $document-horizontal-padding;
+
+.k2e-document-view {
+	/*"minion-pro", Palatino,*/
+	font-size: 100%;
+	font-family: Georgia, serif;
+
+	box-sizing: border-box;
+	margin: 0 auto;
+	max-width: $document-max-width;
+	padding: 1.2em $document-horizontal-padding;
+	vertical-align: baseline;
+	line-height: 1;
+
+    h1 {
+        font-size: 2em;
+        font-weight: 700;
+        line-height: 1.3;
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+
+    h2 {
+        font-size: 1.2em;
+        font-weight: 600;
+        margin: 0.8em 0 0.0455em 0;
+    }
+
+    p {
+        line-height: 1.55em;
+        margin: 1.2em 0;
+    }
+}
+
+.k2e-document-view > * {
+	-webkit-font-smoothing: antialiased;
+}
+
+.k2e-document-view-clip-header,
+.k2e-document-view-subtitle {
+	color: #707065; /* changed from theme */
+	font-size: 0.8em;
+	letter-spacing: 0.09em;
+	margin-top: 1.8em;
+	/*overflow: hidden;*/
+	padding-top: 0.9em;
+	overflow: visible;
+}
+
+.k2e-document-view-subtitle {
+	border-top: 1px solid #CDCDCC; /* changed from theme */
+}
+
+.k2e-document-view-clip-separator {
+	margin: 0 auto;
+	width: 20%;
+	/*height: 2px;*/
+	border-top: 2px dotted gray; /* changed from theme */
+}
+
+.k2e-to-top-button {
+    position: absolute;
+    display: none;
+    z-index: 120;
+
+    color: #f2f2f2;
+    background-color: #555656;
+    border-color: rgba(15, 15, 15, 0.5);
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 36px;
+}
+
+/***********************************************************************************************/
+/* Settings panel */
+
+/*.k2e-settings-panel {
+	width: 400px;
+}*/
+
+.k2e-settings-panel > * {
+	padding: 10px;
+	min-height: 30px;
+	line-height: 30px;
+}
+
+.k2e-settings-item {
+    background-color: #444;
+    border-color: #555;
+    color: white;
+	padding: 8px;
+
+    &:first-child {
+        border-top-color: #555;
+    }
+}
+
+.k2e-settings-item-label-disabled {
+	color: gray;
+}
+
+.k2e-settings-text-input {
+	display: inline-block;
+	width: 140px;
+}
+
+.k2e-settings-action-item-button {
+	width: 100px;
+}
+
+.k2e-settings {
+	position: absolute;
+	top: 57px; /* main toolbar height */
+	left: 0;
+	bottom: 0;
+	background: #333;
+	z-index: 1;
+	width: 480px;
+}
+
+.k2e-settings-active {
+    @include apply-box-shadow(4px, 0, 4px, rgba(0, 0, 0, 0.3));
+}
+
+/***********************************************************************************************/
+/* Clipping picker popup */
+
+.k2e-clipping-picker-popup {
+	/*width: 95%;*/
+	/*height: 95%;*/
+	/*vertical-align: middle;*/
+	/*text-align: center;*/
+	padding: 30px;
+}
+
+
+.k2e-export-popup {
+	padding: 30px;
+	text-align: center;
+}
+
+/***********************************************************************************************/
+/* Accordion */
+
+.k2e-accordion {
+	padding: 10px;
+}
+
+.k2e-accordion-item-header {
+	margin-top: 10px;
+	margin-bottom: 5px;
+	background-color: #4C4C4C;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 14px;
+	border: none;
+	/*background: #4c4c4c url(../assets/gradient.png) repeat-x 0 10px;*/
+}
+
+.k2e-accordion-item-content {
+	border-left: 1px solid #555;
+	padding-left: 5px;
+	color: white;
+}

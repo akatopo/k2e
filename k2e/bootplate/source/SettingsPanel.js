@@ -48,7 +48,7 @@ enyo.kind({
                     {name: "clearSettings", kind: "SettingsActionItem", label: "Restore defaults", buttonLabel: "Restore", ontap: "restoreDefaults"},
                     {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear", ontap: "clearCache" },
                     {name: "exportSettings", kind: "SettingsActionItem", label: "Export Settings", buttonLabel: "Export", ontap: "exportSettings"},
-                    {name: "importSettings", kind: "SettingsActionItem", label: "import Settings", buttonLabel: "Import", ontap: "importSettings"}
+                    {name: "importSettings", kind: "SettingsActionItem", label: "Import Settings", buttonLabel: "Import", ontap: "importSettings"}
                 ]}
             ]}
         ]}
@@ -228,12 +228,6 @@ enyo.kind({
 enyo.kind({
     name: "SettingsTextInput",
 
-    //kind: "onyx.InputDecorator",
-
-    //classes: "k2e-settings-text-input",
-
-    //style: "display: inline-block; width: 140px;",
-
     published: {
         value: "",
         disabled: "false",
@@ -253,7 +247,7 @@ enyo.kind({
     },
 
     components: [
-        {kind: "onyx.InputDecorator", style: "width: 140px", alwaysLooksFocused: true, components: [
+        {kind: "onyx.InputDecorator", classes: "k2e-settings-text-input", alwaysLooksFocused: true, components: [
             {name: "text", kind: "onyx.Input", style: "width: 100%"}
         ]}
     ],
