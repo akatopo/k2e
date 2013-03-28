@@ -1,8 +1,8 @@
 # Ignore sass cache
 .sass-cache
 
-# Don't include the KeyHolder struct in versioning
-KeyHolder.cs
+# Ignore evernote credentials file
+EvernoteCredentials.config
 
 # System files
 .DS_Store
