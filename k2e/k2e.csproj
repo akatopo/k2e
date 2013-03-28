@@ -97,6 +97,7 @@
     <Content Include="deploy\build\app.js" />
     <Content Include="deploy\build\enyo.css" />
     <Content Include="deploy\build\enyo.js" />
+    <Content Include="deploy\Default.aspx" />
     <Content Include="deploy\icon.png" />
     <Content Include="deploy\index.html" />
     <Content Include="deploy\lib\onyx\images\checkbox.png" />
@@ -124,6 +125,9 @@
     <Compile Include="bootplate\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="deploy\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
