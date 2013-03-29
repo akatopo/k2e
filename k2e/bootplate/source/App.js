@@ -51,6 +51,9 @@ enyo.kind(
                             {name: "to_top_button", classes: "k2e-to-top-button", kind: "onyx.Button", ontap: "scrollDocumentToTop", components: [
                                 {tag: "i", classes: "icon-chevron-up icon-large"}
                             ]},
+                            {name: "toggle_fullscreen_button", classes: "k2e-toggle-fullscreen-button", ontap: "toggleFullscreen", kind: "onyx.Button", components: [
+                                {tag: "i", classes: "icon-resize-full icon-large"}
+                            ]},
                             {
                                 name: "document_scroller",
                                 kind: "DocumentScroller",
@@ -93,19 +96,25 @@ enyo.kind(
             },
 
             toggleDistractionFreeMode: function () {
+
                 if (this.$.settings.isAtMax()) {
                     // this.$.settings.animateToMin();
                     this.toggleSettings();
                 }
                 this.$.sidebar.setShowing(!this.$.sidebar.showing);
-                this.$.app_toolbar.setShowing(
-                    !this.$.app_toolbar.showing
-                );
+                this.$.app_toolbar.setShowing(!this.$.app_toolbar.showing);
+
+
                 this.resized();
             },
 
             toggleFullscreen: function () {
-                var node = this.hasNode(),
+                var bounds = this.$.document_scroller.getBounds(),
+                    scrollBounds = this.$.document_scroller.getScrollBounds(),
+                    right,
+                    top,
+                    padding = 10,
+                    node = this.hasNode(),
                     isFullscreen = document.webkitIsFullScreen || document.mozFullscreen || document.fullscreen;
                 if (node) {
                     if (!isFullscreen) {
@@ -125,6 +134,18 @@ enyo.kind(
                             document.exitFullscreen();
                         }
                     }
+                }
+
+                right = bounds.width - scrollBounds.clientWidth + padding;
+                top = padding;
+
+                this.$.toggle_fullscreen_button.applyStyle("right", right + "px");
+                this.$.toggle_fullscreen_button.applyStyle("top", top + "px");
+
+                if (!isFullscreen){
+                    this.$.toggle_fullscreen_button.applyStyle("display", "block");
+                } else {
+                    this.$.toggle_fullscreen_button.applyStyle("display", "none");
                 }
             },
 
@@ -305,7 +326,12 @@ enyo.kind(
 
             handleDocumentSelected: function (inSender, inEvent) {
                 var docSelector,
-                    doc;
+                    doc,
+                    bounds,
+                    scrollBounds,
+                    right,
+                    top,
+                    padding = 10;
 
                 docSelector = inEvent.originator;
                 console.log(docSelector.getTitle());
@@ -317,6 +343,14 @@ enyo.kind(
                 this.$.document_scroller.setScrollTop(0);
                 this.$.document_scroller.setScrollLeft(0);
 
+                bounds = this.$.document_scroller.getBounds(),
+                scrollBounds = this.$.document_scroller.getScrollBounds(),
+
+                right = bounds.width - scrollBounds.clientWidth + padding;
+                top = padding;
+
+                this.$.toggle_fullscreen_button.applyStyle("right", right + "px");
+                this.$.toggle_fullscreen_button.applyStyle("top", top + "px");
             },
 
             handleDocumentScrolled: function (inSender, inEvent) {

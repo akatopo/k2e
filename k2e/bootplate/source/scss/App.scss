@@ -183,9 +183,22 @@ $document-max-width: 940px - $document-horizontal-padding;
     color: #f2f2f2;
     background-color: #555656;
     border-color: rgba(15, 15, 15, 0.5);
-    margin-top: 0;
+    /*margin-top: 0;
     margin-bottom: 0;
-    height: 36px;
+    height: 36px;*/
+}
+
+.k2e-toggle-fullscreen-button {
+    position: absolute;
+    display: none;
+    z-index: 120;
+
+    color: #f2f2f2;
+    background-color: #555656;
+    border-color: rgba(15, 15, 15, 0.5);
+    /*margin-top: 0;
+    margin-bottom: 0;
+    height: 36px;*/
 }
 
 /***********************************************************************************************/
