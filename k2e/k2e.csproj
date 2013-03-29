@@ -92,13 +92,15 @@
     <Content Include="deploy\assets\bg.png" />
     <Content Include="deploy\assets\clippings.txt" />
     <Content Include="deploy\assets\favicon.ico" />
+    <Content Include="deploy\assets\fontawesome-webfont.afm" />
+    <Content Include="deploy\assets\fontawesome-webfont.eot" />
+    <Content Include="deploy\assets\fontawesome-webfont.ttf" />
+    <Content Include="deploy\assets\fontawesome-webfont.woff" />
     <Content Include="deploy\assets\gradient.png" />
     <Content Include="deploy\build\app.css" />
     <Content Include="deploy\build\app.js" />
     <Content Include="deploy\build\enyo.css" />
     <Content Include="deploy\build\enyo.js" />
-    <Content Include="deploy\Default.aspx" />
-    <Content Include="deploy\icon.png" />
     <Content Include="deploy\lib\onyx\images\checkbox.png" />
     <Content Include="deploy\lib\onyx\images\grabbutton.png" />
     <Content Include="deploy\lib\onyx\images\gradient-invert.png" />
@@ -111,6 +113,7 @@
     <Content Include="deploy\lib\onyx\images\spinner-dark.gif" />
     <Content Include="deploy\lib\onyx\images\spinner-light.gif" />
     <Content Include="deploy\lib\onyx\LICENSE-2.0.txt" />
+    <Content Include="icon.png" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -123,10 +126,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="bootplate\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="deploy\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -154,9 +153,6 @@
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -173,12 +169,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="deploy\assets\fontawesome-webfont.afm" />
-    <Content Include="deploy\assets\fontawesome-webfont.eot" />
-    <Content Include="deploy\assets\fontawesome-webfont.ttf" />
-    <Content Include="deploy\assets\fontawesome-webfont.woff" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
