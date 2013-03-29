@@ -25,7 +25,10 @@ enyo.kind(
                 {name: "clipping_picker_popup", kind: "ClippingPickerPopup"},
                 {name: "export_popup", kind: "ExportPopup" },
                 {name: "app_toolbar", kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
-                    {name: "settings_button", kind: "onyx.Button", ontap: "toggleSettings", components: [ {tag: "i", classes: "icon-reorder icon-large", content: " "}, {tag: "span", content: "Settings" } ]},
+                    {name: "settings_button", kind: "onyx.Button", ontap: "toggleSettings", components: [
+                        {tag: "i", classes: "icon-reorder icon-large"},
+                        {tag: null, content: " Settings" }
+                    ]},
                     {content: "k2e", fit: true, style: "text-align: center;"},
                     {name: "export_button", kind: "onyx.Button", classes: "k2e-export-button", content: "Export to Evernote", ontap: "prepareDocumentsAndExport"}
                 ]},
@@ -390,7 +393,7 @@ enyo.kind(
                             type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
                             loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
                             timeStamp = subtitle[subtitle.length - 1];
-                            content = res[4];
+                            content = linkify(enyo.dom.escape(res[4]));
 
                             // Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
                             if (type !== "Bookmark" && type !== "Clipping") {

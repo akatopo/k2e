@@ -17,5 +17,6 @@ enyo.depends(
     "ExportPopup.js",
     "Accordion.js",
     "DocumentScroller.js",
-    "assert.js"
+    "assert.js",
+    "linkify.js"
 );

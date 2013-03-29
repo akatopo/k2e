@@ -55,6 +55,10 @@
   background-color: #333;
   /* #323A40; */
   color: #D6DBDF; }
+  .k2e-document-view-dark a {
+    color: #2FC2EF; }
+    .k2e-document-view-dark a:visited {
+      color: #2FC2EF; }
 
 .k2e-document-view-dark .k2e-document-view-subtitle,
 .k2e-document-view-dark .k2e-document-view-clip-separator,

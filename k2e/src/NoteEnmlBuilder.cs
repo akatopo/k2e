@@ -127,7 +127,9 @@ namespace k2e
                     CreateElement("div", clipHeaderStyle,
                             typeAndLoc + sep + timestamp, htmlEncode: false));
 
-            elements.Append(CreateElement("p", pStyle, c.content));
+            // Assumes content is properly escaped and linkified. If not, enml does not permit
+            // dangerous tags so this should be safe.
+            elements.Append(CreateElement("p", pStyle, c.content, htmlEncode: false));
 
             return elements.ToString();
         }

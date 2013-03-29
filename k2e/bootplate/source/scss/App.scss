@@ -73,6 +73,13 @@
 .k2e-document-view-dark {
 	background-color: #333; /* #323A40; */
 	color: #D6DBDF;
+
+    a {
+        color: #2FC2EF;
+        &:visited {
+            color: #2FC2EF;
+        }
+    }
 }
 
 .k2e-document-view-dark .k2e-document-view-subtitle,
