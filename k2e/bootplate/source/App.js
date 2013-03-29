@@ -16,7 +16,7 @@ enyo.kind(
                 var classNameMap = {
                     "Dark": "k2e-document-view-dark",
                     "Light": "k2e-document-view-light",
-                    "OMG PONIES": "k2e-document-view-omg-ponies"
+                    "OMG ponies": "k2e-document-view-omg-ponies"
                 };
 
                 return classNameMap[themeName];
@@ -39,7 +39,13 @@ enyo.kind(
                         {tag: null, content: " Settings" }
                     ]},
                     {content: "k2e", fit: true, style: "text-align: center;"},
-                    {name: "export_button", kind: "onyx.Button", classes: "k2e-export-button", content: "Export to Evernote", ontap: "prepareDocumentsAndExport"}
+                    {
+                        name: "export_button",
+                        kind: "onyx.Button",
+                        classes: "k2e-export-button",
+                        content: "Export to Evernote",
+                        ontap: "prepareDocumentsAndExport"
+                    }
                 ]},
                 {name: "settings", kind: "SettingsSlideable"},
                 {kind: "FittableColumns", fit: true, components: [
@@ -48,12 +54,24 @@ enyo.kind(
                             {fit: true, name: "document_selector_list", kind: "DocumentSelectorList"}
                         ]},
                         {kind: "FittableRows", classes: "k2e-main-panel", fit: true, components: [
-                            {name: "to_top_button", classes: "k2e-to-top-button", kind: "onyx.Button", ontap: "scrollDocumentToTop", components: [
-                                {tag: "i", classes: "icon-chevron-up icon-large"}
-                            ]},
-                            {name: "toggle_fullscreen_button", classes: "k2e-toggle-fullscreen-button", ontap: "toggleFullscreen", kind: "onyx.Button", components: [
-                                {tag: "i", classes: "icon-resize-full icon-large"}
-                            ]},
+                            {
+                                name: "to_top_button",
+                                classes: "k2e-to-top-button",
+                                kind: "onyx.Button",
+                                ontap: "scrollDocumentToTop",
+                                components: [
+                                    {tag: "i", classes: "icon-chevron-up icon-large"}
+                                ]
+                            },
+                            {
+                                name: "toggle_fullscreen_button",
+                                classes: "k2e-toggle-fullscreen-button",
+                                ontap: "toggleFullscreen",
+                                kind: "onyx.Button",
+                                components: [
+                                    {tag: "i", classes: "icon-resize-full icon-large"}
+                                ]
+                            },
                             {
                                 name: "document_scroller",
                                 kind: "DocumentScroller",
@@ -175,7 +193,7 @@ enyo.kind(
 
             processExportResponse: function (inSender, inResponse) {
                 var self = this;
-                alert(JSON.stringify(inResponse, null, 2));
+                // alert(JSON.stringify(inResponse, null, 2));
                 this.$.export_popup.exportDone();
                 window.setTimeout(function () { self.$.export_popup.hide(); }, 2000); // ms
             },

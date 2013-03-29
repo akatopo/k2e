@@ -329,7 +329,7 @@ enyo.kind({
         {name: "group", kind: "onyx.RadioGroup", ontap: "handleActivate", components: [
             {name: "dark", content: "Dark"},
             {name: "light", content: "Light"},
-            {name: "ponies", content: "OMG PONIES"}
+            {name: "ponies", content: "OMG ponies"}
         ]}
     ],
 
