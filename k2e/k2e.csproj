@@ -99,7 +99,6 @@
     <Content Include="deploy\build\enyo.js" />
     <Content Include="deploy\Default.aspx" />
     <Content Include="deploy\icon.png" />
-    <Content Include="deploy\index.html" />
     <Content Include="deploy\lib\onyx\images\checkbox.png" />
     <Content Include="deploy\lib\onyx\images\grabbutton.png" />
     <Content Include="deploy\lib\onyx\images\gradient-invert.png" />
@@ -120,6 +119,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="Default.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="bootplate\Default.aspx.cs">
@@ -136,6 +136,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\BingData.cs" />
     <Compile Include="src\BingSearchContainer.cs" />
+    <Compile Include="src\_Default.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="src\EvernoteExporter.cs" />
     <Compile Include="src\ExportObjects.cs" />
     <Compile Include="src\EvernoteAuthHelper.cs" />
@@ -147,6 +150,13 @@
     <Compile Include="src\KeyHolder.cs" />
     <Compile Include="src\NoteEnmlBuilder.cs" />
     <Compile Include="src\OAuthBase.cs" />
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

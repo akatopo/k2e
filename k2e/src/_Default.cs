@@ -28,7 +28,7 @@ namespace k2e
 
         protected const string CLIPPING_NOTEBOOK_NAME = "Kindle Clippings";
 
-        protected readonly static string[] DEFAULT_TAGS = 
+        protected readonly static string[] DEFAULT_TAGS =
                 new string[] { "k2e", "kindle_clippings" };
 
         protected void Page_Load(object sender, EventArgs e)
@@ -39,9 +39,9 @@ namespace k2e
         [WebMethod]
         public static string Export(DocumentArrayExport q)
         {
-            OAuthKey accessTokenContainer = 
+            OAuthKey accessTokenContainer =
                 EvernoteAuthHelper.LoadCredentials().GetAccessToken();
-            
+
             var exporter = new EvernoteExporter(
                 accessTokenContainer: accessTokenContainer,
                 clippingNotebookName: CLIPPING_NOTEBOOK_NAME,
@@ -50,8 +50,8 @@ namespace k2e
             exporter.ExportClippings(q);
 
             return ":-D";
-         
+
         }
-        
+
     }
 }
