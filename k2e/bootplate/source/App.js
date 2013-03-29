@@ -15,7 +15,7 @@ enyo.kind(
             getThemeClassFromName = function (themeName) {
                 var classNameMap = {
                     "Dark": "k2e-document-view-dark",
-                    "Light": "k2e-document-view-omg-ponies",
+                    "Light": "k2e-document-view-light",
                     "OMG PONIES": "k2e-document-view-omg-ponies"
                 };
 
