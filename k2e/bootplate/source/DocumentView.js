@@ -20,7 +20,12 @@ enyo.kind({
                 {tag: "span", content: " | "},
                 {tag: "i", content: timestamp }
             ]});
-            self.createComponent({tag: "p", allowHtml: true, content: content});
+            self.createComponent(
+                {tag: "p", components: [
+                    {tag: "i", classes: "icon-quote-left icon-large"},
+                    {tag: null, allowHtml: true, content: " " + content}
+                ]}
+            );
         }
 
         this.clearDocument();
