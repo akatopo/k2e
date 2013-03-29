@@ -11,6 +11,15 @@ enyo.kind(
                 }
 
                 return set;
+            },
+            getThemeClassFromName = function (themeName) {
+                var classNameMap = {
+                    "Dark": "k2e-document-view-dark",
+                    "Light": "k2e-document-view-omg-ponies",
+                    "OMG PONIES": "k2e-document-view-omg-ponies"
+                };
+
+                return classNameMap[themeName];
             };
 
 
@@ -57,14 +66,30 @@ enyo.kind(
             published: {
                 periodicalTitleSet: undefined,
                 ignoredTitleSet: undefined,
-                documents: undefined
+                documents: undefined,
+                currentThemeClass: "k2e-document-view-dark"
             },
 
             handlers: {
                 onDocumentSelected: "handleDocumentSelected",
                 onClippingsTextChanged: "handleClippingsTextChanged",
                 onFullscreenRequest: "handleFullscreenRequest",
-                onDocumentScrolled: "handleDocumentScrolled"
+                onDocumentScrolled: "handleDocumentScrolled",
+                onThemeChanged: "handleThemeChanged"
+            },
+
+            setTheme: function (themeName) {
+                this.setCurrentThemeClass(getThemeClassFromName(themeName));
+            },
+
+            setCurrentThemeClass: function (themeClass) {
+                var oldThemeClass = this.currentThemeClass;
+                // hack to rectify onThemeChanged getting fired on init
+                if (this.$.document_scroller) {
+                    this.currentThemeClass = themeClass;
+                    this.$.document_scroller.removeClass(oldThemeClass);
+                    this.$.document_scroller.addClass(this.currentThemeClass);
+                }
             },
 
             toggleDistractionFreeMode: function () {
@@ -365,6 +390,11 @@ enyo.kind(
                 this.$.settings.toggle();
             },
 
+            handleThemeChanged: function (inSender, inEvent) {
+                this.log(inEvent);
+                this.setTheme(SettingsSingletonInstance().getSetting("themeName"));
+            },
+
             parseKinldeClippings: function (kindleClippings) {
                 var docs = new Documents(),
                     clippingRegExp = new RegExp(/^\s*(.+)\s\((.+)\)\s+-\s+(.+)\s+(.*)/),
@@ -430,6 +460,8 @@ enyo.kind(
             create: function () {
                 this.inherited(arguments);
                 var self = this;
+
+                this.handleThemeChanged();
 
                 exportPreparationSem = new AsyncSemaphore({func: function () { self.exportDocuments(); } });
 

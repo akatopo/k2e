@@ -321,13 +321,15 @@ enyo.kind({
     },
 
     events: {
-        onInputValueChanged: ""
+        onInputValueChanged: "",
+        onThemeChanged: ""
     },
 
     components: [
         {name: "group", kind: "onyx.RadioGroup", ontap: "handleActivate", components: [
             {name: "dark", content: "Dark"},
-            {name: "light", content: "Light"}
+            {name: "light", content: "Light"},
+            {name: "ponies", content: "OMG PONIES"}
         ]}
     ],
 
@@ -338,6 +340,7 @@ enyo.kind({
         }
 
         this.doInputValueChanged();
+        this.doThemeChanged();
 
         return true;
     },
@@ -351,6 +354,7 @@ enyo.kind({
             if (comps[i].getContent() === this.value) {
                 comps[i].setActive(true);
                 this.doInputValueChanged();
+                this.doThemeChanged();
                 return true;
             }
         }
@@ -361,6 +365,7 @@ enyo.kind({
         } else {
             this.value = "";
         }
+
 
         this.log(this.value);
     },

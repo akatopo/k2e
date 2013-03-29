@@ -2,7 +2,7 @@ enyo.kind({
     name: "DocumentScroller",
     kind: "enyo.Scroller",
     fit: true,
-    classes: "k2e-document-scroller k2e-document-view-dark",
+    classes: "k2e-document-scroller",
     events: {
         onDocumentScrolled: ""
     },
@@ -14,8 +14,5 @@ enyo.kind({
             scrollBounds = this.getScrollBounds();
         this.doDocumentScrolled({"bounds": bounds, "scrollBounds": scrollBounds});
 
-    }/*,
-    components: [
-        {name: "document_view", kind: "DocumentView", fit: true}
-    ]*/
+    }
 });
