@@ -88,31 +88,31 @@
   <ItemGroup>
     <Content Include="bootplate\debug.html" />
     <Content Include="bootplate\Default.aspx" />
-    <Content Include="deploy\assets\accordion_collapsed.png" />
-    <Content Include="deploy\assets\bg.png" />
-    <Content Include="deploy\assets\clippings.txt" />
-    <Content Include="deploy\assets\favicon.ico" />
-    <Content Include="deploy\assets\fontawesome-webfont.afm" />
-    <Content Include="deploy\assets\fontawesome-webfont.eot" />
-    <Content Include="deploy\assets\fontawesome-webfont.ttf" />
-    <Content Include="deploy\assets\fontawesome-webfont.woff" />
-    <Content Include="deploy\assets\gradient.png" />
-    <Content Include="deploy\build\app.css" />
-    <Content Include="deploy\build\app.js" />
-    <Content Include="deploy\build\enyo.css" />
-    <Content Include="deploy\build\enyo.js" />
-    <Content Include="deploy\lib\onyx\images\checkbox.png" />
-    <Content Include="deploy\lib\onyx\images\grabbutton.png" />
-    <Content Include="deploy\lib\onyx\images\gradient-invert.png" />
-    <Content Include="deploy\lib\onyx\images\gradient.png" />
-    <Content Include="deploy\lib\onyx\images\more.png" />
-    <Content Include="deploy\lib\onyx\images\progress-button-cancel.png" />
-    <Content Include="deploy\lib\onyx\images\search-input-cancel.png" />
-    <Content Include="deploy\lib\onyx\images\search-input-search.png" />
-    <Content Include="deploy\lib\onyx\images\slider-handle.png" />
-    <Content Include="deploy\lib\onyx\images\spinner-dark.gif" />
-    <Content Include="deploy\lib\onyx\images\spinner-light.gif" />
-    <Content Include="deploy\lib\onyx\LICENSE-2.0.txt" />
+    <Content Include="assets\accordion_collapsed.png" />
+    <Content Include="assets\bg.png" />
+    <Content Include="assets\clippings.txt" />
+    <Content Include="assets\favicon.ico" />
+    <Content Include="assets\fontawesome-webfont.afm" />
+    <Content Include="assets\fontawesome-webfont.eot" />
+    <Content Include="assets\fontawesome-webfont.ttf" />
+    <Content Include="assets\fontawesome-webfont.woff" />
+    <Content Include="assets\gradient.png" />
+    <Content Include="build\app.css" />
+    <Content Include="build\app.js" />
+    <Content Include="build\enyo.css" />
+    <Content Include="build\enyo.js" />
+    <Content Include="lib\onyx\images\checkbox.png" />
+    <Content Include="lib\onyx\images\grabbutton.png" />
+    <Content Include="lib\onyx\images\gradient-invert.png" />
+    <Content Include="lib\onyx\images\gradient.png" />
+    <Content Include="lib\onyx\images\more.png" />
+    <Content Include="lib\onyx\images\progress-button-cancel.png" />
+    <Content Include="lib\onyx\images\search-input-cancel.png" />
+    <Content Include="lib\onyx\images\search-input-search.png" />
+    <Content Include="lib\onyx\images\slider-handle.png" />
+    <Content Include="lib\onyx\images\spinner-dark.gif" />
+    <Content Include="lib\onyx\images\spinner-light.gif" />
+    <Content Include="lib\onyx\LICENSE-2.0.txt" />
     <Content Include="icon.png" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
@@ -125,10 +125,6 @@
     <Content Include="Default.aspx" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="bootplate\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
