@@ -57,7 +57,7 @@ enyo.kind(
                             {
                                 name: "to_top_button",
                                 classes: "k2e-to-top-button",
-                                kind: "onyx.Button",
+                                kind: "ToTopAnimatedButton",
                                 ontap: "scrollDocumentToTop",
                                 components: [
                                     {tag: "i", classes: "icon-chevron-up icon-large"}
@@ -99,7 +99,7 @@ enyo.kind(
                 onThemeChanged: "handleThemeChanged",
                 onFontSizeChanged: "handleFontSizeChanged",
                 onTextMarginChanged: "handleTextMarginChanged"
-            },  
+            },
 
             setTheme: function (themeName) {
                 this.setCurrentThemeClass(getThemeClassFromName(themeName));
@@ -363,8 +363,8 @@ enyo.kind(
                 this.$.document_scroller.setScrollTop(0);
                 this.$.document_scroller.setScrollLeft(0);
 
-                bounds = this.$.document_scroller.getBounds(),
-                scrollBounds = this.$.document_scroller.getScrollBounds(),
+                bounds = this.$.document_scroller.getBounds();
+                scrollBounds = this.$.document_scroller.getScrollBounds();
 
                 right = bounds.width - scrollBounds.clientWidth + padding;
                 top = padding;
@@ -387,9 +387,13 @@ enyo.kind(
                 this.$.to_top_button.applyStyle("bottom", bottom + "px");
 
                 if (scrollBounds.top === 0) {
-                    this.$.to_top_button.applyStyle("display", "none");
+                    // this.$.to_top_button.applyStyle("display", "none");
+                    this.$.to_top_button.tmp_hide();
                 } else {
-                    this.$.to_top_button.applyStyle("display", "block");
+                    // this.$.to_top_button.applyStyle("display", "block");
+                    // if (this.$.to_top_button.getShowing() === false) {
+                    this.$.to_top_button.tmp_show();
+                    // }
                 }
             },
 
