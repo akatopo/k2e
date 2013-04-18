@@ -1,3 +1,14 @@
+// Used when a certain platform restricts functionality due to security
+enyo.execUnsafeLocalFunction = function(e) {
+	// Querying {MSApp} object - Windows 8
+	if (typeof MSApp === "undefined") {
+		e();
+	}
+	else {
+		MSApp.execUnsafeLocalFunction(e);
+	}
+};
+
 // machine for a loader instance
 enyo.machine = {
 	sheet: function(inPath) {
@@ -23,14 +34,17 @@ enyo.machine = {
 			link.type = type;
 			document.getElementsByTagName('head')[0].appendChild(link);
 		} else {
-			document.write('<link href="' + inPath + '" media="screen" rel="' + rel + '" type="' + type + '" />');
+			link = function() {
+				document.write('<link href="' + inPath + '" media="screen" rel="' + rel + '" type="' + type + '" />');
+			};
+			enyo.execUnsafeLocalFunction(link);
 		}
 		if (isLess && window.less) {
 			less.sheets.push(link);
 			if (!enyo.loader.finishCallbacks.lessRefresh) {
 				enyo.loader.finishCallbacks.lessRefresh = function() {
 					less.refresh(true);
-				}
+				};
 			}
 		}
 	},
@@ -40,13 +54,13 @@ enyo.machine = {
 		} else {
 			var script = document.createElement('script');
 			script.src = inSrc;
-			script.onLoad = onLoad;
-			script.onError = onError;
+			script.onload = onLoad;
+			script.onerror = onError;
 			document.getElementsByTagName('head')[0].appendChild(script);
 		}
 	},
 	inject: function(inCode) {
-		document.write('<script type="text/javascript">' + inCode + "</script>");
+		document.write('<scri' + 'pt type="text/javascript">' + inCode + "</scri" + "pt>");
 	}
 };
 
@@ -81,7 +95,7 @@ enyo.depends = function() {
 			enyo.runtimeLoading = true;
 			runtimeLoad();
 		}
-	}
+	};
 	function runtimeLoad(onLoad) {
 		if (onLoad) {
 			onLoad(); // Run user callback function
@@ -97,9 +111,11 @@ enyo.depends = function() {
 				// a reference to the depends argument from the original call for tracking,
 				// followed by kicking off any additionally queued load() calls
 				runtimeLoad(function() {
-					onLoadCallback && onLoadCallback(depends);
+					if (onLoadCallback) {
+						onLoadCallback(depends);
+					}
 				});
-			}
+			};
 			enyo.loader.packageFolder = "./";
 			// Kick off next queued call to loader
 			enyo.depends.apply(this, dependsArg);

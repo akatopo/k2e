@@ -97,7 +97,7 @@ enyo.kind({
 				throw new Error();
 			} catch(x) {
 				enyo.logging._log(inMethod, [inArgs.callee.caller.nom + ": "].concat(enyo.cloneArray(inArgs)));
-				console.log(x.stack);
+				enyo.log(x.stack);
 			}
 		}
 	}
@@ -125,10 +125,10 @@ enyo.Object.addGetterSetter = function(inName, inValue, inProto) {
 	var priv_n = inName;
 	inProto[priv_n] = inValue;
 	//
-	var cap_n = enyo.cap(priv_n); 
+	var cap_n = enyo.cap(priv_n);
 	var get_n = "get" + cap_n;
 	if (!inProto[get_n]) {
-		inProto[get_n] = function() { 
+		inProto[get_n] = function() {
 			return this[priv_n];
 		};
 	}
@@ -136,8 +136,8 @@ enyo.Object.addGetterSetter = function(inName, inValue, inProto) {
 	var set_n = "set" + cap_n;
 	var change_n = priv_n + "Changed";
 	if (!inProto[set_n]) {
-		inProto[set_n] = function(v) { 
-			this._setProperty(priv_n, v, change_n); 
+		inProto[set_n] = function(v) {
+			this._setProperty(priv_n, v, change_n);
 		};
 	}
 };

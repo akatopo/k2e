@@ -13,11 +13,12 @@
 */
 enyo.gesture = {
 	//* @protected
-	eventProps: ["target", "relatedTarget", "clientX", "clientY", "pageX", "pageY", "screenX", "screenY", "altKey", "ctrlKey", "metaKey", "shiftKey",
+	eventProps: ["target", "relatedTarget", "clientX", "clientY", "pageX", "pageY",
+		"screenX", "screenY", "altKey", "ctrlKey", "metaKey", "shiftKey",
 		"detail", "identifier", "dispatchTarget", "which", "srcEvent"],
 	makeEvent: function(inType, inEvent) {
 		var e = {type: inType};
-		for (var i=0, p; p=this.eventProps[i]; i++) {
+		for (var i=0, p; (p=this.eventProps[i]); i++) {
 			e[p] = inEvent[p];
 		}
 		e.srcEvent = e.srcEvent || inEvent;
@@ -27,7 +28,7 @@ enyo.gesture = {
 		// normalize event.which and event.pageX/event.pageY
 		// Note that while "which" works in IE9, it is broken for mousemove. Therefore,
 		// in IE, use window.event.button
-		if (enyo.platform.ie) {
+		if (enyo.platform.ie < 10) {
 			//Fix for IE8, which doesn't include pageX and pageY properties
 			if(enyo.platform.ie==8 && e.target) {
 				e.pageX = e.clientX + e.target.scrollLeft;
@@ -164,7 +165,7 @@ enyo.requiresWindow(function() {
 			};
 			e.type = "mousewheel";
 			var p = e.VERTICAL_AXIS == e.axis ? "wheelDeltaY" : "wheelDeltaX";
-			e[p] =  e.detail * -12;
+			e[p] =  e.detail * -40;
 			enyo.dispatch(e);
 		}, false);
 	}

@@ -6,7 +6,7 @@
 			return false;
 		}
 		var p$ = ["perspective", "WebkitPerspective", "MozPerspective", "msPerspective", "OPerspective"];
-		for (var i=0, p; p=p$[i]; i++) {
+		for (var i=0, p; (p=p$[i]); i++) {
 			if (typeof document.body.style[p] != "undefined") {
 				return true;
 			}
@@ -26,7 +26,7 @@
 		if (this._styleTransformProp || !document.body) {
 			return this._styleTransformProp;
 		}
-		for (var i = 0, p; p = styleTransformProps[i]; i++) {
+		for (var i = 0, p; (p = styleTransformProps[i]); i++) {
 			if (typeof document.body.style[p] != "undefined") {
 				return this._styleTransformProp = p;
 			}
@@ -56,7 +56,7 @@
 				inControl.domStylesChanged();
 			}
 		}
-	}
+	};
 	//* @public
 	/**
 		Returns true if the platform supports CSS3 Transforms
@@ -86,12 +86,12 @@
 
 		Transform values are updated by successive calls:
 
-			enyo.dom.transform(control, {transform: "30px, 40px", scale: 2, rotate: "20deg"});
+			enyo.dom.transform(control, {translate: "30px, 40px", scale: 2, rotate: "20deg"});
 			enyo.dom.transform(control, {scale: 3, skewX: "-30deg"});
 
 		is equivalent to:
 
-			enyo.dom.transform(control, {transform: "30px, 40px", scale: 3, rotate: "20deg", skewX: "-30deg"});
+			enyo.dom.transform(control, {translate: "30px, 40px", scale: 3, rotate: "20deg", skewX: "-30deg"});
 
 		When applying these transforms in webkit browser, this is equivalent to:
 

@@ -11,24 +11,34 @@ enyo.kind({
 	name: "enyo.UiComponent",
 	kind: enyo.Component,
 	published: {
-		//* the UiComponent that physically contains this component in the DOM
+		//* The UiComponent that physically contains this component in the DOM
 		container: null,
-		//* the UiComponent that owns this component for the purpose of event propogation
+		/**
+			The UiComponent that owns this component for purposes of event
+			propagation
+		*/
 		parent: null,
-		//* the UiComponent that will physically contain new items added using createComponent
+		/**
+			The UiComponent that will physically contain new items added by
+			calls to _createComponent_
+		*/
 		controlParentName: "client",
-		//* a kind used to manage the size and placement of child components
+		//* A kind used to manage the size and placement of child components
 		layoutKind: ""
 	},
 	handlers: {
 		onresize: "resizeHandler"
 	},
-	//* when set, provides a control reference that's used to indicate where
-	//* the component is added in the UIComponent's childern array.  This
-	//* usually isn't used at design time, but instead used when dynamically
-	//* creating children. If set to null, control will be added at beginning.
-	//* If left undefined, the default is to add the control to the end of the
-	//* array.
+	/**
+		When set, provides a control reference used to indicate where a
+		newly-created component should be added in the UiComponent's array of
+		children. This is typically used when dynamically creating children
+		(rather than at design time). If set to null, the new control will be
+		added at the beginning of the array; if set to a specific existing
+		control, the new control will be added before the specified control. If
+		left undefined, the	default behavior is to add the new control at the
+		end of the array.
+	*/
 	addBefore: undefined,
 	//* @protected
 	statics: {
@@ -228,7 +238,7 @@ enyo.kind({
 	},
 	//* @protected
 	resizeHandler: function() {
-		// FIXME: once we are in the business of reflowing layouts on resize, then we have an 
+		// FIXME: once we are in the business of reflowing layouts on resize, then we have an
 		// inside/outside problem: some scenarios will need to reflow before child
 		// controls reflow, and some will need to reflow after. Even more complex scenarios
 		// have circular dependencies, and can require multiple passes or other resolution.
@@ -242,7 +252,7 @@ enyo.kind({
 		// Note: Controls will generally be both in a $ hash and a child list somewhere.
 		// Attempt to avoid duplicated messages by sending only to components that are not
 		// UiComponent, as those components are guaranteed not to be in a child list.
-		// May cause a problem if there is a scenario where a UiComponent owns a pure 
+		// May cause a problem if there is a scenario where a UiComponent owns a pure
 		// Component that in turn owns Controls.
 		//
 		// waterfall to all pure components
@@ -253,9 +263,9 @@ enyo.kind({
 		}
 		// waterfall to my children
 		for (var i=0, cs=this.children, c; (c=cs[i]); i++) {
-			// Do not send {showingOnly: true} events to hidden controls. This flag is set for resize events 
+			// Do not send {showingOnly: true} events to hidden controls. This flag is set for resize events
 			// which are broadcast from within the framework. This saves a *lot* of unnecessary layout.
-			// TODO: Maybe remember that we did this, and re-send those messages on setShowing(true)? 
+			// TODO: Maybe remember that we did this, and re-send those messages on setShowing(true)?
 			// No obvious problems with it as-is, though
 			if (c.showing || !(inPayload && inPayload.showingOnly)) {
 				c.waterfall(inMessage, inPayload, inSender);
@@ -290,7 +300,7 @@ enyo.master = new enyo.Component({
 	},
 	isDescendantOf: enyo.nop,
 	bubble: function(inEventName, inEvent, inSender) {
-		//console.log("master event: " + inEventName);
+		//enyo.log("master event: " + inEventName);
 		if (inEventName == "onresize") {
 			// Resize is special; waterfall this message.
 			// This works because master is a Component, so it waterfalls

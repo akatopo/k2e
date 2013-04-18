@@ -1,6 +1,6 @@
 /**
 	Common set of published properties used in both
-	<a href="#enyo.Ajax">enyo.Ajax</a> and 
+	<a href="#enyo.Ajax">enyo.Ajax</a> and
 	<a href="#enyo.WebService">enyo.WebService</a>.
 */
 enyo.AjaxProperties = {
@@ -38,7 +38,14 @@ enyo.AjaxProperties = {
 	*/
 	headers: null,
 	/**
-		The content for the request body for POST method.  If this is not set, params will be used instead.
+		The content for the request body for POST/PUT methods.
+
+		When postBody is a Buffer or a String, it is passed verbatim in the request body.
+		When postBody is an Object, the way it is encoded depends on the contentType:
+
+        * application/json => JSON.stringify
+        * application/x-www-urlencoed => url-encoded parameters
+        * multipart/form-data => passed as fields in enyo.FormData (XHR2 emulation)
 	*/
 	postBody: "",
 	/**
@@ -55,7 +62,7 @@ enyo.AjaxProperties = {
 	*/
 	xhrFields: null,
 	/**
-		Optional string to override the MIME-Type.
+		Optional string to override the MIME-Type header.
 	*/
 	mimeType: null
 };

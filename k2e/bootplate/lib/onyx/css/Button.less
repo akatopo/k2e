@@ -42,7 +42,7 @@
 
 	the effect is as if .onyx-button.active doesn't exist
 */
-.onyx-button.active {
+.onyx-button.active, .onyx-button.pressed {
 	background-image: @onyx-button-active-gradient;
 	background-position: top;
 	border-top: 1px solid rgba(15, 15, 15, 0.6);
@@ -65,27 +65,7 @@
 	padding: 0px 3px;
 }
 
-.onyx-button.onyx-blue {
-	background-color: #35A8EE;
-	color: #F2F2F2;
-}
-
-.onyx-button.onyx-affirmative {
-	background-color: #91BA07;
-	color: #F2F2F2;
-}
-
-.onyx-button.onyx-negative {
-	background-color: #C51616;
-	color: #F2F2F2;
-}
-
-.onyx-button.onyx-dark {
-	background-color: @onyx-dark-background;
-	color: #F2F2F2;
-}
-
-.onyx-button.onyx-light {
-	background-color: @onyx-light-background;
-	color: #2F2F2F;
+/* Remove the focused inner-border style in Firefox (Windows) */
+.onyx-button::-moz-focus-inner {
+  border: 0;
 }

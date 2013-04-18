@@ -16,6 +16,7 @@
 						{content: "1"},
 						{content: "2"},
 						{classes: "onyx-menu-divider"},
+						{content: "Label", classes: "onyx-menu-label"},
 						{content: "3"},
 					]}
 				]}
@@ -31,19 +32,35 @@ enyo.kind({
 	events: {
 		/**
 			Fires when the menu item is selected.
-			
+
 			_inEvent.selected_ contains a reference to the menu item.
-			
+
 			_inEvent.content_ contains the menu item's content.
 		*/
-		onSelect: ""
+		onSelect: "",
+		/**
+			Fires when the content of an item changes.
+
+			_inEvent.content_ contains the content of the item.
+		*/
+		onItemContentChange: ""
 	},
 	//* @protected
 	classes: "onyx-menu-item",
 	tag: "div",
+	create: function(){
+		this.inherited(arguments);
+		if (this.active){
+			this.bubble("onActivate");
+		}
+	},
 	tap: function(inSender) {
 		this.inherited(arguments);
 		this.bubble("onRequestHideMenu");
 		this.doSelect({selected:this, content:this.content});
+	},
+	contentChanged: function(inOld){
+		this.inherited(arguments);
+		this.doItemContentChange({content: this.content});
 	}
 });

@@ -8,6 +8,10 @@ var
 	less = require("less")
 	;
 
+var basename = path.basename(__filename),
+    w = console.log,
+    e = console.error;
+
 // Shimming path.relative with 0.8.8's version if it doesn't exist
 if(!path.relative){
   path.relative = require('./path-relative-shim').relative;
@@ -54,6 +58,10 @@ concatCss = function(loader, doneCB) {
 			if (/^data:/.test(urlPath)) {
 				return "url(" + urlPath + ")";
 			}
+			// skip an external link
+			if (/^http(:?s)?:/.test(urlPath)) {
+			    return "url(" + urlPath + ")";
+			}
 			// get absolute path to referenced asset
 			var normalizedUrlPath = path.join(sheet, "..", urlPath);
 			// Make relative asset path to built css
@@ -72,7 +80,7 @@ concatCss = function(loader, doneCB) {
 		if (sheet) {
 			w(sheet);
 			var isLess = (sheet.slice(-4) == "less");
-			if (isLess && (opt.less !== undefined)) {
+			if (isLess && (opt.less !== true)) {
 				sheet = sheet.slice(0, sheet.length-4) + "css";
 				isLess = false;
 				w(" (Substituting CSS: " + sheet + ")");
@@ -162,10 +170,13 @@ finish = function(loader) {
 		w("");
 		w("done.");
 		w("");
+
+		// required to properly terminate a
+		// node.process.fork() call, as defined by
+		// <http://nodejs.org/api/child_process.html#child_process_child_process_fork_modulepath_args_options>
+		process.exit(0);
 	});
 };
-
-w = console.log;
 
 var knownOpts = {
   "alias": Boolean,
@@ -195,5 +206,26 @@ if (opt.help) {
 	process.exit();
 }
 
+// Send message to parent node process, if any
+process.on('uncaughtException', function (err) {
+	e(err.stack);
+	if (process.send) {
+		// only available if parent-process is node
+		process.send({error: err});
+	}
+	process.exit(1);
+});
+// receive error messages from child node processes
+process.on('message', function(msg) {
+	console.dir(basename, msg);
+	if (msg.error && msg.error.stack) {
+		console.error(basename, msg.error.stack);
+	}
+	if (process.send) {
+		process.send(msg);
+	}
+});
+
 walker.init(opt.enyo);
 walker.walk(opt.source, finish);
+

@@ -4,13 +4,14 @@
 	other control with an _onActivate_ event. The decorator must surround both
 	the	activating control and the menu itself.	When the control is activated,
 	the	menu shows itself in the correct position relative to the activator.
-	
+
 		{kind: "onyx.MenuDecorator", components: [
 			{content: "Show menu"},
 			{kind: "onyx.Menu", components: [
 				{content: "1"},
 				{content: "2"},
 				{classes: "onyx-menu-divider"},
+				{content: "Label", classes: "onyx-menu-label"},
 				{content: "3"},
 			]}
 		]}
