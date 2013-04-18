@@ -3,6 +3,8 @@ enyo.kind({
     kind: enyo.Object,
     published: {
         themeName: '"Dark"',
+        fontSize: '"100"',
+        textMargin: '"300"',
         ignoredTitleList: '""',
         articleExtraction: "false",
         periodicalTitleList: '""',

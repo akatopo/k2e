@@ -19,7 +19,9 @@ enyo.kind({
                 {kind: "onyx.Groupbox", components: [
                     {name: "themeName", kind: "SettingsValueItem",
                             inputComponent: { kind: "SettingsThemeRadioGroup" }, label: "Theme"},
-                    {name: "fullscreen", kind: "SettingsActionItem", label: "Fullscreen", buttonLabel: "Toggle", ontap: "doFullscreenRequest"}
+                    {name: "fullscreen", kind: "SettingsActionItem", label: "Fullscreen", buttonLabel: "Toggle", ontap: "doFullscreenRequest"},
+                    {name: "fontSize", kind: "SettingsValueItem", inputComponent: {kind: "SettingsFontSizeSlider"}, label: "Font Size"},
+                    {name: "textMargin", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextMarginSlider"}, label: "Text Margin"}
                 ]}
             ]},
             {content: "Export", components: [
@@ -377,4 +379,76 @@ enyo.kind({
             comps[i].setDisabled(this.disabled);
         }
     }
+});
+
+enyo.kind({
+    name: "SettingsFontSizeSlider",
+
+    kind: "Control",
+
+    style: "width: 200px",
+
+    published: {
+        value: 100,
+        disabled: false
+    },
+
+    events: {
+        onInputValueChanged: "",
+        onFontSizeChanged: ""
+    },
+
+    valueChanged: function () {
+        this.$.slider.setValue(this.value);
+    },
+
+    getValue: function () {
+        return this.value;
+    },
+
+    handleSliderValueChanged: function (inSender, inEvent) {
+        this.value = this.$.slider.getValue();
+        this.doInputValueChanged();
+        this.doFontSizeChanged({ sizePercent: this.value });
+    },
+
+    components: [
+        {name: "slider", kind: "onyx.Slider", min: 40, max: 160, value: 100, increment: 20, onChanging: "handleSliderValueChanged", onChange: "handleSliderValueChanged"}
+    ]
+});
+
+enyo.kind({
+    name: "SettingsTextMarginSlider",
+
+    kind: "Control",
+
+    style: "width: 200px",
+
+    published: {
+        value: 300,
+        disabled: false
+    },
+
+    events: {
+        onInputValueChanged: "",
+        onTextMarginChanged: ""
+    },
+
+    valueChanged: function () {
+        this.$.slider.setValue(this.value);
+    },
+
+    getValue: function () {
+        return this.value;
+    },
+
+    handleSliderValueChanged: function (inSender, inEvent) {
+        this.value = this.$.slider.getValue();
+        this.doInputValueChanged();
+        this.doTextMarginChanged();
+    },
+
+    components: [
+        {name: "slider", kind: "onyx.Slider", min: 100, max: 500, value: 300, increment: 100, onChanging: "handleSliderValueChanged", onChange: "handleSliderValueChanged"}
+    ]
 });

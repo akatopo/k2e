@@ -96,8 +96,10 @@ enyo.kind(
                 onClippingsTextChanged: "handleClippingsTextChanged",
                 onFullscreenRequest: "handleFullscreenRequest",
                 onDocumentScrolled: "handleDocumentScrolled",
-                onThemeChanged: "handleThemeChanged"
-            },
+                onThemeChanged: "handleThemeChanged",
+                onFontSizeChanged: "handleFontSizeChanged",
+                onTextMarginChanged: "handleTextMarginChanged"
+            },  
 
             setTheme: function (themeName) {
                 this.setCurrentThemeClass(getThemeClassFromName(themeName));
@@ -447,6 +449,21 @@ enyo.kind(
                 this.setTheme(SettingsSingletonInstance().getSetting("themeName"));
             },
 
+            handleFontSizeChanged: function (inSender, inEvent) {
+                this.log(inEvent);
+                // if (inEvent.sizePercent) {
+                //     this.$.document_scroller.applyStyle("font-size", inEvent.sizePercent + "%");
+                // }
+                this.$.document_scroller.applyStyle("font-size", SettingsSingletonInstance().getSetting("fontSize") + "%");
+            },
+
+            handleTextMarginChanged: function (inSender, inEvent) {
+                var padding = SettingsSingletonInstance().getSetting("textMargin") + "px";
+                
+                this.$.document_view.applyStyle("padding-left", padding);
+                this.$.document_view.applyStyle("padding-right", padding);
+            },
+
             parseKinldeClippings: function (kindleClippings) {
                 var docs = new Documents(),
                     clippingRegExp = new RegExp(/^\s*(.+)\s\((.+)\)\s+-\s+(.+)\s+(.*)/),
@@ -514,6 +531,8 @@ enyo.kind(
                 var self = this;
 
                 this.handleThemeChanged();
+                this.handleFontSizeChanged();
+                this.handleTextMarginChanged();
 
                 exportPreparationSem = new AsyncSemaphore({func: function () { self.exportDocuments(); } });
 

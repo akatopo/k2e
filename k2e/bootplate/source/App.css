@@ -16,7 +16,7 @@
   background-color: purple; }
 
 .k2e-export-button {
-  background-color: #35A8EE !important; }
+  background-color: #35a8ee !important; }
 
 .k2e-sidebar {
   width: 20%; }
@@ -29,7 +29,7 @@
   padding-left: 5px;
   margin-top: 1px;
   margin-bottom: 1px;*/
-  border-bottom: 1px solid #0E0E0E;
+  border-bottom: 1px solid #0e0e0e;
   background-color: #333;
   color: white;
   padding: 16px 12px;
@@ -107,8 +107,8 @@
   font-family: Georgia, serif;
   box-sizing: border-box;
   margin: 0 auto;
-  max-width: 840px;
-  padding: 1.2em 100px;
+  max-width: 1620px;
+  padding: 1.2em 300px;
   vertical-align: baseline;
   line-height: 1; }
   .k2e-document-view h1 {
@@ -141,7 +141,7 @@
   overflow: visible; }
 
 .k2e-document-view-subtitle {
-  border-top: 1px solid #CDCDCC;
+  border-top: 1px solid #cdcdcc;
   /* changed from theme */ }
 
 .k2e-document-view-clip-separator {
@@ -245,6 +245,6 @@
   /*background: #4c4c4c url(../assets/gradient.png) repeat-x 0 10px;*/ }
 
 .k2e-accordion-item-content {
-  border-left: 1px solid #555;
+  border-left: 1px solid #555555;
   padding-left: 5px;
   color: white; }
