@@ -425,7 +425,7 @@ enyo.kind({
     style: "width: 200px",
 
     published: {
-        value: 300,
+        value: 20,
         disabled: false
     },
 
@@ -449,6 +449,6 @@ enyo.kind({
     },
 
     components: [
-        {name: "slider", kind: "onyx.Slider", min: 100, max: 500, value: 300, increment: 100, onChanging: "handleSliderValueChanged", onChange: "handleSliderValueChanged"}
+        {name: "slider", kind: "onyx.Slider", min: 10, max: 40, value: 20, increment: 10, onChanging: "handleSliderValueChanged", onChange: "handleSliderValueChanged"}
     ]
 });

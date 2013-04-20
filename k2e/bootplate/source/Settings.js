@@ -4,7 +4,7 @@ enyo.kind({
     published: {
         themeName: '"Dark"',
         fontSize: '"100"',
-        textMargin: '"300"',
+        textMargin: '"20"',
         ignoredTitleList: '""',
         articleExtraction: "false",
         periodicalTitleList: '""',

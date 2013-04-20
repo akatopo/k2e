@@ -108,7 +108,7 @@
   box-sizing: border-box;
   margin: 0 auto;
   max-width: 1620px;
-  padding: 1.2em 300px;
+  padding: 1.2em 20%;
   vertical-align: baseline;
   line-height: 1; }
   .k2e-document-view h1 {
@@ -221,7 +221,7 @@
   /*width: 95%;*/
   /*height: 95%;*/
   /*vertical-align: middle;*/
-  /*text-align: center;*/
+  text-align: center;
   padding: 30px; }
 
 .k2e-export-popup {

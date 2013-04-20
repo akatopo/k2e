@@ -462,7 +462,7 @@ enyo.kind(
             },
 
             handleTextMarginChanged: function (inSender, inEvent) {
-                var padding = SettingsSingletonInstance().getSetting("textMargin") + "px";
+                var padding = SettingsSingletonInstance().getSetting("textMargin") + "%";
                 
                 this.$.document_view.applyStyle("padding-left", padding);
                 this.$.document_view.applyStyle("padding-right", padding);

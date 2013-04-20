@@ -142,7 +142,7 @@
 }
 
 /** document display default styles **/
-$document-horizontal-padding: 300px;
+$document-horizontal-padding: 20%;
 $document-max-width: 1920px - $document-horizontal-padding;
 
 .k2e-document-view {
@@ -288,7 +288,7 @@ $document-max-width: 1920px - $document-horizontal-padding;
 	/*width: 95%;*/
 	/*height: 95%;*/
 	/*vertical-align: middle;*/
-	/*text-align: center;*/
+	text-align: center;
 	padding: 30px;
 }
 
