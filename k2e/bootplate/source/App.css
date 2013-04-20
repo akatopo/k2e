@@ -111,6 +111,16 @@
   padding: 1.2em 20%;
   vertical-align: baseline;
   line-height: 1; }
+  .k2e-document-view a {
+    -ms-word-break: break-all;
+        word-break: break-all;
+
+        /* Non standard for webkit */
+        word-break: break-word;
+
+    -webkit-hyphens: auto;
+       -moz-hyphens: auto;
+            hyphens: auto;}
   .k2e-document-view h1 {
     font-size: 2em;
     font-weight: 700;

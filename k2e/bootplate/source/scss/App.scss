@@ -157,6 +157,18 @@ $document-max-width: 1920px - $document-horizontal-padding;
 	vertical-align: baseline;
 	line-height: 1;
 
+    a {
+        -ms-word-break: break-all;
+            word-break: break-all;
+
+            /* Non standard for webkit */
+            word-break: break-word;
+
+        -webkit-hyphens: auto;
+           -moz-hyphens: auto;
+                hyphens: auto;
+    }
+
     h1 {
         font-size: 2em;
         font-weight: 700;
