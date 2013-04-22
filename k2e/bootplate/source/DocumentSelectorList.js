@@ -26,8 +26,9 @@ enyo.kind({
                 this.selDocumentSelectorItem.setSelected(false);
             }
             this.selDocumentSelectorItem = docSelectorItem;
+            this.scrollIntoView(this.selDocumentSelectorItem);
         } else {
-            return true;
+            inEvent.reSelected = true;
         }
     },
     handleSetupItem: function (inSender, inEvent) {

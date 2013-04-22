@@ -49,7 +49,7 @@ enyo.kind(
                 ]},
                 {name: "settings", kind: "SettingsSlideable"},
                 {kind: "FittableColumns", fit: true, components: [
-                    {kind: "Panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
+                    {name: "main_panels", kind: "Panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
                         {name: "sidebar", classes: "k2e-sidebar", components: [
                             {fit: true, name: "document_selector_list", kind: "DocumentSelectorList"}
                         ]},
@@ -78,7 +78,10 @@ enyo.kind(
                                 components: [
                                     {name: "document_view", kind: "DocumentView", fit: true}
                                 ]
-                            }
+                            },
+                            {name: "back_toolbar", kind: "onyx.Toolbar", showing: false, components: [
+                                {kind: "onyx.Button", content: "Back", ontap: "showDocumentSelectorList"}
+                            ]}
                         ]}
                     ]}
                 ]}
@@ -167,6 +170,10 @@ enyo.kind(
                 } else {
                     this.$.toggle_fullscreen_button.applyStyle("display", "none");
                 }
+            },
+
+            showDocumentSelectorList: function () {
+                this.$.main_panels.setIndex(0);
             },
 
             exportDocuments: function (inSender, inEvent) {
@@ -353,24 +360,30 @@ enyo.kind(
                     top,
                     padding = 10;
 
-                docSelector = inEvent.originator;
-                console.log(docSelector.getTitle());
-                console.log(docSelector.getIndex());
-                doc = this.documents.getDocumentByIndex(docSelector.getIndex());
-                console.log(doc);
-                //this.$.document_view.setContent(doc.clippings[0].getContent());
-                this.$.document_view.displayDocument(doc);
-                this.$.document_scroller.setScrollTop(0);
-                this.$.document_scroller.setScrollLeft(0);
+                if (enyo.Panels.isScreenNarrow()) {
+                    this.$.main_panels.setIndex(1);
+                }
 
-                bounds = this.$.document_scroller.getBounds();
-                scrollBounds = this.$.document_scroller.getScrollBounds();
+                if (!inEvent.reSelected) {
+                    docSelector = inEvent.originator;
+                    console.log(docSelector.getTitle());
+                    console.log(docSelector.getIndex());
+                    doc = this.documents.getDocumentByIndex(docSelector.getIndex());
+                    console.log(doc);
+                    //this.$.document_view.setContent(doc.clippings[0].getContent());
+                    this.$.document_view.displayDocument(doc);
+                    this.$.document_scroller.setScrollTop(0);
+                    this.$.document_scroller.setScrollLeft(0);
 
-                right = bounds.width - scrollBounds.clientWidth + padding;
-                top = padding;
+                    bounds = this.$.document_scroller.getBounds();
+                    scrollBounds = this.$.document_scroller.getScrollBounds();
 
-                this.$.toggle_fullscreen_button.applyStyle("right", right + "px");
-                this.$.toggle_fullscreen_button.applyStyle("top", top + "px");
+                    right = bounds.width - scrollBounds.clientWidth + padding;
+                    top = padding;
+
+                    this.$.toggle_fullscreen_button.applyStyle("right", right + "px");
+                    this.$.toggle_fullscreen_button.applyStyle("top", top + "px");
+                }
             },
 
             handleDocumentScrolled: function (inSender, inEvent) {
@@ -458,14 +471,17 @@ enyo.kind(
                 // if (inEvent.sizePercent) {
                 //     this.$.document_scroller.applyStyle("font-size", inEvent.sizePercent + "%");
                 // }
-                this.$.document_scroller.applyStyle("font-size", SettingsSingletonInstance().getSetting("fontSize") + "%");
+                if (this.$.document_scroller) {
+                    this.$.document_scroller.applyStyle("font-size", SettingsSingletonInstance().getSetting("fontSize") + "%");
+                }
             },
 
             handleTextMarginChanged: function (inSender, inEvent) {
                 var padding = SettingsSingletonInstance().getSetting("textMargin") + "%";
-                
-                this.$.document_view.applyStyle("padding-left", padding);
-                this.$.document_view.applyStyle("padding-right", padding);
+                if (this.$.document_view) {
+                    this.$.document_view.applyStyle("padding-left", padding);
+                    this.$.document_view.applyStyle("padding-right", padding);
+                }
             },
 
             parseKinldeClippings: function (kindleClippings) {
@@ -516,11 +532,16 @@ enyo.kind(
             },
 
             reflow: function () {
+                var backShowing = this.$.back_toolbar.showing;
+
                 this.inherited(arguments);
-                if (enyo.Panels.isScreenNarrow()) {
-                    this.$.document_view.setContent("isScreenNarrow");
-                } else {
-                    this.$.document_view.setContent("notScreenNarrow");
+
+                this.$.back_toolbar.setShowing(enyo.Panels.isScreenNarrow());
+                if (this.$.back_toolbar.showing !== backShowing) {
+                    this.$.document_scroller.resized();
+                }
+                if (!enyo.Panels.isScreenNarrow()) {
+                    this.$.main_panels.setIndex(0);
                 }
             },
 

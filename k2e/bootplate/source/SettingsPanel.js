@@ -400,6 +400,8 @@ enyo.kind({
 
     valueChanged: function () {
         this.$.slider.setValue(this.value);
+        this.doInputValueChanged();
+        this.doFontSizeChanged({ sizePercent: this.value });
     },
 
     getValue: function () {
@@ -436,6 +438,8 @@ enyo.kind({
 
     valueChanged: function () {
         this.$.slider.setValue(this.value);
+        this.doInputValueChanged();
+        this.doTextMarginChanged();
     },
 
     getValue: function () {
