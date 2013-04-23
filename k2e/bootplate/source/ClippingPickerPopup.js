@@ -1,3 +1,5 @@
+/*global enyo, FileReader */
+
 enyo.kind({
     name: "ClippingPickerPopup",
 
@@ -21,7 +23,7 @@ enyo.kind({
         {tag: "span", style: "width: 0px; height: 0px; overflow: hidden;", components: [
             {name: "file_picker", kind: "enyo.Input", type: "file", onchange: "handleFiles"}
         ]}
-        
+
     ],
 
     events: {

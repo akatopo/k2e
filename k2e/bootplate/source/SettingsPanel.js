@@ -1,3 +1,5 @@
+/*global enyo, SettingsSingleton */
+
 enyo.kind({
     name: "SettingsPanel",
 
@@ -35,14 +37,14 @@ enyo.kind({
                             onSettingChanged: "handleExtractionSettingChanged"},
                     {name: "periodicalTitleList", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextInput"},
                             label: "Periodical tiles",
-                            disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
+                            disabled: !(new SettingsSingleton()).getSetting("articleExtraction")},
                     {name: "googleSearchApiKey", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextInput", type: "password"},
                             label: "Google Search Api Key",
-                            disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
+                            disabled: !(new SettingsSingleton()).getSetting("articleExtraction")},
                     {name: "googleSearchApiCx", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Cx",
-                            disabled: !SettingsSingletonInstance().getSetting("articleExtraction")},
+                            disabled: !(new SettingsSingleton()).getSetting("articleExtraction")},
                     {name: "googleSearchApiLoc", kind: "SettingsValueItem", defaultInputKind: "SettingsTextInput", label: "Google Search Api Url",
-                            disabled: !SettingsSingletonInstance().getSetting("articleExtraction")}
+                            disabled: !(new SettingsSingleton()).getSetting("articleExtraction")}
                 ]}
             ]},
             {content: "Local Storage", components: [
@@ -82,7 +84,7 @@ enyo.kind({
 
         localStorage.clear();
 
-        var settings = SettingsSingletonInstance(),
+        var settings = new SettingsSingleton(),
             defaultsArray = settings.defaultSettings.published,
             key;
 
@@ -207,6 +209,7 @@ enyo.kind({
     },
 
     create: function () {
+        var settings = new SettingsSingleton();
         this.inherited(arguments);
 
         this.createComponent({fit: true});
@@ -217,7 +220,7 @@ enyo.kind({
             this.createComponent({name: "input", kind: this.defaultInputKind});
         }
 
-        this.value = SettingsSingletonInstance().getSetting(this.getName());
+        this.value = settings.getSetting(this.getName());
         this.valueChanged();
     },
 

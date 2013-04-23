@@ -1,3 +1,5 @@
+/*global enyo, AsyncSemaphore, SettingsSingleton, linkify, Clipping, Documents, Element */
+
 enyo.kind(
     (function () {
         // Private data
@@ -165,7 +167,7 @@ enyo.kind(
                 this.$.toggle_fullscreen_button.applyStyle("right", right + "px");
                 this.$.toggle_fullscreen_button.applyStyle("top", top + "px");
 
-                if (!isFullscreen){
+                if (!isFullscreen) {
                     this.$.toggle_fullscreen_button.applyStyle("display", "block");
                 } else {
                     this.$.toggle_fullscreen_button.applyStyle("display", "none");
@@ -216,7 +218,7 @@ enyo.kind(
                 this.$.export_popup.show();
                 this.handleExportBegin();
 
-                var settings = SettingsSingletonInstance(),
+                var settings = new SettingsSingleton(),
                     ignoredTitleSet = {},
                     ignoredTitleList = settings.getSetting("ignoredTitleList"),
                     docExportArray,
@@ -263,7 +265,7 @@ enyo.kind(
 
             setSuggestedDataToClipping: function (clippingExport, makeQuotedFlag, retryFlag) {
                 var self = this,
-                    settings = SettingsSingletonInstance(),
+                    settings = new SettingsSingleton(),
                     quoted = (makeQuotedFlag === undefined) ? true : makeQuotedFlag,
                     retry = (retryFlag === undefined) ? true : retryFlag,
                     loc = settings.getSetting("googleSearchApiLoc"),
@@ -462,22 +464,27 @@ enyo.kind(
             },
 
             handleThemeChanged: function (inSender, inEvent) {
+                var settings = new SettingsSingleton();
+
                 this.log(inEvent);
-                this.setTheme(SettingsSingletonInstance().getSetting("themeName"));
+                this.setTheme(settings.getSetting("themeName"));
             },
 
             handleFontSizeChanged: function (inSender, inEvent) {
+                var settings = new SettingsSingleton();
+
                 this.log(inEvent);
                 // if (inEvent.sizePercent) {
                 //     this.$.document_scroller.applyStyle("font-size", inEvent.sizePercent + "%");
                 // }
                 if (this.$.document_scroller) {
-                    this.$.document_scroller.applyStyle("font-size", SettingsSingletonInstance().getSetting("fontSize") + "%");
+                    this.$.document_scroller.applyStyle("font-size", settings.getSetting("fontSize") + "%");
                 }
             },
 
             handleTextMarginChanged: function (inSender, inEvent) {
-                var padding = SettingsSingletonInstance().getSetting("textMargin") + "%";
+                var settings = new SettingsSingleton(),
+                    padding = settings.getSetting("textMargin") + "%";
                 if (this.$.document_view) {
                     this.$.document_view.applyStyle("padding-left", padding);
                     this.$.document_view.applyStyle("padding-right", padding);

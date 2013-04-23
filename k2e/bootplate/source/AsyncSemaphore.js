@@ -1,3 +1,5 @@
+/*global enyo */
+
 enyo.kind({
     name: "AsyncSemaphore",
     kind: "enyo.Component",

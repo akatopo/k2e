@@ -1,3 +1,5 @@
+/*global enyo, DefaultSettings */
+
 enyo.kind({
     name: "DefaultSettings",
     kind: enyo.Object,

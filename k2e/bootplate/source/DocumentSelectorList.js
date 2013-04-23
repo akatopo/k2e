@@ -1,3 +1,5 @@
+/*global enyo */
+
 enyo.kind({
     name: "DocumentSelectorList",
     kind: "enyo.Scroller",

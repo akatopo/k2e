@@ -1,3 +1,5 @@
+/*global enyo, Document */
+
 enyo.kind({
     name: "Document",
     kind: "enyo.Component",
