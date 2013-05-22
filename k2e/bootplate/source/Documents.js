@@ -27,10 +27,12 @@ enyo.kind({
         var clipExportArray = [],
             clipExport,
             i;
+
         for (i = 0; i < this.clippings.length; i += 1) {
             clipExport = this.clippings[i].exportObject();
             clipExportArray.push(clipExport);
         }
+
         return {
             title: this.title,
             author: this.author,
@@ -93,22 +95,41 @@ enyo.kind({
         this.docMap = {};
         this.keyArray = [];
     },
-    exportObject: function (ignoredTitleSet) {
-        if (ignoredTitleSet === undefined) {
-            ignoredTitleSet = {};
-        }
-
-        var documentsExport = { documents: [] },
+    exportObject: function (options) {
+        var ignoredTitleSet = (options && options.ignoredTitleSet) || false,
+            selectedKeySet = (options && options.selectedKeySet) || false,
+            documentsExport = { documents: [] },
             i,
             doc,
-            docExport;
+            docExport,
+            exportFunc;
+
+        // selectedKeySet has priority over ignoredTitleSet
+        if (selectedKeySet) {
+            exportFunc = function (doc) {
+                if (selectedKeySet.hasOwnProperty(doc.title + doc.author)) {
+                    docExport = doc.exportObject();
+                    documentsExport.documents.push(docExport);
+                }
+            };
+        } else if (ignoredTitleSet) {
+            exportFunc = function (doc) {
+                if (!ignoredTitleSet.hasOwnProperty(doc.title)) {
+                    docExport = doc.exportObject();
+                    documentsExport.documents.push(docExport);
+                }
+            };
+        } else {
+            exportFunc = function (doc) {
+                docExport = doc.exportObject();
+                documentsExport.documents.push(docExport);
+            };
+        }
+
         for (i = 0; i < this.keyArray.length; i += 1) {
             doc = this.docMap[this.keyArray[i]];
 
-            if (!ignoredTitleSet.hasOwnProperty(doc.title)) {
-                docExport = doc.exportObject();
-                documentsExport.documents.push(docExport);
-            }
+            exportFunc(doc);
         }
 
         return documentsExport;

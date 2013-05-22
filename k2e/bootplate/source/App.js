@@ -230,7 +230,7 @@ enyo.kind(
                     ignoredTitleSet = arrayToSet(ignoredTitleList.split(","));
                 }
 
-                docsExport = this.documents.exportObject(ignoredTitleSet);
+                docsExport = this.documents.exportObject({ignoredTitleSet: ignoredTitleSet});
                 docExportArray = docsExport.documents;
 
                 periodicalTitleList = settings.getSetting("periodicalTitleList");

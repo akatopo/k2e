@@ -46,14 +46,27 @@ enyo.kind({
     },
     enableMultiSelection: function () {
         var i;
+
         for (i = 0; i < this.items.length; i += 1) {
             this.items[i].setMultiSelected(true);
         }
     },
     disableMultiSelection: function () {
         var i;
+
         for (i = 0; i < this.items.length; i += 1) {
             this.items[i].setMultiSelected(false);
+        }
+    },
+    getMultiSelectionKeys: function () {
+        var i,
+            keyArray = this.documentsRef.getKeyArray();
+
+        for (i = 0; i < this.items.length; i += 1) {
+            if (this.items[i].getMultiSelected()
+                    && this.items[i].isMarked()) {
+                this.log(keyArray[i]);
+            }
         }
     },
     selectNextDocument: function () {
@@ -138,15 +151,18 @@ enyo.kind({
         return this.$.label.getContent();
     },
     setMultiSelected: function (bool) {
-        if (bool === true) {
+        if (bool) {
             this.multiSelected = true;
             this.$.checkbox.setChecked(false);
             this.$.checkbox.show();
-        } else if (bool === false) {
+        } else {
             this.multiSelected = false;
             this.$.checkbox.hide();
             this.$.checkbox.setChecked(false);
         }
+    },
+    isMarked: function () {
+        return this.$.checkbox.getChecked();
     }
 
 });
