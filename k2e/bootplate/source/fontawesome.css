@@ -255,20 +255,23 @@ ul.icons {
 .icon-cog:before {
   content: "\f021"; }
 
-.icon-upload:before {
+.icon-share:before {
   content: "\f022"; }
 
-.icon-resize-full:before {
+.icon-check:before {
   content: "\f023"; }
 
-.icon-chevron-up:before {
+.icon-resize-full:before {
   content: "\f024"; }
 
-.icon-reorder:before {
+.icon-resize-small:before {
   content: "\f025"; }
 
-.icon-quote-left:before {
+.icon-chevron-up:before {
   content: "\f026"; }
 
-.icon-quote-right:before {
+.icon-reorder:before {
   content: "\f027"; }
+
+.icon-quote-left:before {
+  content: "\f028"; }

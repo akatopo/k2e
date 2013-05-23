@@ -33,6 +33,7 @@
   background-color: #333;
   color: white;
   padding: 16px 12px;
+  height: 64px;
   overflow: hidden;
   white-space: nowrap;
   position: relative; }
@@ -44,9 +45,9 @@
   vertical-align: middle;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 80%;
+  width: 90%;
   /* hack */
-  padding-left: 5px; }
+  padding-left: 10px; }
 
 /***********************************************************************************************/
 /* Document Display */
@@ -107,20 +108,18 @@
   font-family: Georgia, serif;
   box-sizing: border-box;
   margin: 0 auto;
-  max-width: 1620px;
+  max-width: 1536 px;
   padding: 1.2em 20%;
   vertical-align: baseline;
   line-height: 1; }
   .k2e-document-view a {
     -ms-word-break: break-all;
-        word-break: break-all;
-
-        /* Non standard for webkit */
-        word-break: break-word;
-
+    word-break: break-all;
+    /* Non standard for webkit */
+    word-break: break-word;
     -webkit-hyphens: auto;
-       -moz-hyphens: auto;
-            hyphens: auto;}
+    -moz-hyphens: auto;
+    hyphens: auto; }
   .k2e-document-view h1 {
     font-size: 2em;
     font-weight: 700;

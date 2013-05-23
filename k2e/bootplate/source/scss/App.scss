@@ -48,6 +48,7 @@
 	background-color: #333;
 	color: white;
 	padding: 16px 12px;
+    height: (2*16+32px); // checkbox is 32px x 32px
 	overflow: hidden;
 	white-space: nowrap;
 	position: relative;
@@ -62,8 +63,8 @@
 	vertical-align: middle; 
 	overflow: hidden; 
 	text-overflow: ellipsis;
-	width: 80%; /* hack */
-	padding-left: 5px;
+	width: 90%; /* hack */
+	padding-left: 10px;
 }
 
 /***********************************************************************************************/
@@ -143,7 +144,7 @@
 
 /** document display default styles **/
 $document-horizontal-padding: 20%;
-$document-max-width: 1920px - $document-horizontal-padding;
+$document-max-width: (1920 - 1920 * 0.2)px;// - $document-horizontal-padding;
 
 .k2e-document-view {
 	/*"minion-pro", Palatino,*/

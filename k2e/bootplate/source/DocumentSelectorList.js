@@ -13,7 +13,8 @@ enyo.kind({
     ],
     published: {
         documentsRef: undefined,
-        selDocumentSelectorItem: null
+        selDocumentSelectorItem: null,
+        multiSelected: false,
     },
     items: undefined,
     handlers: {
@@ -28,7 +29,10 @@ enyo.kind({
                 this.selDocumentSelectorItem.setSelected(false);
             }
             this.selDocumentSelectorItem = docSelectorItem;
-            this.scrollIntoView(this.selDocumentSelectorItem);
+            // TODO: isInView is protected. Is there a better way to find whether a node/control is in view?
+            if (!this.getStrategy().isInView(this.selDocumentSelectorItem.hasNode())) {
+                this.scrollToControl(this.selDocumentSelectorItem);
+            }
         } else {
             inEvent.reSelected = true;
         }
@@ -44,8 +48,26 @@ enyo.kind({
         this.items.push(item.$.documentSelectorItem);
         return true;
     },
+    setMultiSelected: function (inValue) {
+        if (inValue) {
+            this.multiSelected = true;
+            this.enableMultiSelection();
+        } else {
+            this.multiSelected = false;
+            this.disableMultiSelection();
+        }
+    },
+    toggleMultiSelection: function () {
+        if (this.multiSelected) {
+            this.disableMultiSelection();
+        } else {
+            this.enableMultiSelection();
+        }
+    },
     enableMultiSelection: function () {
         var i;
+
+        this.multiSelected = true;
 
         for (i = 0; i < this.items.length; i += 1) {
             this.items[i].setMultiSelected(true);
@@ -54,20 +76,25 @@ enyo.kind({
     disableMultiSelection: function () {
         var i;
 
+        this.multiSelected = false;
+
         for (i = 0; i < this.items.length; i += 1) {
             this.items[i].setMultiSelected(false);
         }
     },
     getMultiSelectionKeys: function () {
         var i,
-            keyArray = this.documentsRef.getKeyArray();
+            keyArray = this.documentsRef.getKeyArray(),
+            multiSelKeys = {};
 
         for (i = 0; i < this.items.length; i += 1) {
             if (this.items[i].getMultiSelected()
                     && this.items[i].isMarked()) {
-                this.log(keyArray[i]);
+                multiSelKeys[keyArray[i]] = true;
             }
         }
+
+        return multiSelKeys;
     },
     selectNextDocument: function () {
         var curIndex,

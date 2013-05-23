@@ -38,22 +38,42 @@ enyo.kind(
                 {name: "app_toolbar", kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
                     {name: "settings_button", kind: "onyx.Button", ontap: "toggleSettings", components: [
                         {tag: "i", classes: "icon-reorder icon-large"},
-                        {tag: null, content: " Settings" }
+                        {name: "settings_button_label", tag: "span", style: "padding-left: 5px;", content: "Settings" }
                     ]},
                     {content: "k2e", fit: true, style: "text-align: center;"},
                     {
                         name: "export_button",
                         kind: "onyx.Button",
                         classes: "k2e-export-button",
-                        content: "Export to Evernote",
-                        ontap: "prepareDocumentsAndExport"
+                        ontap: "prepareDocumentsAndExport",
+                        components: [
+                            {tag: "i", classes: "icon-share icon-large"},
+                            {name: "export_button_label", tag: "span", style: "padding-left: 5px;", content: "Export to Evernote" }
+                        ]
+                    },
+                    {
+                        name: "export_selected_button",
+                        kind: "onyx.Button",
+                        classes: "k2e-export-button",
+                        showing: false,
+                        ontap: "prepareDocumentsAndExport",
+                        components: [
+                            {tag: "i", classes: "icon-share icon-large"},
+                            {name: "export_button_label", tag: "span", style: "padding-left: 5px;", content: "Export Selected to Evernote" }
+                        ]
                     }
                 ]},
                 {name: "settings", kind: "SettingsSlideable"},
                 {kind: "FittableColumns", fit: true, components: [
                     {name: "main_panels", kind: "Panels", fit: true, arrangerKind: "CollapsingArranger", realtimeFit: true, wrap: false, components: [
-                        {name: "sidebar", classes: "k2e-sidebar", components: [
-                            {fit: true, name: "document_selector_list", kind: "DocumentSelectorList"}
+                        {name: "sidebar", classes: "k2e-sidebar", layoutKind: "FittableRowsLayout", components: [
+                            {fit: true, name: "document_selector_list", kind: "DocumentSelectorList"},
+                            {name: "sidebar_toolbar", kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
+                                {name: "multi_select_button", kind: "onyx.Button", ontap: "toggleMultiSelection", components: [
+                                    {tag: "i", classes: "icon-check icon-large"},
+                                    {name: "multi_select_button_label", tag: "span", style: "padding-left: 5px;", content: " Select Documents" }
+                                ]}
+                            ]}
                         ]},
                         {kind: "FittableRows", classes: "k2e-main-panel", fit: true, components: [
                             {
@@ -71,7 +91,7 @@ enyo.kind(
                                 ontap: "toggleFullscreen",
                                 kind: "onyx.Button",
                                 components: [
-                                    {tag: "i", classes: "icon-resize-full icon-large"}
+                                    {tag: "i", classes: "icon-resize-small icon-large"}
                                 ]
                             },
                             {
@@ -230,7 +250,11 @@ enyo.kind(
                     ignoredTitleSet = arrayToSet(ignoredTitleList.split(","));
                 }
 
-                docsExport = this.documents.exportObject({ignoredTitleSet: ignoredTitleSet});
+                if (this.$.document_selector_list.getMultiSelected()) {
+                    docsExport = this.documents.exportObject({selectedKeySet: this.$.document_selector_list.getMultiSelectionKeys()});
+                } else {
+                    docsExport = this.documents.exportObject({ignoredTitleSet: ignoredTitleSet});
+                }
                 docExportArray = docsExport.documents;
 
                 periodicalTitleList = settings.getSetting("periodicalTitleList");
@@ -463,6 +487,16 @@ enyo.kind(
                 this.$.settings.toggle();
             },
 
+            toggleMultiSelection: function (inSender, inEvent) {
+                var multiSelectButton = this.$.multi_select_button;
+                multiSelectButton.addRemoveClass("active", !multiSelectButton.hasClass("active"));
+                this.$.document_selector_list.toggleMultiSelection();
+                this.$.export_button.setShowing(!this.$.export_button.getShowing());
+                this.$.export_selected_button.setShowing(!this.$.export_selected_button.getShowing());
+
+                this.$.app_toolbar.reflow();
+            },
+
             handleThemeChanged: function (inSender, inEvent) {
                 var settings = new SettingsSingleton();
 
@@ -539,15 +573,17 @@ enyo.kind(
             },
 
             reflow: function () {
-                var backShowing = this.$.back_toolbar.showing;
+                var backShowing = this.$.back_toolbar.showing,
+                    isScreenNarrow = enyo.Panels.isScreenNarrow();
 
                 this.inherited(arguments);
 
-                this.$.back_toolbar.setShowing(enyo.Panels.isScreenNarrow());
+                this.$.settings_button_label.setShowing(!isScreenNarrow);
+                this.$.back_toolbar.setShowing(isScreenNarrow);
                 if (this.$.back_toolbar.showing !== backShowing) {
                     this.$.document_scroller.resized();
                 }
-                if (!enyo.Panels.isScreenNarrow()) {
+                if (!isScreenNarrow) {
                     this.$.main_panels.setIndex(0);
                 }
             },
