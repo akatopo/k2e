@@ -426,13 +426,9 @@ enyo.kind(
                 this.$.to_top_button.applyStyle("bottom", bottom + "px");
 
                 if (scrollBounds.top === 0) {
-                    // this.$.to_top_button.applyStyle("display", "none");
-                    this.$.to_top_button.tmp_hide();
+                    this.$.to_top_button.setShowing(false);
                 } else {
-                    // this.$.to_top_button.applyStyle("display", "block");
-                    // if (this.$.to_top_button.getShowing() === false) {
-                    this.$.to_top_button.tmp_show();
-                    // }
+                    this.$.to_top_button.setShowing(true);
                 }
             },
 
@@ -465,13 +461,20 @@ enyo.kind(
             },
 
             handleKeydown: function (inSender, inEvent) {
+                var modKeyPressed = inEvent.altKey
+                        || inEvent.ctrlKey
+                        || inEvent.shiftKey
+                        || inEvent.altGraphKey
+                        || inEvent.metaKey;
+
                 this.log(inSender);
                 this.log(inEvent);
-                if (inEvent.keyCode === 70) { // 'f'
+
+                if (!modKeyPressed && inEvent.keyCode === 70) { // 'f'
                     this.toggleFullscreen();
-                } else if (inEvent.keyCode === 74) { // 'j'
+                } else if (!modKeyPressed && inEvent.keyCode === 74) { // 'j'
                     this.$.document_selector_list.selectNextDocument();
-                } else if (inEvent.keyCode === 75) { // 'k'
+                } else if (!modKeyPressed && inEvent.keyCode === 75) { // 'k'
                     this.$.document_selector_list.selectPrevDocument();
                 }
                 return true;
