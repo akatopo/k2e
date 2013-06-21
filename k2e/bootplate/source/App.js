@@ -59,7 +59,7 @@ enyo.kind(
                         ontap: "prepareDocumentsAndExport",
                         components: [
                             {tag: "i", classes: "icon-share icon-large"},
-                            {name: "export_button_label", tag: "span", style: "padding-left: 5px;", content: "Export Selected to Evernote" }
+                            {name: "export_selected_button_label", tag: "span", style: "padding-left: 5px;", content: "Export Selected to Evernote" }
                         ]
                     }
                 ]},

@@ -14,7 +14,7 @@ enyo.kind({
     published: {
         documentsRef: undefined,
         selDocumentSelectorItem: null,
-        multiSelected: false,
+        multiSelected: false
     },
     items: undefined,
     handlers: {
