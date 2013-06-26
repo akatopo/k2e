@@ -59,11 +59,16 @@ enyo.kind({
     ],
 
     handleSettingChanged: function (inSender, inEvent) {
-        var settingsItem = inEvent.originator;
+        var settingsItem = inEvent.originator,
+            value = JSON.stringify(settingsItem.getValue()),
+            name = settingsItem.getName();
 
         this.log(settingsItem.getValue());
         this.log(settingsItem.getName());
-        localStorage[settingsItem.getName()] = JSON.stringify(settingsItem.getValue());
+
+
+        (new SettingsSingleton()).setSetting(name, value);
+
         return true;
     },
 

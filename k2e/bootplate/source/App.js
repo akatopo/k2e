@@ -160,7 +160,8 @@ enyo.kind(
                     top,
                     padding = 10,
                     node = this.hasNode(),
-                    isFullscreen = document.webkitIsFullScreen || document.mozFullscreen || document.fullscreen;
+                    isFullscreen = document.webkitIsFullScreen || document.mozFullScreen || document.fullscreen;
+
                 if (node) {
                     if (!isFullscreen) {
                         if (node.webkitRequestFullscreen) {

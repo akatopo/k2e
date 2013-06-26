@@ -17,29 +17,37 @@ enyo.kind({
 });
 
 function SettingsSingleton() {
-
     if (arguments.callee.singletonInstance) {
         return arguments.callee.singletonInstance;
     }
-    arguments.callee.singletonInstance = this;
 
-    this.defaultSettings = new DefaultSettings();
-
-    var self = this,
+    var storage = window.localStorage,
+        self = this,
         settingExists = function (settingName) {
             if (self.defaultSettings[settingName]) {
                 return true;
             }
             return false;
         };
+    arguments.callee.singletonInstance = this;
+
+    this.defaultSettings = new DefaultSettings();
+
+    this.setSetting = function (settingName, settingValue) {
+        if (settingExists(settingName)) {
+            if (storage) {
+                storage[settingName] = settingValue;
+            }
+        }
+    };
 
     this.getSetting = function (settingName) {
         if (!settingExists(settingName)) {
             return null;
         }
 
-        var settingValue = localStorage[settingName] ?
-                JSON.parse(localStorage[settingName]) :
+        var settingValue = storage && storage[settingName] ?
+                JSON.parse(storage[settingName]) :
                 JSON.parse(this.defaultSettings[settingName]);
         return settingValue;
     };
