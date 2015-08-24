@@ -60,11 +60,11 @@
 }
 
 .k2e-document-selector-item-label {
-	vertical-align: middle; 
 	overflow: hidden; 
 	text-overflow: ellipsis;
 	width: 90%; /* hack */
 	padding-left: 10px;
+	line-height: (32px - 1px); // vertically aligned text
 }
 
 /***********************************************************************************************/
