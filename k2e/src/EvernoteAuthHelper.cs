@@ -30,10 +30,20 @@
  * ***********************************************************************/
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Web;
+using System.Security.Cryptography;
 using System.Text;
 using OAuth;
+
+using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
+
+using k2e;
 
 namespace EvernoteWebQuickstart
 {
@@ -42,13 +52,13 @@ namespace EvernoteWebQuickstart
     /// </summary>
     public class EvernoteAuthHelper
     {
-        const string USER_EVERNOTE_CREDENTIALS = "userEvernoteCredentials";
-        const string REQUEST_KEY_OAUTH_TOKEN = "oauth_token";
-        const string REQUEST_KEY_OAUTH_VERIFIER = "oauth_verifier";
-        const string RESPONSE_KEY_EDAM_NOTESTORE_URL = "edam_noteStoreUrl";
+		private const string USER_EVERNOTE_CREDENTIALS = "userEvernoteCredentials";
+		private const string REQUEST_KEY_OAUTH_TOKEN = "oauth_token";
+		private const string REQUEST_KEY_OAUTH_VERIFIER = "oauth_verifier";
+        private const string RESPONSE_KEY_EDAM_NOTESTORE_URL = "edam_noteStoreUrl";
 
         // TODO: replace this url with the production one when ready
-        private Uri BaseUri = new Uri("https://sandbox.evernote.com/oauth");
+        private readonly Uri BaseUri = new Uri("https://sandbox.evernote.com/oauth");
         private EvernoteCredentials evernoteCredentials;
 
         private EvernoteAuthHelper(EvernoteCredentials ec)
@@ -73,26 +83,49 @@ namespace EvernoteWebQuickstart
         /// </param>
         /// <param name="user">Not used</param>
         /// <returns>An EvernoteAuthHelper with the relevant credentials.</returns>
-        public static EvernoteAuthHelper LoadCredentials(string callbackUrl="", string user="")
+        public static EvernoteAuthHelper LoadCredentials(
+			string callbackUrl="",
+			string consumerPublicKey="",
+			string k2eAccessToken="")
         {
-            // WILLNOTDO: implement code to pull this information from a datastore
-            // based on the user name that is provided.
-            // this sample just pulls it from Session, so every time you stop the
-            // webserver you'll have to authorize again.
-
             EvernoteCredentials ec;
             EvernoteAuthHelper eah;
 
-            if (HttpContext.Current.Session[USER_EVERNOTE_CREDENTIALS] == null)
+			if (string.IsNullOrEmpty(consumerPublicKey) || string.IsNullOrEmpty(k2eAccessToken))
             {
+				
                 eah = new EvernoteAuthHelper(k2e.KeyHolder.PublicKey, 
                         k2e.KeyHolder.SecretKey, callbackUrl);
                 ec = eah.evernoteCredentials;
             }
             else
             {
-                ec = (EvernoteCredentials)HttpContext.Current.Session[USER_EVERNOTE_CREDENTIALS];
-                eah = new EvernoteAuthHelper(ec);
+				var findResults = AsyncHelpers.RunSync<List<BsonDocument>>(
+					() => DataStore.FindCredentials(consumerPublicKey, k2eAccessToken)
+				);
+				if (findResults.Count == 0)
+					throw new Exception("invalid consumerPublicKey and/or k2eAccessToken provided");
+				if (findResults.Count != 1)
+					throw new Exception("Multiple credentials found");
+
+				ec = BsonSerializer.Deserialize<EvernoteCredentials>(findResults[0]);
+				eah = new EvernoteAuthHelper(ec);
+
+				// freshen cookie and db
+				var oldAccessToken = ec.K2eAccessToken;
+				ec.K2eAccessToken = K2eAccessToken.Generate();
+
+				var updateResult = AsyncHelpers.RunSync<UpdateResult>(
+					() => DataStore.UpdateK2eAccessToken(ec, oldAccessToken)
+				);
+				if (updateResult.IsAcknowledged)
+				{
+					HttpContext.Current.Response.Cookies["K2eAccessToken"].Value = ec.K2eAccessToken;
+				}
+				else
+				{
+					throw new Exception("no credentials in db");
+				}
             }
 
             if (!eah.UserIsAuthenticated && 
@@ -104,8 +137,6 @@ namespace EvernoteWebQuickstart
                 eah.evernoteCredentials.OauthVerifier =
                         HttpContext.Current.Request.QueryString[REQUEST_KEY_OAUTH_VERIFIER].ToString();
             }
-
-            HttpContext.Current.Session[USER_EVERNOTE_CREDENTIALS] = ec;
 
             return eah;
         }
@@ -211,10 +242,17 @@ namespace EvernoteWebQuickstart
                     }
                 }
 
-                if (paramsFound != 2)
-                {
-                    throw new Exception("oauth_token and/or edam_noteStoreUrl parameters not found");
-                }
+				if (paramsFound != 2) {
+					throw new Exception ("oauth_token and/or edam_noteStoreUrl parameters not found");
+				}
+				else {
+					evernoteCredentials.K2eAccessToken = K2eAccessToken.Generate();
+					HttpContext.Current.Response.Cookies["ConsumerPublicKey"].Value = evernoteCredentials.ConsumerPublicKey;
+					HttpContext.Current.Response.Cookies["K2eAccessToken"].Value = evernoteCredentials.K2eAccessToken;
+					var replaceResult = AsyncHelpers.RunSync<ReplaceOneResult>(
+						() => DataStore.InsertOrReplaceCredentials(evernoteCredentials)
+					);
+				}
             }
 
             return evernoteCredentials.AccessToken;
@@ -255,8 +293,12 @@ namespace EvernoteWebQuickstart
     /// <summary>
     /// A container for oauth credentials.
     /// </summary>
-    public class EvernoteCredentials
+	public class EvernoteCredentials
     {
+		[BsonIgnoreIfDefault]
+		public ObjectId _id { get; set; }
+
+		public string K2eAccessToken { get; set; }
         public string ConsumerPublicKey { get; set; }
         public string ConsumerSecretKey { get; set; }
         
@@ -271,7 +313,7 @@ namespace EvernoteWebQuickstart
     /// <summary>
     /// A container for oauth token credentials
     /// </summary>
-    public class OAuthKey
+	public class OAuthKey
     {
         public string AuthToken { get; set; }
         public string NoteStoreUrl { get; set; }

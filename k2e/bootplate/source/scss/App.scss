@@ -3,6 +3,8 @@
 	This way, you can minify your application, and just remove the "source" folder for production
 */
 
+$assetPath: "../../assets";
+
 /***********************************************************************************************/
 
 @mixin apply-box-shadow($offset-x, $offset-y, $blur-radius, $color) {
@@ -13,7 +15,7 @@
 
 #app {
 	background-color: gray;
-	background: url(../assets/bg.png);
+	background: url("#{$assetPath}/bg.png");
 }
 
 .k2e-main-panel {
@@ -326,7 +328,7 @@ $document-max-width: (1920 - 1920 * 0.2)px;// - $document-horizontal-padding;
 	font-weight: bold;
 	font-size: 14px;
 	border: none;
-	/*background: #4c4c4c url(../assets/gradient.png) repeat-x 0 10px;*/
+	/*background: #4c4c4c url("#{$assetPath}/gradient.png") repeat-x 0 10px;*/
 }
 
 .k2e-accordion-item-content {

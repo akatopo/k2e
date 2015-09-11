@@ -30,8 +30,12 @@
  * ***********************************************************************/
 
 using System;
+using System.Configuration;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
+
+using k2e;
 
 namespace EvernoteWebQuickstart
 {
@@ -46,20 +50,40 @@ namespace EvernoteWebQuickstart
         public EvernoteAuthHelper evernoteAuthHelper;
         // TODO - change this url to the production one when ready
         const string BASE_URL = "https://sandbox.evernote.com/";
-        private string callbackUrl { get; set; }    
+		const string FILE_PATH = "/Auth.aspx?authDone=1";
+		    
+		delegate string stringTransform(string s);
+
+		private string _callbackUrl;
+		public string GetCallbackUrl()
+		{
+			if (string.IsNullOrEmpty(_callbackUrl))
+			{
+				stringTransform portStr = s => s != "80" ? ":" + s : "";
+				if (ConfigurationManager.AppSettings ["AppHbDeployment"] != null)
+				{
+					portStr = s => "";	
+				}
+
+				// create a callback that Evernote servers will use to pass back the authorization token
+				// this will return to the same page that called it
+				_callbackUrl = "http://" + 
+					Request.ServerVariables["SERVER_NAME"].ToString() +
+					portStr(Request.ServerVariables["SERVER_PORT"]) +
+					FILE_PATH;
+			}
+
+			return _callbackUrl;
+		}
 
         protected bool LoadPage()
         {
-            // create a callback that Evernote servers will use to pass back the authorization token
-            // this will return to the same page that called it
-            callbackUrl = "http://" + 
-                    Request.ServerVariables["SERVER_NAME"].ToString() +
-                    // ":" + Request.ServerVariables["SERVER_PORT"] +
-                    Page.Request.FilePath;
-
-            // WILLNOTDO - figure out the user for the app and pass
+            // figure out the user for the app and pass
             // it to load that user's credentials from a data store
-            evernoteAuthHelper = EvernoteAuthHelper.LoadCredentials(callbackUrl);
+			var consumerPublicKey = Page.Request.Cookies.TryGetValue("ConsumerPublicKey");
+			var k2eAccessToken = Page.Request.Cookies.TryGetValue("K2eAccessToken");
+			var callbackUrl = GetCallbackUrl();
+			evernoteAuthHelper =  EvernoteAuthHelper.LoadCredentials(callbackUrl, consumerPublicKey, k2eAccessToken);
             bool success = false;
 
             if (!Page.IsPostBack)
@@ -87,17 +111,17 @@ namespace EvernoteWebQuickstart
                     try
                     {
                         // get the app authorization token and shared id
-                        OAuthKey authKey = evernoteAuthHelper.GetAccessToken();
+						OAuthKey authKey =  evernoteAuthHelper.GetAccessToken();
 
                         // we're all the way through... do stuff.
                         success = (authKey != null);
                     }
-                    catch (System.Net.WebException)
+                    catch (System.Net.WebException ex)
                     {
                         // the user clicked on Decline in the Evernote app authorization dialog if the code is in here... 
                         // show a message or something
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         // some other server error, log it or do what ever you do on server errors :)
                         // show a message or something

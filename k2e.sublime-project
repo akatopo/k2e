@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "follow_symlinks": true,
+      "folder_exclude_patterns": [
+        "node_modules",
+        "dist",
+        "packages",
+        "build"
+      ],
+      "path": "."
+    }
+  ],
+  "settings": {
+    "tab_size": 2
+  }
+}

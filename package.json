@@ -1,0 +1,32 @@
+{
+  "name": "k2e",
+  "version": "0.0.1",
+  "description": "Kindle clipping viewer and evernote exporter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/akatopo/k2e.git"
+  },
+  "keywords": [
+    "kindle",
+    "evernote",
+    "enyojs"
+  ],
+  "author": "Alex Katopodis",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/akatopo/k2e#readme",
+  "devDependencies": {
+    "babel-core": "^5.8.24",
+    "del": "^1.2.1",
+    "gulp": "^3.9.0",
+    "gulp-livereload": "^3.8.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.0.4",
+    "run-sequence": "^1.1.2",
+    "streamqueue": "^1.1.0",
+    "underscore": "^1.8.3"
+  }
+}

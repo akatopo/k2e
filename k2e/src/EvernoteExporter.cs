@@ -235,8 +235,7 @@ namespace k2e
             {
                 string url = kv.Key;
                 string title = kv.Value.Item1;
-                List<ClippingExport> clippings 
-                        = kv.Value.Item2;
+                List<ClippingExport> clippings = kv.Value.Item2;
 
 
                 string imgMimeType = "";

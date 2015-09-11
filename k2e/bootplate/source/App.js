@@ -22,7 +22,14 @@ enyo.kind(
                 };
 
                 return classNameMap[themeName];
-            };
+            },
+            EXPORT_PATH = '/Default.aspx/Export',
+            AUTH_PATH = '/Auth.aspx',
+            AUTH_WINDOW_NAME = 'k2e Evernote authentication',
+            AUTH_WINDOW_FEATURES = 'width=800, height=600',
+            AUTH_DONE_QUERY_PARAM = 'authDone',
+            ACCESS_TOKEN_COOKIE_NAME = 'K2eAccessToken',
+            CONSUMER_PUBLIC_KEY_COOKIE_NAME = 'ConsumerPublicKey';
 
 
         // enyo kind definition
@@ -201,9 +208,9 @@ enyo.kind(
 
             exportDocuments: function (inSender, inEvent) {
                 this.log("Export processing done");
-                var loc = location.protocol + '//' + location.host + location.pathname,
+                var loc = location.protocol + '//' + location.host + EXPORT_PATH,
                     ajax = new enyo.Ajax({
-                        url: loc + "/Export",
+                        url: loc,
                         contentType: "application/json; charset=utf-8",
                         method: "POST",
                         postBody: '{"q":' + JSON.stringify(docsExport, null, 0) + '}'
@@ -227,65 +234,86 @@ enyo.kind(
                 var self = this;
                 // alert(JSON.stringify(inResponse, null, 2));
                 this.$.export_popup.exportDone();
-                window.setTimeout(function () { self.$.export_popup.hide(); }, 2000); // ms
+                window.setTimeout(function () { self.$.export_popup.hide(); }, 2000); // 2s
             },
 
             processExportError: function (inSender, inResponse) {
                 this.error("Error in exporting");
             },
 
-            prepareDocumentsAndExport: function () {
-                this.$.export_popup.exportBegin();
-                this.$.export_popup.show();
-                this.handleExportBegin();
+            prepareDocumentsAndExport: function (/*inSender, inEvent*/) {
+                var self = this;
 
-                var settings = new SettingsSingleton(),
-                    ignoredTitleSet = {},
-                    ignoredTitleList = settings.getSetting("ignoredTitleList"),
-                    docExportArray,
-                    periodicalTitleSet = {},
-                    periodicalTitleList,
-                    self = this;
+                self.$.export_popup.exportBegin();
+                self.$.export_popup.show();
 
-                if (ignoredTitleList.length > 0) {
-                    ignoredTitleSet = arrayToSet(ignoredTitleList.split(","));
+                if (document.cookie.indexOf(ACCESS_TOKEN_COOKIE_NAME) !== -1 &&
+                    document.cookie.indexOf(CONSUMER_PUBLIC_KEY_COOKIE_NAME) !== -1
+                ) {
+                    console.log('Cookies present');
+                    doExport(self);
+                }
+                else {
+                    var popup = window.open(AUTH_PATH, AUTH_WINDOW_NAME, AUTH_WINDOW_FEATURES);
+
+                    var pollTimer = window.setInterval(function() {
+                        if (popup.document.URL.indexOf(AUTH_DONE_QUERY_PARAM) !== -1) {
+                            window.clearInterval(pollTimer);
+                            popup.close();
+                            self.prepareDocumentsAndExport.apply(self, arguments);
+                        }
+                    }, 100); // ms
                 }
 
-                if (this.$.document_selector_list.getMultiSelected()) {
-                    docsExport = this.documents.exportObject({selectedKeySet: this.$.document_selector_list.getMultiSelectionKeys()});
-                } else {
-                    docsExport = this.documents.exportObject({ignoredTitleSet: ignoredTitleSet});
-                }
-                docExportArray = docsExport.documents;
+                function doExport(app) {
+                    app.handleExportBegin();
 
-                periodicalTitleList = settings.getSetting("periodicalTitleList");
-                if (periodicalTitleList.length > 0) {
-                    periodicalTitleSet = arrayToSet(periodicalTitleList.split(","));
-                }
+                    var settings = new SettingsSingleton(),
+                        ignoredTitleSet = {},
+                        ignoredTitleList = settings.getSetting("ignoredTitleList"),
+                        docExportArray,
+                        periodicalTitleSet = {},
+                        periodicalTitleList;
 
-                (function () {
-                    var dEx,
-                        cEx,
-                        j,
-                        i;
+                    if (ignoredTitleList.length > 0) {
+                        ignoredTitleSet = arrayToSet(ignoredTitleList.split(","));
+                    }
 
-                    for (i = 0; i < docExportArray.length; i += 1) {
-                        dEx = docExportArray[i];
-                        if (settings.getSetting("articleExtraction") === true) {
-                            self.log("Tagging documents as periodicals");
-                            if (periodicalTitleSet.hasOwnProperty(dEx.title)) {
-                                dEx.isPeriodical = true;
-                                for (j = 0; j < dEx.clippings.length; j += 1) {
-                                    cEx = dEx.clippings[j];
-                                    self.setSuggestedDataToClipping(cEx);
+                    if (app.$.document_selector_list.getMultiSelected()) {
+                        docsExport = app.documents.exportObject({selectedKeySet: app.$.document_selector_list.getMultiSelectionKeys()});
+                    } else {
+                        docsExport = app.documents.exportObject({ignoredTitleSet: ignoredTitleSet});
+                    }
+                    docExportArray = docsExport.documents;
+
+                    periodicalTitleList = settings.getSetting("periodicalTitleList");
+                    if (periodicalTitleList.length > 0) {
+                        periodicalTitleSet = arrayToSet(periodicalTitleList.split(","));
+                    }
+
+                    (function () {
+                        var dEx,
+                            cEx,
+                            j,
+                            i;
+
+                        for (i = 0; i < docExportArray.length; i += 1) {
+                            dEx = docExportArray[i];
+                            if (settings.getSetting("articleExtraction") === true) {
+                                self.log("Tagging documents as periodicals");
+                                if (periodicalTitleSet.hasOwnProperty(dEx.title)) {
+                                    dEx.isPeriodical = true;
+                                    for (j = 0; j < dEx.clippings.length; j += 1) {
+                                        cEx = dEx.clippings[j];
+                                        self.setSuggestedDataToClipping(cEx);
+                                    }
                                 }
                             }
                         }
-                    }
-                }());
+                    }());
 
-                this.handleExportEnd();
-
+                    app.handleExportEnd();
+                }
             },
 
             setSuggestedDataToClipping: function (clippingExport, makeQuotedFlag, retryFlag) {

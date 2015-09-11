@@ -5,7 +5,7 @@
 /***********************************************************************************************/
 #app {
   background-color: gray;
-  background: url(../assets/bg.png); }
+  background: url("../../assets/bg.png"); }
 
 .k2e-main-panel {
   -moz-box-shadow: -4px 0 4px rgba(0, 0, 0, 0.3);
@@ -16,7 +16,7 @@
   background-color: purple; }
 
 .k2e-export-button {
-  background-color: #35a8ee !important; }
+  background-color: #35A8EE !important; }
 
 .k2e-sidebar {
   width: 20%; }
@@ -25,11 +25,11 @@
 /* Document selector list */
 .k2e-document-selector-item {
   /*padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  margin-top: 1px;
-  margin-bottom: 1px;*/
-  border-bottom: 1px solid #0e0e0e;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	margin-top: 1px;
+	margin-bottom: 1px;*/
+  border-bottom: 1px solid #0E0E0E;
   background-color: #333;
   color: white;
   padding: 16px 12px;
@@ -42,12 +42,12 @@
   background-color: #226B9A; }
 
 .k2e-document-selector-item-label {
-  vertical-align: middle;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 90%;
   /* hack */
-  padding-left: 10px; }
+  padding-left: 10px;
+  line-height: 31px; }
 
 /***********************************************************************************************/
 /* Document Display */
@@ -150,7 +150,7 @@
   overflow: visible; }
 
 .k2e-document-view-subtitle {
-  border-top: 1px solid #cdcdcc;
+  border-top: 1px solid #CDCDCC;
   /* changed from theme */ }
 
 .k2e-document-view-clip-separator {
@@ -167,8 +167,8 @@
   background-color: #555656;
   border-color: rgba(15, 15, 15, 0.5);
   /*margin-top: 0;
-  margin-bottom: 0;
-  height: 36px;*/ }
+    margin-bottom: 0;
+    height: 36px;*/ }
 
 .k2e-toggle-fullscreen-button {
   position: absolute;
@@ -178,8 +178,8 @@
   background-color: #555656;
   border-color: rgba(15, 15, 15, 0.5);
   /*margin-top: 0;
-  margin-bottom: 0;
-  height: 36px;*/ }
+    margin-bottom: 0;
+    height: 36px;*/ }
 
 /***********************************************************************************************/
 /* Settings panel */
@@ -250,9 +250,9 @@
   font-weight: bold;
   font-size: 14px;
   border: none;
-  /*background: #4c4c4c url(../assets/gradient.png) repeat-x 0 10px;*/ }
+  /*background: #4c4c4c url("../../assets/gradient.png") repeat-x 0 10px;*/ }
 
 .k2e-accordion-item-content {
-  border-left: 1px solid #555555;
+  border-left: 1px solid #555;
   padding-left: 5px;
   color: white; }

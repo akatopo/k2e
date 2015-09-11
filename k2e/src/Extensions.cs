@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Web;
 
 namespace k2e
 {
@@ -9,5 +10,10 @@ namespace k2e
         {
             return WebUtility.HtmlEncode(s);
         }
+
+		public static string TryGetValue(this HttpCookieCollection c, string key)
+		{
+			return c[key] == null ? "" : c[key].Value;
+		}
     }
 }

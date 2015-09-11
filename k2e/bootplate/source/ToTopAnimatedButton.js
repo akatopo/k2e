@@ -47,14 +47,6 @@ enyo.kind({
         }
     },
 
-    tmp_show: function () {
-        this.setShowing(true);
-    },
-
-    tmp_hide: function () {
-        this.setShowing(false);
-    },
-
     create: function () {
         this.inherited(arguments);
     }
