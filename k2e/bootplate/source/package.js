@@ -19,5 +19,6 @@ enyo.depends(
     "Accordion.js",
     "DocumentScroller.js",
     "assert.js",
-    "linkify.js"
+    "linkify.js",
+    "node_modules/fontfaceobserver/fontfaceobserver.js"
 );
