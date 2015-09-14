@@ -49,6 +49,9 @@
   padding-left: 10px;
   line-height: 31px; }
 
+.k2e-document-selector-item .onyx-checkbox {
+  vertical-align: baseline; }
+
 /***********************************************************************************************/
 /* Document Display */
 /** Dark theme **/
