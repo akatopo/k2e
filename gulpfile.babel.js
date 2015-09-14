@@ -10,10 +10,11 @@ import livereload from 'gulp-livereload';
 import rename from 'gulp-rename';
 import runSequence from 'run-sequence';
 import sass from 'gulp-sass';
+import msbuild from 'gulp-msbuild';
 
 const BASE_BOOTPLATE_PATH = './k2e/bootplate';
 const BASE_SOURCE_PATH = './k2e/bootplate/source';
-const BASE_DEPLOY_PATH = 'k2e/bootplate/deploy/bootplate';
+const BASE_DEPLOY_PATH = './k2e/bootplate/deploy/bootplate';
 
 gulp.task('sass', sassCompile);
 
@@ -56,10 +57,11 @@ function watch() {
   gulp.watch(`${BASE_SOURCE_PATH}/*.js`, livereload.reload);
 }
 
-function buildBackend(cb) {
-  exec('xbuild /p:Configuration=Release k2e/k2e.csproj',
-    _.partial(execCallback, cb)
-  );
+function buildBackend() {
+  return gulp.src('./k2e.sln')
+    .pipe(msbuild({
+      configuration: 'Release'
+    }));
 }
 
 function buildFrontend(cb) {

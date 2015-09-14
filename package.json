@@ -23,6 +23,7 @@
     "del": "^1.2.1",
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.0",
+    "gulp-msbuild": "^0.2.13",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.0.4",
     "run-sequence": "^1.1.2",
