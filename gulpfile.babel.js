@@ -84,10 +84,8 @@ function distCss() {
 
 function distAssets() {
   return streamqueue({ objectMode: true },
-    gulp.src('./k2e/assets/*')
-      .pipe(rename({ dirname: 'assets' })),
+    gulp.src('./k2e/assets/**/*', { base: './k2e' }),
     gulp.src(`${BASE_DEPLOY_PATH}/lib/**/*`, { base: `${BASE_DEPLOY_PATH}` }),
-      // .pipe(rename({ dirname: 'lib' })),
     gulp.src(`${BASE_BOOTPLATE_PATH}/icon.png`)
   )
   .pipe(gulp.dest('./dist'));
