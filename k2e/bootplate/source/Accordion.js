@@ -14,10 +14,10 @@ enyo.kind({
     },
 
     childComponents: [
-        {name: "header", classes: "onyx-toolbar-inline k2e-accordion-item-header", style: "height: 36px", ontap: "toggleOpen", components: [
+        {name: "header", classes: "onyx-toolbar-inline k2e-accordion-item-header", ontap: "toggleOpen", components: [
             {name: "animation", kind: "Animator", onStep: "animatorStep", onEnd: "animatorComplete"},
-            {name: "expander", style: "background-color: inherit; width: 36px; height: 100%; margin: 0;", components: [
-                {tag: "img", src: "assets/accordion_collapsed.png"}
+            {name: "expander", classes: "k2e-accordion-item-expander", components: [
+                {tag: "i", classes: "icon-play"}
             ]},
             {classes: "k2e-accordion-item-content", style: "height: 100%; margin: 0;", components: [
                 {name: "header_text", content: "Heading", style: "display: table-cell; vertical-align: middle; height: 36px"}

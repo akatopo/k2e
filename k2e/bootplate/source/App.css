@@ -253,7 +253,16 @@
   font-weight: bold;
   font-size: 14px;
   border: none;
-  /*background: #4c4c4c url("../../assets/gradient.png") repeat-x 0 10px;*/ }
+  height: 36px; }
+
+.k2e-accordion-item-expander {
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  line-height: 35px;
+  text-align: center;
+  color: white;
+  font-size: 10px; }
 
 .k2e-accordion-item-content {
   border-left: 1px solid #555;

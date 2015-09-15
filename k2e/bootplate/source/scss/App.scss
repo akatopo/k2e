@@ -332,7 +332,18 @@ $document-max-width: (1920 - 1920 * 0.2)px;// - $document-horizontal-padding;
 	font-weight: bold;
 	font-size: 14px;
 	border: none;
-	/*background: #4c4c4c url("#{$assetPath}/gradient.png") repeat-x 0 10px;*/
+    height: 36px;
+	// background: #4c4c4c url("#{$assetPath}/gradient.png") repeat-x 0 10px;
+}
+
+.k2e-accordion-item-expander {
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    line-height: (36px - 1px);
+    text-align: center;
+    color: white;
+    font-size: 10px;
 }
 
 .k2e-accordion-item-content {
