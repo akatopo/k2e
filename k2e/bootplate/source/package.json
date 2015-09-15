@@ -1,7 +1,0 @@
-{
-  "name": "bootplate",
-  "version": "0.0.1",
-  "dependencies": {
-    "fontfaceobserver": "^1.5.1"
-  }
-}

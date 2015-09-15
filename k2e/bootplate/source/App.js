@@ -634,13 +634,6 @@ enyo.kind(
                     document.onmozfullscreenchange =
                     document.onfullscreenchange = function () { self.toggleDistractionFreeMode(); };
 
-                var observer = new FontFaceObserver("FontAwesome")
-                    .check("\f027").then(function () {
-                        window.setTimeout(self.$.app_toolbar.rendered.bind(self), 0);
-                    }, function () {
-                      console.warn("FontAwesome is not available");
-                    });
-
                 // FIXME: Get data by dnd or file chooser
                 // if (!window.XMLHttpRequest)
                 //     return;
