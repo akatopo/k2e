@@ -1,0 +1,11 @@
+{
+    "enyo": "./lib/enyo",
+    "packagejs": "./package.js",
+    "assets": [
+        "./icon.png"
+    ],
+    "libs": [
+        "./lib/onyx",
+        "./lib/layout"
+    ]
+}

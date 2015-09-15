@@ -1,0 +1,9 @@
+{
+  "name": "k2e",
+  "version": "0.0.1",
+  "dependencies": {
+    "enyo": "2.5.1.1",
+    "onyx": "enyojs/onyx#2.5.1.1",
+    "layout": "enyojs/layout#2.5.1.1"
+  }
+}

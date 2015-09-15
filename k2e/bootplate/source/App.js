@@ -155,9 +155,6 @@ enyo.kind(
                 }
                 this.$.sidebar.setShowing(!this.$.sidebar.showing);
                 this.$.app_toolbar.setShowing(!this.$.app_toolbar.showing);
-
-
-                this.resized();
             },
 
             toggleFullscreen: function () {
@@ -605,16 +602,12 @@ enyo.kind(
             },
 
             reflow: function () {
-                var backShowing = this.$.back_toolbar.showing,
-                    isScreenNarrow = enyo.Panels.isScreenNarrow();
+                var isScreenNarrow = enyo.Panels.isScreenNarrow();
 
                 this.inherited(arguments);
 
                 this.$.settings_button_label.setShowing(!isScreenNarrow);
                 this.$.back_toolbar.setShowing(isScreenNarrow);
-                if (this.$.back_toolbar.showing !== backShowing) {
-                    this.$.document_scroller.resized();
-                }
                 if (!isScreenNarrow) {
                     this.$.main_panels.setIndex(0);
                 }

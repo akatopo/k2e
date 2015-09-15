@@ -14,7 +14,8 @@ import msbuild from 'gulp-msbuild';
 
 const BASE_BOOTPLATE_PATH = './k2e/bootplate';
 const BASE_SOURCE_PATH = './k2e/bootplate/source';
-const BASE_DEPLOY_PATH = './k2e/bootplate/deploy/bootplate';
+const BASE_DEPLOY_PATH = './k2e/bootplate/deploy';
+const BOWER_COMPONENTS = 'lib';
 
 gulp.task('sass', sassCompile);
 
@@ -65,7 +66,7 @@ function buildBackend() {
 }
 
 function buildFrontend(cb) {
-  exec('./tools/deploy.sh',
+  exec(`node ${BOWER_COMPONENTS}/enyo/tools/deploy.js -T -s . -o deploy -lib ${BOWER_COMPONENTS}`,
     { cwd: BASE_BOOTPLATE_PATH },
     _.partial(execCallback, cb)
   );
@@ -85,8 +86,8 @@ function distAssets() {
   return streamqueue({ objectMode: true },
     gulp.src('./k2e/assets/*')
       .pipe(rename({ dirname: 'assets' })),
-    gulp.src(`${BASE_BOOTPLATE_PATH}/lib/onyx/images/*`)
-      .pipe(rename({ dirname: 'lib/onyx/images' })),
+    gulp.src(`${BASE_DEPLOY_PATH}/lib/**/*`, { base: `${BASE_DEPLOY_PATH}` }),
+      // .pipe(rename({ dirname: 'lib' })),
     gulp.src(`${BASE_BOOTPLATE_PATH}/icon.png`)
   )
   .pipe(gulp.dest('./dist'));
@@ -112,13 +113,13 @@ function distConfig() {
 }
 
 function distFrontend(cb) {
-  runSequence('build-frontend', ['dist-scripts', 'dist-css'], cb);
+  runSequence('build-frontend', ['dist-assets', 'dist-scripts', 'dist-css'], cb);
 }
 
 function dist(cb) {
   runSequence(
     'dist-clean',
-    ['dist-frontend', 'dist-assets', 'dist-aspx', 'dist-config', 'dist-bin'],
+    ['dist-frontend', 'dist-aspx', 'dist-config', 'dist-bin'],
     cb
   );
 }

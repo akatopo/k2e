@@ -164,7 +164,11 @@ enyo.kind({
         onDocumentSelected: ""
     },
     handlers: {
-        ontap: "doDocumentSelected"
+        ontap: "handleTap"
+    },
+    handleTap: function () {
+        var self = this;
+        this.doDocumentSelected(self);
     },
     setSelected: function (bool) {
         this.selected = bool;

@@ -15,9 +15,9 @@
         <!-- Less.js (uncomment for client-side rendering of less stylesheets; leave commented to use only CSS) -->
         <!-- <script src="enyo/tools/minifier/node_modules/less/dist/less-1.3.0e.min.js"></script> -->
         <!-- enyo (debug) -->
-        <script src="bootplate/enyo/enyo.js"></script>
+        <script src="bootplate/lib/enyo/enyo.js" charset="utf-8"></script>
         <!-- application (debug) -->
-        <script src="bootplate/source/package.js" type="text/javascript"></script>
+        <script src="bootplate/source/package.js" charset="utf-8"></script>
     </head>
     <body class="enyo-unselectable">
         <script>

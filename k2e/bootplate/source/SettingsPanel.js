@@ -169,7 +169,6 @@ enyo.kind({
 
     rendered: function () {
         this.inherited(arguments);
-        this.resized(); // hack to correct layout
     }
 });
 
@@ -231,7 +230,6 @@ enyo.kind({
 
     rendered: function () {
         this.inherited(arguments);
-        this.resized(); // hack to correct layout
     }
 });
 

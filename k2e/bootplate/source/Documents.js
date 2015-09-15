@@ -1,7 +1,7 @@
 /*global enyo, Document */
 
 enyo.kind({
-    name: "Document",
+    name: "ClippingCollection",
     kind: "enyo.Component",
     published: {
         index: -1,
@@ -77,7 +77,7 @@ enyo.kind({
         var key = title + author;
 
         if (!this.docMap[key]) {
-            this.docMap[key] = new Document({
+            this.docMap[key] = new ClippingCollection({
                 title: title,
                 author: author
             });
