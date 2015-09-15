@@ -582,7 +582,7 @@ enyo.kind(
                             type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
                             loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
                             timeStamp = subtitle[subtitle.length - 1];
-                            content = linkify(enyo.dom.escape(res[4]));
+                            content = linkify(enyo.dom.escape(res[4]), { targetBlank: true });
 
                             // Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
                             if (type !== "Bookmark" && type !== "Clipping") {
