@@ -68,7 +68,13 @@ enyo.kind({
             handleDragover,
             handleFiles,
             handleDrop,
-            handleFilePick;
+            handleFilePick,
+            sampleClippingsNode = document.querySelector("#sample-clippings");
+
+        if (sampleClippingsNode) {
+            self.setClippingsText(sampleClippingsNode.innerHTML);
+            return;
+        }
 
         if (popupNode && pickerNode) {
             handleDragleave = function (ev) {
