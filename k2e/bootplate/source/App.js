@@ -44,7 +44,7 @@ enyo.kind(
                 {name: "export_popup", kind: "ExportPopup" },
                 {name: "app_toolbar", kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
                     {name: "settings_button", kind: "onyx.Button", ontap: "toggleSettings", components: [
-                        {tag: "i", classes: "icon-reorder icon-large"},
+                        {tag: "i", classes: "icon-menu icon-large"},
                         {name: "settings_button_label", tag: "span", style: "padding-left: 5px;", content: "Settings" }
                     ]},
                     {content: "k2e", fit: true, style: "text-align: center;"},
