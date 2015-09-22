@@ -12,11 +12,16 @@ enyo.kind({
     value: -100,
     unit: "%",
     draggable: false,
+    cookieModel: undefined,
 
     components: [
         {name: "scroller", kind: "enyo.Scroller", fit: true, style: "height: 100%", components: [
-            {kind: "SettingsPanel"}
+            { name: "panel", kind: "SettingsPanel"}
         ]}
+    ],
+
+    bindings: [
+        { from: "cookieModel", to: "$.panel.cookieModel" }
     ],
 
     toggle: function () {

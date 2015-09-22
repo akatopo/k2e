@@ -1,4 +1,4 @@
-/*global enyo, AsyncSemaphore, SettingsSingleton, linkify, Clipping, Documents, Element */
+/*global AsyncSemaphore, SettingsSingleton, linkify, Clipping, Documents, Element, CookieModel, Constants */
 
 enyo.kind(
     (function () {
@@ -22,14 +22,7 @@ enyo.kind(
                 };
 
                 return classNameMap[themeName];
-            },
-            EXPORT_PATH = '/Default.aspx/Export',
-            AUTH_PATH = '/Auth.aspx',
-            AUTH_WINDOW_NAME = 'k2e Evernote authentication',
-            AUTH_WINDOW_FEATURES = 'width=800, height=600',
-            AUTH_DONE_QUERY_PARAM = 'authDone',
-            ACCESS_TOKEN_COOKIE_NAME = 'K2eAccessToken',
-            CONSUMER_PUBLIC_KEY_COOKIE_NAME = 'ConsumerPublicKey';
+            };
 
 
         // enyo kind definition
@@ -39,13 +32,13 @@ enyo.kind(
             kind: "FittableRows",
 
             components: [
-                {kind: enyo.Signals, onkeydown: "handleKeydown"},
+                {kind: "enyo.Signals", onkeydown: "handleKeydown"},
                 {name: "clipping_picker_popup", kind: "ClippingPickerPopup"},
-                {name: "export_popup", kind: "ExportPopup" },
+                {name: "export_popup", kind: "ProgressPopup" },
                 {name: "app_toolbar", kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
                     {name: "settings_button", kind: "onyx.Button", ontap: "toggleSettings", components: [
                         {tag: "i", classes: "icon-menu icon-large"},
-                        {name: "settings_button_label", tag: "span", style: "padding-left: 5px;", content: "Settings" }
+                        {name: "settings_button_label", tag: "span", content: "Settings" }
                     ]},
                     {content: "k2e", fit: true, style: "text-align: center;"},
                     {
@@ -55,7 +48,7 @@ enyo.kind(
                         ontap: "prepareDocumentsAndExport",
                         components: [
                             {tag: "i", classes: "icon-share icon-large"},
-                            {name: "export_button_label", tag: "span", style: "padding-left: 5px;", content: "Export to Evernote" }
+                            {name: "export_button_label", tag: "span", content: "Export to Evernote" }
                         ]
                     },
                     {
@@ -66,7 +59,7 @@ enyo.kind(
                         ontap: "prepareDocumentsAndExport",
                         components: [
                             {tag: "i", classes: "icon-share icon-large"},
-                            {name: "export_selected_button_label", tag: "span", style: "padding-left: 5px;", content: "Export Selected to Evernote" }
+                            {name: "export_selected_button_label", tag: "span", content: "Export Selected to Evernote" }
                         ]
                     }
                 ]},
@@ -132,6 +125,12 @@ enyo.kind(
                 onFontSizeChanged: "handleFontSizeChanged",
                 onTextMarginChanged: "handleTextMarginChanged"
             },
+
+            bindings: [
+                { from: "cookieModel", to: "$.settings.cookieModel" }
+            ],
+
+            cookieModel: undefined,
 
             setTheme: function (themeName) {
                 this.setCurrentThemeClass(getThemeClassFromName(themeName));
@@ -205,12 +204,13 @@ enyo.kind(
 
             exportDocuments: function (inSender, inEvent) {
                 this.log("Export processing done");
-                var loc = location.protocol + '//' + location.host + EXPORT_PATH,
+                var loc = location.protocol + '//' + location.host + Constants.EXPORT_PATH,
                     ajax = new enyo.Ajax({
                         url: loc,
-                        contentType: "application/json; charset=utf-8",
+                        contentType: "application/json",
                         method: "POST",
-                        postBody: '{"q":' + JSON.stringify(docsExport, null, 0) + '}'
+                        // postBody: '{"q":' + JSON.stringify(docsExport, null, 0) + '}'
+                        postBody: {q: docsExport}
                     });
 
                 console.log(loc);
@@ -218,7 +218,7 @@ enyo.kind(
 
                 // // comment out to enable exporting
                 // var self = this;
-                // window.setTimeout(function () { self.$.export_popup.exportDone(); }, 2000 /* ms */);
+                // window.setTimeout(function () { self.$.export_popup.done("Export done!"); }, 2000 /* ms */);
                 // window.setTimeout(function () { self.$.export_popup.hide(); }, 4000 /* ms */);
                 // return;
                 ajax.go();
@@ -229,37 +229,69 @@ enyo.kind(
 
             processExportResponse: function (inSender, inResponse) {
                 var self = this;
-                // alert(JSON.stringify(inResponse, null, 2));
-                this.$.export_popup.exportDone();
-                window.setTimeout(function () { self.$.export_popup.hide(); }, 2000); // 2s
+                this.$.export_popup.done("Export done!");
+                // window.setTimeout(function () { self.$.export_popup.hide(); }, POPUP_TIMEOUT_MS);
             },
 
             processExportError: function (inSender, inResponse) {
-                this.error("Error in exporting");
+                var self = this;
+                var response = JSON.parse(inSender.xhrResponse.body);
+                response = response ? response.d : { errors: []};
+                if (inResponse === 401) {
+                    var cookieModel = self.$.settings.get("cookieModel");
+                    cookieModel.fetch();
+                    cookieModel.set(Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
+                    cookieModel.set(Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
+                    cookieModel.commit();
+                    this.$.export_popup.failed("Export failed", "Try exporting again");
+                }
+                else {
+                    this.$.export_popup.failed("Export failed", response.errors.map(function (error) {
+                        return error.message;
+                    }));
+                }
+            },
+
+            evernoteAuthPopup: function (cb, err) {
+                var popup = window.open(Constants.AUTH_PATH, Constants.AUTH_WINDOW_NAME, Constants.AUTH_WINDOW_FEATURES);
+
+                var pollTimer = window.setInterval(function() {
+                    try {
+                        if (popup.closed) {
+                            window.clearInterval(pollTimer);
+                            (err || function(){})();
+                        }
+                        if (popup.document.URL.indexOf(Constants.AUTH_DONE_QUERY_PARAM) !== -1) {
+                            window.clearInterval(pollTimer);
+                            popup.close();
+                            if (document.cookie.indexOf(Constants.ACCESS_TOKEN_COOKIE_NAME) !== -1 &&
+                                document.cookie.indexOf(Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) !== -1
+                            ) {
+                                (cb || function(){})();
+                            }
+                            else {
+                                (err || function(){})();
+                            }
+                        }
+                    }
+                    catch (ex) {}
+                }, 100); // ms
             },
 
             prepareDocumentsAndExport: function (/*inSender, inEvent*/) {
-                var self = this;
+                this.$.export_popup.begin("Exporting clippings...");
 
-                self.$.export_popup.exportBegin();
-                self.$.export_popup.show();
-
-                if (document.cookie.indexOf(ACCESS_TOKEN_COOKIE_NAME) !== -1 &&
-                    document.cookie.indexOf(CONSUMER_PUBLIC_KEY_COOKIE_NAME) !== -1
+                if (document.cookie.indexOf(Constants.ACCESS_TOKEN_COOKIE_NAME) !== -1 &&
+                    document.cookie.indexOf(Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) !== -1
                 ) {
-                    console.log('Cookies present');
-                    doExport(self);
+                    this.cookieModel.fetch();
+                    doExport(this);
                 }
                 else {
-                    var popup = window.open(AUTH_PATH, AUTH_WINDOW_NAME, AUTH_WINDOW_FEATURES);
-
-                    var pollTimer = window.setInterval(function() {
-                        if (popup.document.URL.indexOf(AUTH_DONE_QUERY_PARAM) !== -1) {
-                            window.clearInterval(pollTimer);
-                            popup.close();
-                            self.prepareDocumentsAndExport.apply(self, arguments);
-                        }
-                    }, 100); // ms
+                    this.evernoteAuthPopup(
+                        this.prepareDocumentsAndExport.bind(this),
+                        stopExport.bind(undefined, this)
+                    );
                 }
 
                 function doExport(app) {
@@ -297,12 +329,12 @@ enyo.kind(
                         for (i = 0; i < docExportArray.length; i += 1) {
                             dEx = docExportArray[i];
                             if (settings.getSetting("articleExtraction") === true) {
-                                self.log("Tagging documents as periodicals");
+                                app.log("Tagging documents as periodicals");
                                 if (periodicalTitleSet.hasOwnProperty(dEx.title)) {
                                     dEx.isPeriodical = true;
                                     for (j = 0; j < dEx.clippings.length; j += 1) {
                                         cEx = dEx.clippings[j];
-                                        self.setSuggestedDataToClipping(cEx);
+                                        app.setSuggestedDataToClipping(cEx);
                                     }
                                 }
                             }
@@ -310,6 +342,10 @@ enyo.kind(
                     }());
 
                     app.handleExportEnd();
+                }
+
+                function stopExport(app) {
+                    app.$.export_popup.failed("Authentication failed");
                 }
             },
 
@@ -627,6 +663,10 @@ enyo.kind(
                 self.handleThemeChanged();
                 self.handleFontSizeChanged();
                 self.handleTextMarginChanged();
+
+                var cookieModel = new CookieModel();
+                cookieModel.fetch();
+                self.set("cookieModel", cookieModel);
 
                 exportPreparationSem = new AsyncSemaphore({func: function () { self.exportDocuments(); } });
 

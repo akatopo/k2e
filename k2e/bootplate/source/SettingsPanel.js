@@ -1,4 +1,4 @@
-/*global enyo, SettingsSingleton */
+/* global CookieSource, CookieModel, Cookies, SettingsSingleton, Constants */
 
 enyo.kind({
     name: "SettingsPanel",
@@ -16,6 +16,7 @@ enyo.kind({
     },
 
     components: [
+        {name: "settings_popup", kind: "ProgressPopup"},
         {kind: "Accordion", components: [
             {content: "Appearance", components: [
                 {kind: "onyx.Groupbox", components: [
@@ -36,7 +37,7 @@ enyo.kind({
                     {name: "articleExtraction", kind: "SettingsValueItem", defaultInputKind: "SettingsToggleButton", label: "Periodical Article Extraction",
                             onSettingChanged: "handleExtractionSettingChanged"},
                     {name: "periodicalTitleList", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextInput"},
-                            label: "Periodical tiles",
+                            label: "Periodical titles",
                             disabled: !(new SettingsSingleton()).getSetting("articleExtraction")},
                     {name: "googleSearchApiKey", kind: "SettingsValueItem", inputComponent: {kind: "SettingsTextInput", type: "password"},
                             label: "Google Search Api Key",
@@ -49,14 +50,56 @@ enyo.kind({
             ]},
             {content: "Local Storage", components: [
                 {kind: "onyx.Groupbox", components: [
-                    {name: "clearSettings", kind: "SettingsActionItem", label: "Restore defaults", buttonLabel: "Restore", ontap: "restoreDefaults"},
-                    {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear", ontap: "clearCache" },
-                    {name: "exportSettings", kind: "SettingsActionItem", label: "Export Settings", buttonLabel: "Export", ontap: "exportSettings"},
-                    {name: "importSettings", kind: "SettingsActionItem", label: "Import Settings", buttonLabel: "Import", ontap: "importSettings"}
+                    {name: "clearSettings", kind: "SettingsActionItem", label: "Restore defaults", buttonLabel: "Restore", onActivated: "restoreDefaults"},
+                    {name: "clearCache", kind: "SettingsActionItem", label: "Clear Cache", buttonLabel: "Clear", onActivated: "clearCache" },
+                    {name: "exportSettings", kind: "SettingsActionItem", label: "Export Settings", buttonLabel: "Export", onActivated: "exportSettings"},
+                    {name: "importSettings", kind: "SettingsActionItem", label: "Import Settings", buttonLabel: "Import", onActivated: "importSettings"}
                 ]}
+            ]},
+            {content: "Permissions", components: [
+                {
+                    kind: "onyx.Groupbox",
+                    components: [
+                        {
+                            name: "revokeEvernotePermissions",
+                            kind: "SettingsActionItem",
+                            label: "Revoke Evernote permissions",
+                            buttonLabel: "Revoke",
+                            onActivated: "revokeEvernotePermissions",
+                            cookieModel: undefined,
+                            computed: [
+                                {
+                                    method: "disabledComputed",
+                                    path: [
+                                        "cookieModel",
+                                        "modelDep1",
+                                        "modelDep2"
+                                    ]
+                                }
+                            ],
+                            disabledComputed: function () {
+                                return !(
+                                    !!this.get("cookieModel." + Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) &&
+                                    !!this.get("cookieModel." + Constants.ACCESS_TOKEN_COOKIE_NAME)
+                                );
+                            },
+                            bindings: [
+                                { from: "disabledComputed", to: "disabled"},
+                                { from: "cookieModel." + Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, to: "modelDep1" },
+                                { from: "cookieModel." + Constants.ACCESS_TOKEN_COOKIE_NAME, to: "modelDep2" }
+                            ]
+                        }
+                    ]
+                }
             ]}
         ]}
     ],
+
+    bindings: [
+        { from: "cookieModel", to: "$.revokeEvernotePermissions.cookieModel" }
+    ],
+
+    cookieModel: undefined,
 
     handleSettingChanged: function (inSender, inEvent) {
         var settingsItem = inEvent.originator,
@@ -84,6 +127,34 @@ enyo.kind({
         }
     },
 
+    revokeEvernotePermissions: function (inSender, inEvent) {
+        this.$.settings_popup.begin("Revoking permissions...");
+
+        var loc = location.protocol + '//' + location.host + "/Default.aspx/Revoke",
+            ajax = new enyo.Ajax({
+                url: loc,
+                contentType: "application/json",
+                method: "POST"
+            });
+        ajax.go();
+
+        ajax.response(this.$.settings_popup, processResponse);
+        ajax.error(this.$.settings_popup, processError);
+
+        var cookieModel = this.cookieModel;
+        function processResponse(inSender, inEvent) {
+            cookieModel.fetch();
+            cookieModel.set(Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
+            cookieModel.set(Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
+            cookieModel.commit();
+            this.done("Permissions revoked successfully");
+        }
+
+        function processError(inSender, inEvent) {
+            this.failed("Revocation failed");
+        }
+    },
+
     restoreDefaults: function () {
         this.log("restore defaults");
 
@@ -96,6 +167,7 @@ enyo.kind({
         for (key in defaultsArray) {
             if (defaultsArray.hasOwnProperty(key)) {
                 this.$[key].setValue(settings.getDefaultSetting(key));
+                this.$[key].valueChanged();
             }
         }
     },
@@ -129,9 +201,9 @@ enyo.kind({
         {name: "label", kind: "Control"}
     ],
 
-    labelChanged: function () {
-        this.$.label.setContent(this.label);
-    },
+    bindings: [
+        { from: "label", to: "$.label.content" }
+    ],
 
     disabledChanged: function () {
         this.$.label.addRemoveClass("k2e-settings-item-label-disabled", this.disabled);
@@ -139,11 +211,6 @@ enyo.kind({
 
     create: function () {
         this.inherited(arguments);
-    },
-
-    rendered: function () {
-        this.inherited(arguments);
-        this.labelChanged();
         this.disabledChanged();
     }
 });
@@ -154,17 +221,31 @@ enyo.kind({
     kind: "SettingsItem",
 
     published: {
-        buttonLabel: ""
+        buttonLabel: "",
+        disabled: false
     },
 
-    buttonLabelChanged: function () {
-        this.$.button.setContent(this.buttonLabel);
+    events: {
+        "onActivated": ""
     },
+
+    bindings: [
+        {from: "disabled", to: "$.button.disabled"},
+        {from: "buttonLabel", to: "$.button.content"}
+    ],
 
     create: function () {
         this.inherited(arguments);
         this.createComponent({fit: true});
-        this.createComponent({name: "button", kind: "onyx.Button", classes: "k2e-settings-action-item-button", content: this.buttonLabel});
+        this.createComponent({
+            name: "button",
+
+            kind: "onyx.Button",
+
+            classes: "k2e-settings-action-item-button",
+
+            ontap: "doActivated"
+        });
     },
 
     rendered: function () {
@@ -178,6 +259,7 @@ enyo.kind({
     kind: "SettingsItem",
 
     published: {
+        // disabled: false,
         value: ""
     },
 
@@ -188,6 +270,10 @@ enyo.kind({
     handlers: {
         onInputValueChanged: "handleInputValueChanged"
     },
+
+    bindings: [
+        { from: "disabled", to: "$.input.disabled" }
+    ],
 
     defaultInputKind: "onyx.Checkbox",
 
@@ -202,10 +288,10 @@ enyo.kind({
         this.$.input.setValue(this.value);
     },
 
-    disabledChanged: function () {
-        this.inherited(arguments);
-        this.$.input.setDisabled(this.disabled);
-    },
+    // disabledChanged: function () {
+    //     this.inherited(arguments);
+    //     this.$.input.setDisabled(this.disabled);
+    // },
 
     handleInputValueChanged: function (inSender, inEvent) {
         this.doSettingChanged();
