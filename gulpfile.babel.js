@@ -53,9 +53,13 @@ function sassCompile() {
 }
 
 function watch() {
+  // relative path for watch, https://github.com/floatdrop/gulp-watch/issues/104
+
+  let sourcePath = BASE_SOURCE_PATH.substr(2);
+
   livereload.listen();
-  gulp.watch(`${BASE_SOURCE_PATH}/scss/*.scss`, ['sass']);
-  gulp.watch(`${BASE_SOURCE_PATH}/*.js`, livereload.reload);
+  gulp.watch(`${sourcePath}/scss/*.scss`, ['sass']);
+  gulp.watch(`${sourcePath}/*.js`, livereload.reload);
 }
 
 function buildBackend() {
@@ -79,7 +83,7 @@ function distScripts() {
 
 function distCss() {
   return gulp.src(`${BASE_DEPLOY_PATH}/build/*.css`)
-    .pipe(gulp.dest('./dist/build')); 
+    .pipe(gulp.dest('./dist/build'));
 }
 
 function distAssets() {
