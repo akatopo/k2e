@@ -6,13 +6,9 @@
 
 namespace Evernote.EDAM.Type
 {
-  public enum PrivilegeLevel
+  public enum BusinessUserRole
   {
-    NORMAL = 1,
-    PREMIUM = 3,
-    VIP = 5,
-    MANAGER = 7,
-    SUPPORT = 8,
-    ADMIN = 9,
+    ADMIN = 1,
+    NORMAL = 2,
   }
 }

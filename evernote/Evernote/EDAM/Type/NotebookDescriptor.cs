@@ -18,14 +18,13 @@ namespace Evernote.EDAM.Type
   #if !SILVERLIGHT && !NETFX_CORE
   [Serializable]
   #endif
-  public partial class SavedSearch : TBase
+  public partial class NotebookDescriptor : TBase
   {
     private string _guid;
-    private string _name;
-    private string _query;
-    private QueryFormat _format;
-    private int _updateSequenceNum;
-    private SavedSearchScope _scope;
+    private string _notebookDisplayName;
+    private string _contactName;
+    private bool _hasSharedNotebook;
+    private int _joinedUserCount;
 
     public string Guid
     {
@@ -40,68 +39,55 @@ namespace Evernote.EDAM.Type
       }
     }
 
-    public string Name
+    public string NotebookDisplayName
     {
       get
       {
-        return _name;
+        return _notebookDisplayName;
       }
       set
       {
-        __isset.name = true;
-        this._name = value;
+        __isset.notebookDisplayName = true;
+        this._notebookDisplayName = value;
       }
     }
 
-    public string Query
+    public string ContactName
     {
       get
       {
-        return _query;
+        return _contactName;
       }
       set
       {
-        __isset.query = true;
-        this._query = value;
+        __isset.contactName = true;
+        this._contactName = value;
       }
     }
 
-    public QueryFormat Format
+    public bool HasSharedNotebook
     {
       get
       {
-        return _format;
+        return _hasSharedNotebook;
       }
       set
       {
-        __isset.format = true;
-        this._format = value;
+        __isset.hasSharedNotebook = true;
+        this._hasSharedNotebook = value;
       }
     }
 
-    public int UpdateSequenceNum
+    public int JoinedUserCount
     {
       get
       {
-        return _updateSequenceNum;
+        return _joinedUserCount;
       }
       set
       {
-        __isset.updateSequenceNum = true;
-        this._updateSequenceNum = value;
-      }
-    }
-
-    public SavedSearchScope Scope
-    {
-      get
-      {
-        return _scope;
-      }
-      set
-      {
-        __isset.scope = true;
-        this._scope = value;
+        __isset.joinedUserCount = true;
+        this._joinedUserCount = value;
       }
     }
 
@@ -112,14 +98,13 @@ namespace Evernote.EDAM.Type
     #endif
     public struct Isset {
       public bool guid;
-      public bool name;
-      public bool query;
-      public bool format;
-      public bool updateSequenceNum;
-      public bool scope;
+      public bool notebookDisplayName;
+      public bool contactName;
+      public bool hasSharedNotebook;
+      public bool joinedUserCount;
     }
 
-    public SavedSearch() {
+    public NotebookDescriptor() {
     }
 
     public void Read (TProtocol iprot)
@@ -143,36 +128,28 @@ namespace Evernote.EDAM.Type
             break;
           case 2:
             if (field.Type == TType.String) {
-              Name = iprot.ReadString();
+              NotebookDisplayName = iprot.ReadString();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
           case 3:
             if (field.Type == TType.String) {
-              Query = iprot.ReadString();
+              ContactName = iprot.ReadString();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
           case 4:
-            if (field.Type == TType.I32) {
-              Format = (QueryFormat)iprot.ReadI32();
+            if (field.Type == TType.Bool) {
+              HasSharedNotebook = iprot.ReadBool();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
           case 5:
             if (field.Type == TType.I32) {
-              UpdateSequenceNum = iprot.ReadI32();
-            } else { 
-              TProtocolUtil.Skip(iprot, field.Type);
-            }
-            break;
-          case 6:
-            if (field.Type == TType.Struct) {
-              Scope = new SavedSearchScope();
-              Scope.Read(iprot);
+              JoinedUserCount = iprot.ReadI32();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
@@ -187,7 +164,7 @@ namespace Evernote.EDAM.Type
     }
 
     public void Write(TProtocol oprot) {
-      TStruct struc = new TStruct("SavedSearch");
+      TStruct struc = new TStruct("NotebookDescriptor");
       oprot.WriteStructBegin(struc);
       TField field = new TField();
       if (Guid != null && __isset.guid) {
@@ -198,44 +175,36 @@ namespace Evernote.EDAM.Type
         oprot.WriteString(Guid);
         oprot.WriteFieldEnd();
       }
-      if (Name != null && __isset.name) {
-        field.Name = "name";
+      if (NotebookDisplayName != null && __isset.notebookDisplayName) {
+        field.Name = "notebookDisplayName";
         field.Type = TType.String;
         field.ID = 2;
         oprot.WriteFieldBegin(field);
-        oprot.WriteString(Name);
+        oprot.WriteString(NotebookDisplayName);
         oprot.WriteFieldEnd();
       }
-      if (Query != null && __isset.query) {
-        field.Name = "query";
+      if (ContactName != null && __isset.contactName) {
+        field.Name = "contactName";
         field.Type = TType.String;
         field.ID = 3;
         oprot.WriteFieldBegin(field);
-        oprot.WriteString(Query);
+        oprot.WriteString(ContactName);
         oprot.WriteFieldEnd();
       }
-      if (__isset.format) {
-        field.Name = "format";
-        field.Type = TType.I32;
+      if (__isset.hasSharedNotebook) {
+        field.Name = "hasSharedNotebook";
+        field.Type = TType.Bool;
         field.ID = 4;
         oprot.WriteFieldBegin(field);
-        oprot.WriteI32((int)Format);
+        oprot.WriteBool(HasSharedNotebook);
         oprot.WriteFieldEnd();
       }
-      if (__isset.updateSequenceNum) {
-        field.Name = "updateSequenceNum";
+      if (__isset.joinedUserCount) {
+        field.Name = "joinedUserCount";
         field.Type = TType.I32;
         field.ID = 5;
         oprot.WriteFieldBegin(field);
-        oprot.WriteI32(UpdateSequenceNum);
-        oprot.WriteFieldEnd();
-      }
-      if (Scope != null && __isset.scope) {
-        field.Name = "scope";
-        field.Type = TType.Struct;
-        field.ID = 6;
-        oprot.WriteFieldBegin(field);
-        Scope.Write(oprot);
+        oprot.WriteI32(JoinedUserCount);
         oprot.WriteFieldEnd();
       }
       oprot.WriteFieldStop();
@@ -243,19 +212,17 @@ namespace Evernote.EDAM.Type
     }
 
     public override string ToString() {
-      StringBuilder sb = new StringBuilder("SavedSearch(");
+      StringBuilder sb = new StringBuilder("NotebookDescriptor(");
       sb.Append("Guid: ");
       sb.Append(Guid);
-      sb.Append(",Name: ");
-      sb.Append(Name);
-      sb.Append(",Query: ");
-      sb.Append(Query);
-      sb.Append(",Format: ");
-      sb.Append(Format);
-      sb.Append(",UpdateSequenceNum: ");
-      sb.Append(UpdateSequenceNum);
-      sb.Append(",Scope: ");
-      sb.Append(Scope== null ? "<null>" : Scope.ToString());
+      sb.Append(",NotebookDisplayName: ");
+      sb.Append(NotebookDisplayName);
+      sb.Append(",ContactName: ");
+      sb.Append(ContactName);
+      sb.Append(",HasSharedNotebook: ");
+      sb.Append(HasSharedNotebook);
+      sb.Append(",JoinedUserCount: ");
+      sb.Append(JoinedUserCount);
       sb.Append(")");
       return sb.ToString();
     }

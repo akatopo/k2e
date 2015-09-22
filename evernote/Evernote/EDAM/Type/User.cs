@@ -33,6 +33,8 @@ namespace Evernote.EDAM.Type
     private string _shardId;
     private UserAttributes _attributes;
     private Accounting _accounting;
+    private PremiumInfo _premiumInfo;
+    private BusinessUserInfo _businessUserInfo;
 
     public int Id
     {
@@ -203,6 +205,32 @@ namespace Evernote.EDAM.Type
       }
     }
 
+    public PremiumInfo PremiumInfo
+    {
+      get
+      {
+        return _premiumInfo;
+      }
+      set
+      {
+        __isset.premiumInfo = true;
+        this._premiumInfo = value;
+      }
+    }
+
+    public BusinessUserInfo BusinessUserInfo
+    {
+      get
+      {
+        return _businessUserInfo;
+      }
+      set
+      {
+        __isset.businessUserInfo = true;
+        this._businessUserInfo = value;
+      }
+    }
+
 
     public Isset __isset;
     #if !SILVERLIGHT && !NETFX_CORE
@@ -222,6 +250,8 @@ namespace Evernote.EDAM.Type
       public bool shardId;
       public bool attributes;
       public bool accounting;
+      public bool premiumInfo;
+      public bool businessUserInfo;
     }
 
     public User() {
@@ -328,6 +358,22 @@ namespace Evernote.EDAM.Type
             if (field.Type == TType.Struct) {
               Accounting = new Accounting();
               Accounting.Read(iprot);
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 17:
+            if (field.Type == TType.Struct) {
+              PremiumInfo = new PremiumInfo();
+              PremiumInfo.Read(iprot);
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 18:
+            if (field.Type == TType.Struct) {
+              BusinessUserInfo = new BusinessUserInfo();
+              BusinessUserInfo.Read(iprot);
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
@@ -449,6 +495,22 @@ namespace Evernote.EDAM.Type
         Accounting.Write(oprot);
         oprot.WriteFieldEnd();
       }
+      if (PremiumInfo != null && __isset.premiumInfo) {
+        field.Name = "premiumInfo";
+        field.Type = TType.Struct;
+        field.ID = 17;
+        oprot.WriteFieldBegin(field);
+        PremiumInfo.Write(oprot);
+        oprot.WriteFieldEnd();
+      }
+      if (BusinessUserInfo != null && __isset.businessUserInfo) {
+        field.Name = "businessUserInfo";
+        field.Type = TType.Struct;
+        field.ID = 18;
+        oprot.WriteFieldBegin(field);
+        BusinessUserInfo.Write(oprot);
+        oprot.WriteFieldEnd();
+      }
       oprot.WriteFieldStop();
       oprot.WriteStructEnd();
     }
@@ -481,6 +543,10 @@ namespace Evernote.EDAM.Type
       sb.Append(Attributes== null ? "<null>" : Attributes.ToString());
       sb.Append(",Accounting: ");
       sb.Append(Accounting== null ? "<null>" : Accounting.ToString());
+      sb.Append(",PremiumInfo: ");
+      sb.Append(PremiumInfo== null ? "<null>" : PremiumInfo.ToString());
+      sb.Append(",BusinessUserInfo: ");
+      sb.Append(BusinessUserInfo== null ? "<null>" : BusinessUserInfo.ToString());
       sb.Append(")");
       return sb.ToString();
     }

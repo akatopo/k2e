@@ -12,7 +12,7 @@ using Thrift;
 using Thrift.Collections;
 using Thrift.Protocol;
 using Thrift.Transport;
-namespace Evernote.EDAM.UserStore
+namespace Evernote.EDAM.Type
 {
 
   #if !SILVERLIGHT && !NETFX_CORE
@@ -30,8 +30,7 @@ namespace Evernote.EDAM.UserStore
     private bool _canPurchaseUploadAllowance;
     private string _sponsoredGroupName;
     private SponsoredGroupRole _sponsoredGroupRole;
-    private string _businessName;
-    private bool _businessAdmin;
+    private bool _premiumUpgradable;
 
     public long CurrentTime
     {
@@ -163,29 +162,16 @@ namespace Evernote.EDAM.UserStore
       }
     }
 
-    public string BusinessName
+    public bool PremiumUpgradable
     {
       get
       {
-        return _businessName;
+        return _premiumUpgradable;
       }
       set
       {
-        __isset.businessName = true;
-        this._businessName = value;
-      }
-    }
-
-    public bool BusinessAdmin
-    {
-      get
-      {
-        return _businessAdmin;
-      }
-      set
-      {
-        __isset.businessAdmin = true;
-        this._businessAdmin = value;
+        __isset.premiumUpgradable = true;
+        this._premiumUpgradable = value;
       }
     }
 
@@ -205,8 +191,7 @@ namespace Evernote.EDAM.UserStore
       public bool canPurchaseUploadAllowance;
       public bool sponsoredGroupName;
       public bool sponsoredGroupRole;
-      public bool businessName;
-      public bool businessAdmin;
+      public bool premiumUpgradable;
     }
 
     public PremiumInfo() {
@@ -295,15 +280,8 @@ namespace Evernote.EDAM.UserStore
             }
             break;
           case 11:
-            if (field.Type == TType.String) {
-              BusinessName = iprot.ReadString();
-            } else { 
-              TProtocolUtil.Skip(iprot, field.Type);
-            }
-            break;
-          case 12:
             if (field.Type == TType.Bool) {
-              BusinessAdmin = iprot.ReadBool();
+              PremiumUpgradable = iprot.ReadBool();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
@@ -401,20 +379,12 @@ namespace Evernote.EDAM.UserStore
         oprot.WriteI32((int)SponsoredGroupRole);
         oprot.WriteFieldEnd();
       }
-      if (BusinessName != null && __isset.businessName) {
-        field.Name = "businessName";
-        field.Type = TType.String;
+      if (__isset.premiumUpgradable) {
+        field.Name = "premiumUpgradable";
+        field.Type = TType.Bool;
         field.ID = 11;
         oprot.WriteFieldBegin(field);
-        oprot.WriteString(BusinessName);
-        oprot.WriteFieldEnd();
-      }
-      if (__isset.businessAdmin) {
-        field.Name = "businessAdmin";
-        field.Type = TType.Bool;
-        field.ID = 12;
-        oprot.WriteFieldBegin(field);
-        oprot.WriteBool(BusinessAdmin);
+        oprot.WriteBool(PremiumUpgradable);
         oprot.WriteFieldEnd();
       }
       oprot.WriteFieldStop();
@@ -443,10 +413,8 @@ namespace Evernote.EDAM.UserStore
       sb.Append(SponsoredGroupName);
       sb.Append(",SponsoredGroupRole: ");
       sb.Append(SponsoredGroupRole);
-      sb.Append(",BusinessName: ");
-      sb.Append(BusinessName);
-      sb.Append(",BusinessAdmin: ");
-      sb.Append(BusinessAdmin);
+      sb.Append(",PremiumUpgradable: ");
+      sb.Append(PremiumUpgradable);
       sb.Append(")");
       return sb.ToString();
     }

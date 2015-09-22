@@ -22,6 +22,7 @@ namespace Evernote.EDAM.Error
   {
     private EDAMErrorCode _errorCode;
     private string _message;
+    private int _rateLimitDuration;
 
     public EDAMErrorCode ErrorCode
     {
@@ -49,6 +50,19 @@ namespace Evernote.EDAM.Error
       }
     }
 
+    public int RateLimitDuration
+    {
+      get
+      {
+        return _rateLimitDuration;
+      }
+      set
+      {
+        __isset.rateLimitDuration = true;
+        this._rateLimitDuration = value;
+      }
+    }
+
 
     public Isset __isset;
     #if !SILVERLIGHT && !NETFX_CORE
@@ -57,6 +71,7 @@ namespace Evernote.EDAM.Error
     public struct Isset {
       public bool errorCode;
       public bool message;
+      public bool rateLimitDuration;
     }
 
     public EDAMSystemException() {
@@ -84,6 +99,13 @@ namespace Evernote.EDAM.Error
           case 2:
             if (field.Type == TType.String) {
               Message = iprot.ReadString();
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 3:
+            if (field.Type == TType.I32) {
+              RateLimitDuration = iprot.ReadI32();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
@@ -117,6 +139,14 @@ namespace Evernote.EDAM.Error
         oprot.WriteString(Message);
         oprot.WriteFieldEnd();
       }
+      if (__isset.rateLimitDuration) {
+        field.Name = "rateLimitDuration";
+        field.Type = TType.I32;
+        field.ID = 3;
+        oprot.WriteFieldBegin(field);
+        oprot.WriteI32(RateLimitDuration);
+        oprot.WriteFieldEnd();
+      }
       oprot.WriteFieldStop();
       oprot.WriteStructEnd();
     }
@@ -127,6 +157,8 @@ namespace Evernote.EDAM.Error
       sb.Append(ErrorCode);
       sb.Append(",Message: ");
       sb.Append(Message);
+      sb.Append(",RateLimitDuration: ");
+      sb.Append(RateLimitDuration);
       sb.Append(")");
       return sb.ToString();
     }

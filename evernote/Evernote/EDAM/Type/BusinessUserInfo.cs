@@ -12,68 +12,68 @@ using Thrift;
 using Thrift.Collections;
 using Thrift.Protocol;
 using Thrift.Transport;
-namespace Evernote.EDAM.NoteStore
+namespace Evernote.EDAM.Type
 {
 
   #if !SILVERLIGHT && !NETFX_CORE
   [Serializable]
   #endif
-  public partial class RelatedQuery : TBase
+  public partial class BusinessUserInfo : TBase
   {
-    private string _noteGuid;
-    private string _plainText;
-    private NoteFilter _filter;
-    private string _referenceUri;
+    private int _businessId;
+    private string _businessName;
+    private BusinessUserRole _role;
+    private string _email;
 
-    public string NoteGuid
+    public int BusinessId
     {
       get
       {
-        return _noteGuid;
+        return _businessId;
       }
       set
       {
-        __isset.noteGuid = true;
-        this._noteGuid = value;
+        __isset.businessId = true;
+        this._businessId = value;
       }
     }
 
-    public string PlainText
+    public string BusinessName
     {
       get
       {
-        return _plainText;
+        return _businessName;
       }
       set
       {
-        __isset.plainText = true;
-        this._plainText = value;
+        __isset.businessName = true;
+        this._businessName = value;
       }
     }
 
-    public NoteFilter Filter
+    public BusinessUserRole Role
     {
       get
       {
-        return _filter;
+        return _role;
       }
       set
       {
-        __isset.filter = true;
-        this._filter = value;
+        __isset.role = true;
+        this._role = value;
       }
     }
 
-    public string ReferenceUri
+    public string Email
     {
       get
       {
-        return _referenceUri;
+        return _email;
       }
       set
       {
-        __isset.referenceUri = true;
-        this._referenceUri = value;
+        __isset.email = true;
+        this._email = value;
       }
     }
 
@@ -83,13 +83,13 @@ namespace Evernote.EDAM.NoteStore
     [Serializable]
     #endif
     public struct Isset {
-      public bool noteGuid;
-      public bool plainText;
-      public bool filter;
-      public bool referenceUri;
+      public bool businessId;
+      public bool businessName;
+      public bool role;
+      public bool email;
     }
 
-    public RelatedQuery() {
+    public BusinessUserInfo() {
     }
 
     public void Read (TProtocol iprot)
@@ -105,30 +105,29 @@ namespace Evernote.EDAM.NoteStore
         switch (field.ID)
         {
           case 1:
-            if (field.Type == TType.String) {
-              NoteGuid = iprot.ReadString();
+            if (field.Type == TType.I32) {
+              BusinessId = iprot.ReadI32();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
           case 2:
             if (field.Type == TType.String) {
-              PlainText = iprot.ReadString();
+              BusinessName = iprot.ReadString();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
           case 3:
-            if (field.Type == TType.Struct) {
-              Filter = new NoteFilter();
-              Filter.Read(iprot);
+            if (field.Type == TType.I32) {
+              Role = (BusinessUserRole)iprot.ReadI32();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
           case 4:
             if (field.Type == TType.String) {
-              ReferenceUri = iprot.ReadString();
+              Email = iprot.ReadString();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
@@ -143,39 +142,39 @@ namespace Evernote.EDAM.NoteStore
     }
 
     public void Write(TProtocol oprot) {
-      TStruct struc = new TStruct("RelatedQuery");
+      TStruct struc = new TStruct("BusinessUserInfo");
       oprot.WriteStructBegin(struc);
       TField field = new TField();
-      if (NoteGuid != null && __isset.noteGuid) {
-        field.Name = "noteGuid";
-        field.Type = TType.String;
+      if (__isset.businessId) {
+        field.Name = "businessId";
+        field.Type = TType.I32;
         field.ID = 1;
         oprot.WriteFieldBegin(field);
-        oprot.WriteString(NoteGuid);
+        oprot.WriteI32(BusinessId);
         oprot.WriteFieldEnd();
       }
-      if (PlainText != null && __isset.plainText) {
-        field.Name = "plainText";
+      if (BusinessName != null && __isset.businessName) {
+        field.Name = "businessName";
         field.Type = TType.String;
         field.ID = 2;
         oprot.WriteFieldBegin(field);
-        oprot.WriteString(PlainText);
+        oprot.WriteString(BusinessName);
         oprot.WriteFieldEnd();
       }
-      if (Filter != null && __isset.filter) {
-        field.Name = "filter";
-        field.Type = TType.Struct;
+      if (__isset.role) {
+        field.Name = "role";
+        field.Type = TType.I32;
         field.ID = 3;
         oprot.WriteFieldBegin(field);
-        Filter.Write(oprot);
+        oprot.WriteI32((int)Role);
         oprot.WriteFieldEnd();
       }
-      if (ReferenceUri != null && __isset.referenceUri) {
-        field.Name = "referenceUri";
+      if (Email != null && __isset.email) {
+        field.Name = "email";
         field.Type = TType.String;
         field.ID = 4;
         oprot.WriteFieldBegin(field);
-        oprot.WriteString(ReferenceUri);
+        oprot.WriteString(Email);
         oprot.WriteFieldEnd();
       }
       oprot.WriteFieldStop();
@@ -183,15 +182,15 @@ namespace Evernote.EDAM.NoteStore
     }
 
     public override string ToString() {
-      StringBuilder sb = new StringBuilder("RelatedQuery(");
-      sb.Append("NoteGuid: ");
-      sb.Append(NoteGuid);
-      sb.Append(",PlainText: ");
-      sb.Append(PlainText);
-      sb.Append(",Filter: ");
-      sb.Append(Filter== null ? "<null>" : Filter.ToString());
-      sb.Append(",ReferenceUri: ");
-      sb.Append(ReferenceUri);
+      StringBuilder sb = new StringBuilder("BusinessUserInfo(");
+      sb.Append("BusinessId: ");
+      sb.Append(BusinessId);
+      sb.Append(",BusinessName: ");
+      sb.Append(BusinessName);
+      sb.Append(",Role: ");
+      sb.Append(Role);
+      sb.Append(",Email: ");
+      sb.Append(Email);
       sb.Append(")");
       return sb.ToString();
     }

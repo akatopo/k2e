@@ -29,10 +29,16 @@ namespace Evernote.EDAM.Type
     private string _sourceURL;
     private string _sourceApplication;
     private long _shareDate;
+    private long _reminderOrder;
+    private long _reminderDoneTime;
+    private long _reminderTime;
     private string _placeName;
     private string _contentClass;
     private LazyMap _applicationData;
     private string _lastEditedBy;
+    private Dictionary<string, string> _classifications;
+    private int _creatorId;
+    private int _lastEditorId;
 
     public long SubjectDate
     {
@@ -151,6 +157,45 @@ namespace Evernote.EDAM.Type
       }
     }
 
+    public long ReminderOrder
+    {
+      get
+      {
+        return _reminderOrder;
+      }
+      set
+      {
+        __isset.reminderOrder = true;
+        this._reminderOrder = value;
+      }
+    }
+
+    public long ReminderDoneTime
+    {
+      get
+      {
+        return _reminderDoneTime;
+      }
+      set
+      {
+        __isset.reminderDoneTime = true;
+        this._reminderDoneTime = value;
+      }
+    }
+
+    public long ReminderTime
+    {
+      get
+      {
+        return _reminderTime;
+      }
+      set
+      {
+        __isset.reminderTime = true;
+        this._reminderTime = value;
+      }
+    }
+
     public string PlaceName
     {
       get
@@ -203,6 +248,45 @@ namespace Evernote.EDAM.Type
       }
     }
 
+    public Dictionary<string, string> Classifications
+    {
+      get
+      {
+        return _classifications;
+      }
+      set
+      {
+        __isset.classifications = true;
+        this._classifications = value;
+      }
+    }
+
+    public int CreatorId
+    {
+      get
+      {
+        return _creatorId;
+      }
+      set
+      {
+        __isset.creatorId = true;
+        this._creatorId = value;
+      }
+    }
+
+    public int LastEditorId
+    {
+      get
+      {
+        return _lastEditorId;
+      }
+      set
+      {
+        __isset.lastEditorId = true;
+        this._lastEditorId = value;
+      }
+    }
+
 
     public Isset __isset;
     #if !SILVERLIGHT && !NETFX_CORE
@@ -218,10 +302,16 @@ namespace Evernote.EDAM.Type
       public bool sourceURL;
       public bool sourceApplication;
       public bool shareDate;
+      public bool reminderOrder;
+      public bool reminderDoneTime;
+      public bool reminderTime;
       public bool placeName;
       public bool contentClass;
       public bool applicationData;
       public bool lastEditedBy;
+      public bool classifications;
+      public bool creatorId;
+      public bool lastEditorId;
     }
 
     public NoteAttributes() {
@@ -302,6 +392,27 @@ namespace Evernote.EDAM.Type
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
+          case 18:
+            if (field.Type == TType.I64) {
+              ReminderOrder = iprot.ReadI64();
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 19:
+            if (field.Type == TType.I64) {
+              ReminderDoneTime = iprot.ReadI64();
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 20:
+            if (field.Type == TType.I64) {
+              ReminderTime = iprot.ReadI64();
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
           case 21:
             if (field.Type == TType.String) {
               PlaceName = iprot.ReadString();
@@ -327,6 +438,39 @@ namespace Evernote.EDAM.Type
           case 24:
             if (field.Type == TType.String) {
               LastEditedBy = iprot.ReadString();
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 26:
+            if (field.Type == TType.Map) {
+              {
+                Classifications = new Dictionary<string, string>();
+                TMap _map17 = iprot.ReadMapBegin();
+                for( int _i18 = 0; _i18 < _map17.Count; ++_i18)
+                {
+                  string _key19;
+                  string _val20;
+                  _key19 = iprot.ReadString();
+                  _val20 = iprot.ReadString();
+                  Classifications[_key19] = _val20;
+                }
+                iprot.ReadMapEnd();
+              }
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 27:
+            if (field.Type == TType.I32) {
+              CreatorId = iprot.ReadI32();
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 28:
+            if (field.Type == TType.I32) {
+              LastEditorId = iprot.ReadI32();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
@@ -416,6 +560,30 @@ namespace Evernote.EDAM.Type
         oprot.WriteI64(ShareDate);
         oprot.WriteFieldEnd();
       }
+      if (__isset.reminderOrder) {
+        field.Name = "reminderOrder";
+        field.Type = TType.I64;
+        field.ID = 18;
+        oprot.WriteFieldBegin(field);
+        oprot.WriteI64(ReminderOrder);
+        oprot.WriteFieldEnd();
+      }
+      if (__isset.reminderDoneTime) {
+        field.Name = "reminderDoneTime";
+        field.Type = TType.I64;
+        field.ID = 19;
+        oprot.WriteFieldBegin(field);
+        oprot.WriteI64(ReminderDoneTime);
+        oprot.WriteFieldEnd();
+      }
+      if (__isset.reminderTime) {
+        field.Name = "reminderTime";
+        field.Type = TType.I64;
+        field.ID = 20;
+        oprot.WriteFieldBegin(field);
+        oprot.WriteI64(ReminderTime);
+        oprot.WriteFieldEnd();
+      }
       if (PlaceName != null && __isset.placeName) {
         field.Name = "placeName";
         field.Type = TType.String;
@@ -448,6 +616,38 @@ namespace Evernote.EDAM.Type
         oprot.WriteString(LastEditedBy);
         oprot.WriteFieldEnd();
       }
+      if (Classifications != null && __isset.classifications) {
+        field.Name = "classifications";
+        field.Type = TType.Map;
+        field.ID = 26;
+        oprot.WriteFieldBegin(field);
+        {
+          oprot.WriteMapBegin(new TMap(TType.String, TType.String, Classifications.Count));
+          foreach (string _iter21 in Classifications.Keys)
+          {
+            oprot.WriteString(_iter21);
+            oprot.WriteString(Classifications[_iter21]);
+            oprot.WriteMapEnd();
+          }
+        }
+        oprot.WriteFieldEnd();
+      }
+      if (__isset.creatorId) {
+        field.Name = "creatorId";
+        field.Type = TType.I32;
+        field.ID = 27;
+        oprot.WriteFieldBegin(field);
+        oprot.WriteI32(CreatorId);
+        oprot.WriteFieldEnd();
+      }
+      if (__isset.lastEditorId) {
+        field.Name = "lastEditorId";
+        field.Type = TType.I32;
+        field.ID = 28;
+        oprot.WriteFieldBegin(field);
+        oprot.WriteI32(LastEditorId);
+        oprot.WriteFieldEnd();
+      }
       oprot.WriteFieldStop();
       oprot.WriteStructEnd();
     }
@@ -472,6 +672,12 @@ namespace Evernote.EDAM.Type
       sb.Append(SourceApplication);
       sb.Append(",ShareDate: ");
       sb.Append(ShareDate);
+      sb.Append(",ReminderOrder: ");
+      sb.Append(ReminderOrder);
+      sb.Append(",ReminderDoneTime: ");
+      sb.Append(ReminderDoneTime);
+      sb.Append(",ReminderTime: ");
+      sb.Append(ReminderTime);
       sb.Append(",PlaceName: ");
       sb.Append(PlaceName);
       sb.Append(",ContentClass: ");
@@ -480,6 +686,12 @@ namespace Evernote.EDAM.Type
       sb.Append(ApplicationData== null ? "<null>" : ApplicationData.ToString());
       sb.Append(",LastEditedBy: ");
       sb.Append(LastEditedBy);
+      sb.Append(",Classifications: ");
+      sb.Append(Classifications);
+      sb.Append(",CreatorId: ");
+      sb.Append(CreatorId);
+      sb.Append(",LastEditorId: ");
+      sb.Append(LastEditorId);
       sb.Append(")");
       return sb.ToString();
     }

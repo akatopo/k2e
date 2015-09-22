@@ -23,6 +23,8 @@ namespace Evernote.EDAM.NoteStore
     private int _maxNotes;
     private int _maxNotebooks;
     private int _maxTags;
+    private bool _writableNotebooksOnly;
+    private bool _includeContainingNotebooks;
 
     public int MaxNotes
     {
@@ -63,6 +65,32 @@ namespace Evernote.EDAM.NoteStore
       }
     }
 
+    public bool WritableNotebooksOnly
+    {
+      get
+      {
+        return _writableNotebooksOnly;
+      }
+      set
+      {
+        __isset.writableNotebooksOnly = true;
+        this._writableNotebooksOnly = value;
+      }
+    }
+
+    public bool IncludeContainingNotebooks
+    {
+      get
+      {
+        return _includeContainingNotebooks;
+      }
+      set
+      {
+        __isset.includeContainingNotebooks = true;
+        this._includeContainingNotebooks = value;
+      }
+    }
+
 
     public Isset __isset;
     #if !SILVERLIGHT && !NETFX_CORE
@@ -72,6 +100,8 @@ namespace Evernote.EDAM.NoteStore
       public bool maxNotes;
       public bool maxNotebooks;
       public bool maxTags;
+      public bool writableNotebooksOnly;
+      public bool includeContainingNotebooks;
     }
 
     public RelatedResultSpec() {
@@ -106,6 +136,20 @@ namespace Evernote.EDAM.NoteStore
           case 3:
             if (field.Type == TType.I32) {
               MaxTags = iprot.ReadI32();
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 4:
+            if (field.Type == TType.Bool) {
+              WritableNotebooksOnly = iprot.ReadBool();
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 5:
+            if (field.Type == TType.Bool) {
+              IncludeContainingNotebooks = iprot.ReadBool();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
@@ -147,6 +191,22 @@ namespace Evernote.EDAM.NoteStore
         oprot.WriteI32(MaxTags);
         oprot.WriteFieldEnd();
       }
+      if (__isset.writableNotebooksOnly) {
+        field.Name = "writableNotebooksOnly";
+        field.Type = TType.Bool;
+        field.ID = 4;
+        oprot.WriteFieldBegin(field);
+        oprot.WriteBool(WritableNotebooksOnly);
+        oprot.WriteFieldEnd();
+      }
+      if (__isset.includeContainingNotebooks) {
+        field.Name = "includeContainingNotebooks";
+        field.Type = TType.Bool;
+        field.ID = 5;
+        oprot.WriteFieldBegin(field);
+        oprot.WriteBool(IncludeContainingNotebooks);
+        oprot.WriteFieldEnd();
+      }
       oprot.WriteFieldStop();
       oprot.WriteStructEnd();
     }
@@ -159,6 +219,10 @@ namespace Evernote.EDAM.NoteStore
       sb.Append(MaxNotebooks);
       sb.Append(",MaxTags: ");
       sb.Append(MaxTags);
+      sb.Append(",WritableNotebooksOnly: ");
+      sb.Append(WritableNotebooksOnly);
+      sb.Append(",IncludeContainingNotebooks: ");
+      sb.Append(IncludeContainingNotebooks);
       sb.Append(")");
       return sb.ToString();
     }
