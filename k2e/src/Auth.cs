@@ -12,7 +12,7 @@ namespace k2e
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-//			if (Page.Request.QueryString["done"] != null)
+//			if (Page.Request.QueryString["authDone"] != null)
 //			{
 //				return;
 //			}

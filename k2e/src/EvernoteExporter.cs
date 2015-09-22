@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Text;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using System.Web;
 
 using Thrift;
 using Thrift.Protocol;
@@ -14,8 +15,10 @@ using Evernote.EDAM.UserStore;
 using Evernote.EDAM.NoteStore;
 using Evernote.EDAM.Error;
 
+using MongoDB.Driver;
+
 using EvernoteWebQuickstart;
-using System.Security.Cryptography;
+
 
 //using Bing;
 
@@ -30,7 +33,6 @@ namespace k2e
         private OAuthKey AccessToken;
 
         public readonly string ClippingNotebookName;
-
 
         private EvernoteExporter() { }
         

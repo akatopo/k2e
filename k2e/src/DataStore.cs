@@ -69,6 +69,16 @@ namespace k2e
 			return collection.Find(filter).ToListAsync();
 		}
 
+		public static Task<DeleteResult> RemoveCredentials(string consumerPublicKey, string k2eAccessToken)
+		{
+			var collection = database.GetCollection<BsonDocument>(EVERNOTE_CREDENTIALS_COLLECTION);
+			var builder = Builders<BsonDocument>.Filter;
+			var filter = builder.Eq("ConsumerPublicKey", consumerPublicKey) &
+				builder.Eq("K2eAccessToken", k2eAccessToken);
+
+			return collection.DeleteOneAsync(filter);
+		}
+
 	}
 }
 

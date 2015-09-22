@@ -43,6 +43,15 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
+using Thrift;
+using Thrift.Protocol;
+using Thrift.Transport;
+
+using Evernote.EDAM.Type;
+using Evernote.EDAM.UserStore;
+using Evernote.EDAM.NoteStore;
+using Evernote.EDAM.Error;
+
 using k2e;
 
 namespace EvernoteWebQuickstart
@@ -58,7 +67,14 @@ namespace EvernoteWebQuickstart
         private const string RESPONSE_KEY_EDAM_NOTESTORE_URL = "edam_noteStoreUrl";
 
         // TODO: replace this url with the production one when ready
-        private readonly Uri BaseUri = new Uri("https://sandbox.evernote.com/oauth");
+		private const string EvernoteHost = "sandbox.evernote.com";
+		private const string EDAMBaseUrl = "https://" + EvernoteHost;
+
+		private readonly Uri OAuthBaseUri = new Uri(EDAMBaseUrl + "/oauth");
+
+		// UserStore service endpoint
+		private const string UserStoreUrl = EDAMBaseUrl + "/edam/user";
+
         private EvernoteCredentials evernoteCredentials;
 
         private EvernoteAuthHelper(EvernoteCredentials ec)
@@ -81,10 +97,11 @@ namespace EvernoteWebQuickstart
         /// The url that evernote will redirect to after the user grants access to the app.
         /// It is needed if there is no existing EvernoteAuthHelper object in the current session.
         /// </param>
-        /// <param name="user">Not used</param>
+		/// <param name="consumerPublicKey"></param>
+		/// <param name="k2eAccessToken"></param>
         /// <returns>An EvernoteAuthHelper with the relevant credentials.</returns>
         public static EvernoteAuthHelper LoadCredentials(
-			string callbackUrl="",
+			string callbackUrl,
 			string consumerPublicKey="",
 			string k2eAccessToken="")
         {
@@ -103,10 +120,13 @@ namespace EvernoteWebQuickstart
 				var findResults = AsyncHelpers.RunSync<List<BsonDocument>>(
 					() => DataStore.FindCredentials(consumerPublicKey, k2eAccessToken)
 				);
-				if (findResults.Count == 0)
-					throw new Exception("invalid consumerPublicKey and/or k2eAccessToken provided");
 				if (findResults.Count != 1)
-					throw new Exception("Multiple credentials found");
+					throw new ApiException()
+					{
+						Code = ErrorCode.INVALID_CREDENTIALS,
+						Message = "Invalid credentials provided",
+						HttpStatusCode = HttpStatusCode.Unauthorized
+					};
 
 				ec = BsonSerializer.Deserialize<EvernoteCredentials>(findResults[0]);
 				eah = new EvernoteAuthHelper(ec);
@@ -121,6 +141,7 @@ namespace EvernoteWebQuickstart
 				if (updateResult.IsAcknowledged)
 				{
 					HttpContext.Current.Response.Cookies["K2eAccessToken"].Value = ec.K2eAccessToken;
+					HttpContext.Current.Response.Cookies["K2eAccessToken"].Expires = DateTime.Now.AddYears(1);
 				}
 				else
 				{
@@ -248,7 +269,9 @@ namespace EvernoteWebQuickstart
 				else {
 					evernoteCredentials.K2eAccessToken = K2eAccessToken.Generate();
 					HttpContext.Current.Response.Cookies["ConsumerPublicKey"].Value = evernoteCredentials.ConsumerPublicKey;
+					HttpContext.Current.Response.Cookies["ConsumerPublicKey"].Expires = DateTime.Now.AddYears(1);
 					HttpContext.Current.Response.Cookies["K2eAccessToken"].Value = evernoteCredentials.K2eAccessToken;
+					HttpContext.Current.Response.Cookies["K2eAccessToken"].Expires = DateTime.Now.AddYears(1);
 					var replaceResult = AsyncHelpers.RunSync<ReplaceOneResult>(
 						() => DataStore.InsertOrReplaceCredentials(evernoteCredentials)
 					);
@@ -257,6 +280,33 @@ namespace EvernoteWebQuickstart
 
             return evernoteCredentials.AccessToken;
         }
+
+		public void RevokeSession()
+		{
+			TTransport userStoreTransport = new THttpClient(new Uri(UserStoreUrl));
+			TProtocol userStoreProtocol = new TBinaryProtocol(userStoreTransport);
+			UserStore.Client userStore = new UserStore.Client(userStoreProtocol);
+			var accessToken = this.GetAccessToken();
+			var consumerPublicKey = this.evernoteCredentials.ConsumerPublicKey;
+			var k2eAccessToken = this.evernoteCredentials.K2eAccessToken;
+
+			try
+			{
+				userStore.revokeLongSession(accessToken.AuthToken);
+				var result = AsyncHelpers.RunSync<DeleteResult>(
+					() => DataStore.RemoveCredentials(consumerPublicKey, k2eAccessToken)
+				);
+				if (result.DeletedCount == 0)
+				{
+					throw new Exception("nothing to delete");
+				}
+			}
+			catch (EDAMUserException ex)
+			{
+				//TODO: throw relevant API exception(s) here
+				throw ex;
+			}
+		}
 
         private Uri GetAccessTokenUri()
         {
@@ -277,14 +327,14 @@ namespace EvernoteWebQuickstart
             string normalizedUrl = String.Empty;
             string normalizedRequestParameters = String.Empty;
 
-            string sig = oAuth.GenerateSignature(BaseUri, this.evernoteCredentials.ConsumerPublicKey, 
+            string sig = oAuth.GenerateSignature(OAuthBaseUri, this.evernoteCredentials.ConsumerPublicKey, 
                 this.evernoteCredentials.ConsumerSecretKey, String.Empty, String.Empty, 
                 "GET", timeStamp, nonce, OAuth.OAuthBase.SignatureTypes.PLAINTEXT, 
                 out normalizedUrl, out normalizedRequestParameters);
 
             return String.Format(@"{0}?oauth_consumer_key={1}&oauth_signature={4}
                     &oauth_signature_method=PLAINTEXT&oauth_timestamp={3}&oauth_nonce={2}", 
-                    BaseUri, this.evernoteCredentials.ConsumerPublicKey, nonce, timeStamp, sig);
+                    OAuthBaseUri, this.evernoteCredentials.ConsumerPublicKey, nonce, timeStamp, sig);
 
 
         }
