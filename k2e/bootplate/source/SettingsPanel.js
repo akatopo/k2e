@@ -116,10 +116,11 @@ enyo.kind({
     },
 
     handleExtractionSettingChanged: function (inSender, inEvent) {
-        if (this.$.periodicalTitleList
-                && this.$.googleSearchApiKey
-                && this.$.googleSearchApiCx
-                && this.$.googleSearchApiLoc) {
+        if (this.$.periodicalTitleList &&
+            this.$.googleSearchApiKey &&
+            this.$.googleSearchApiCx &&
+            this.$.googleSearchApiLoc
+        ) {
             this.$.periodicalTitleList.setDisabled(!inEvent.originator.getValue());
             this.$.googleSearchApiKey.setDisabled(!inEvent.originator.getValue());
             this.$.googleSearchApiCx.setDisabled(!inEvent.originator.getValue());

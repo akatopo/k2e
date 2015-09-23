@@ -1,0 +1,14 @@
+{
+  "globals": {
+    "enyo": false
+  },
+  "curly": true,
+  "eqeqeq": true,
+  "forin": true,
+  "latedef": true,
+  "undef": true,
+  "strict": false, // https://github.com/enyojs/enyo/wiki/Enyo-and-Use-Strict
+  "browser": true,
+  "devel": true,
+  "latedef": "nofunc"
+}

@@ -523,11 +523,11 @@ enyo.kind(
             },
 
             handleKeydown: function (inSender, inEvent) {
-                var modKeyPressed = inEvent.altKey
-                        || inEvent.ctrlKey
-                        || inEvent.shiftKey
-                        || inEvent.altGraphKey
-                        || inEvent.metaKey;
+                var modKeyPressed = inEvent.altKey ||
+                    inEvent.ctrlKey ||
+                    inEvent.shiftKey ||
+                    inEvent.altGraphKey ||
+                    inEvent.metaKey;
 
                 this.log(inSender);
                 this.log(inEvent);

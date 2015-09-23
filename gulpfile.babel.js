@@ -4,6 +4,7 @@ import _ from 'underscore';
 import del from 'del';
 import { exec } from 'child_process';
 import streamqueue from 'streamqueue';
+import jshintStylish from 'jshint-stylish';
 
 import gulp from 'gulp';
 import livereload from 'gulp-livereload';
@@ -11,11 +12,15 @@ import rename from 'gulp-rename';
 import runSequence from 'run-sequence';
 import sass from 'gulp-sass';
 import msbuild from 'gulp-msbuild';
+import jshint from 'gulp-jshint';
+import cached from 'gulp-cached';
 
 const BASE_BOOTPLATE_PATH = './k2e/bootplate';
 const BASE_SOURCE_PATH = './k2e/bootplate/source';
 const BASE_DEPLOY_PATH = './k2e/bootplate/deploy';
 const BOWER_COMPONENTS = 'lib';
+
+gulp.task('lint', lint);
 
 gulp.task('sass', sassCompile);
 
@@ -45,8 +50,17 @@ gulp.task('dist', dist);
 
 //////////////////////////////////////////////////////////////
 
+function lint() {
+  return gulp.src(`${BASE_SOURCE_PATH}/*.js`)
+    .pipe(cached('linting'))
+    .pipe(jshint())
+    .pipe(jshint.reporter(jshintStylish))
+    .pipe(jshint.reporter('fail'));
+}
+
 function sassCompile() {
-  return gulp.src(BASE_SOURCE_PATH + '/scss/*.scss')
+  return gulp.src(`${BASE_SOURCE_PATH}/scss/*.scss`)
+    .pipe(cached('sass'))
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest(BASE_SOURCE_PATH))
     .pipe(livereload());

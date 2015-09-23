@@ -1,4 +1,4 @@
-/*global enyo, Document */
+/* global Document, ClippingCollection */
 
 enyo.kind({
     name: "ClippingCollection",

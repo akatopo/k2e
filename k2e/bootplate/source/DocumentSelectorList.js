@@ -88,8 +88,9 @@ enyo.kind({
             multiSelKeys = {};
 
         for (i = 0; i < this.items.length; i += 1) {
-            if (this.items[i].getMultiSelected()
-                    && this.items[i].isMarked()) {
+            if (this.items[i].getMultiSelected() &&
+                this.items[i].isMarked()
+            ) {
                 multiSelKeys[keyArray[i]] = true;
             }
         }
