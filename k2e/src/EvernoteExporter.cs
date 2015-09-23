@@ -187,7 +187,6 @@ namespace k2e
                     .Append(document.author);
             string noteContent = NoteEnmlBuilder.NoteContentFromDocumentExport(document);
             var tags = new List<string>(this.DefaultTagSet);
-            tags.Add(document.author.Replace(" ", "_"));
 
             CreateOrUpdateNote(
                     accessTokenContainer: this.AccessToken,
