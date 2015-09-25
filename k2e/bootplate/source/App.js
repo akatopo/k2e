@@ -261,7 +261,7 @@ enyo.kind(
                             window.clearInterval(pollTimer);
                             (err || function(){})();
                         }
-                        if (popup.document.URL.indexOf(Constants.AUTH_DONE_QUERY_PARAM) !== -1) {
+                        else if (popup.document.URL.indexOf(Constants.AUTH_DONE_QUERY_PARAM) !== -1) {
                             window.clearInterval(pollTimer);
                             popup.close();
                             if (document.cookie.indexOf(Constants.ACCESS_TOKEN_COOKIE_NAME) !== -1 &&

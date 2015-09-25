@@ -9,6 +9,25 @@ namespace k2e
 {
     public class Global : System.Web.HttpApplication
     {
+		void Application_BeginRequest(object sender, EventArgs e)
+		{
+			if (HttpContext.Current.Request.IsLocal)
+			{
+				return;
+			}
+			if (HttpContext.Current.Request.IsSecureConnection)
+			{
+				return;
+			}
+			if (!string.IsNullOrEmpty(HttpContext.Current.Request.Headers["X-Forwarded-Proto"]))
+			{
+				var uriScheme = HttpContext.Current.Request.Headers["X-Forwarded-Proto"];
+				if (string.Equals(uriScheme, Uri.UriSchemeHttps, StringComparison.InvariantCultureIgnoreCase))
+					return;
+			}
+			Response.Redirect(Uri.UriSchemeHttps + "://" + HttpContext.Current.Request.Url.Host + HttpContext.Current.Request.Url.PathAndQuery);
+		}
+
 
         void Application_Start(object sender, EventArgs e)
         {

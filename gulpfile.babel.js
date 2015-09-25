@@ -118,7 +118,8 @@ function distAspx() {
   return streamqueue({ objectMode: true },
     gulp.src('./k2e/Default-dist.aspx')
       .pipe(rename('Default.aspx')),
-    gulp.src('./k2e/Auth.aspx')
+    gulp.src('./k2e/Auth.aspx'),
+    gulp.src('./k2e/Global.asax')
   )
   .pipe(gulp.dest('./dist'));
 }

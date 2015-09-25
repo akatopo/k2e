@@ -59,17 +59,19 @@ namespace EvernoteWebQuickstart
 		{
 			if (string.IsNullOrEmpty(_callbackUrl))
 			{
-				stringTransform portStr = s => s != "80" ? ":" + s : "";
-				if (ConfigurationManager.AppSettings ["AppHbDeployment"] != null)
-				{
-					portStr = s => "";	
-				}
+				Func<int, string, string> createPortStr =
+					(port, appHb) => (port == 80) || !string.IsNullOrEmpty(appHb) ? "" : (":" + port.ToString());
 
+				Func<bool, string, string> createProtocolStr =
+					(isHttps, appHb) => isHttps || !string.IsNullOrEmpty(appHb) ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+
+				var portStr = createPortStr(Request.Url.Port, ConfigurationManager.AppSettings["AppHbDeployment"]);
+				var protocolStr = createProtocolStr(Request.IsSecureConnection, ConfigurationManager.AppSettings["AppHbDeployment"]);
 				// create a callback that Evernote servers will use to pass back the authorization token
 				// this will return to the same page that called it
-				_callbackUrl = "http://" + 
-					Request.ServerVariables["SERVER_NAME"].ToString() +
-					portStr(Request.ServerVariables["SERVER_PORT"]) +
+				_callbackUrl = protocolStr + "://" +
+					Request.Url.Host +
+					portStr +
 					FILE_PATH;
 			}
 
