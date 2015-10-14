@@ -1,5 +1,3 @@
-/*global enyo */
-
 (function () {
 
 enyo.kind({
@@ -22,7 +20,7 @@ enyo.kind({
 
     done: function (message) {
         changeMessage.call(this, message);
-        window.setTimeout(this.hide.bind(this), 4000);
+        window.setTimeout(this.hide.bind(this), calculateTimeout(this.$.message.content));
     },
 
     begin: function (message) {
@@ -41,7 +39,7 @@ enyo.kind({
             (messages.length !== 0 ? ": " : "") +
             messages.join("\n")
         );
-        window.setTimeout(this.hide.bind(this), 4000);
+        window.setTimeout(this.hide.bind(this), calculateTimeout(this.$.message.content));
     }
 });
 
@@ -50,6 +48,21 @@ function changeMessage(message, spinnerToggle) {
     spinnerFunc.call(this.$.spinner);
     this.$.message.setContent(message);
     this.rendered();
+}
+
+function calculateTimeout(s) {
+    var MS_REACTION_TIME = 250;
+    var MS_PER_CHARACTER = 60000 / (200 * 5); // 200 WPM -> 1000 CPM, 
+    var nonSpaceCharacters = Array.prototype.reduce.call(s, nonSpaceReducer, 0);
+
+    return (nonSpaceCharacters * MS_PER_CHARACTER) + 2 * MS_REACTION_TIME;
+}
+
+function nonSpaceReducer(charCount, character) {
+    if (/[^\s]/.test(character)) {
+        ++charCount;
+    }
+    return charCount;
 }
 
 })();
