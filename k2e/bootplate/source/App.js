@@ -78,28 +78,28 @@ enyo.kind(
                         ]},
                         {kind: "FittableRows", classes: "k2e-main-panel", fit: true, components: [
                             {
+                                name: "document_scroller",
+                                kind: "DocumentScroller",
+                                components: [
+                                    {name: "document_view", kind: "DocumentView", fit: true},
+                                    {
+                                        name: "toggle_fullscreen_button",
+                                        classes: "k2e-toggle-fullscreen-button",
+                                        ontap: "toggleFullscreen",
+                                        kind: "onyx.Button",
+                                        components: [
+                                            {tag: "i", classes: "icon-resize-small icon-large"}
+                                        ]
+                                    },
+                                ]
+                            },
+                            {
                                 name: "to_top_button",
                                 classes: "k2e-to-top-button",
                                 kind: "ToTopAnimatedButton",
                                 ontap: "scrollDocumentToTop",
                                 components: [
                                     {tag: "i", classes: "icon-chevron-up icon-large"}
-                                ]
-                            },
-                            {
-                                name: "toggle_fullscreen_button",
-                                classes: "k2e-toggle-fullscreen-button",
-                                ontap: "toggleFullscreen",
-                                kind: "onyx.Button",
-                                components: [
-                                    {tag: "i", classes: "icon-resize-small icon-large"}
-                                ]
-                            },
-                            {
-                                name: "document_scroller",
-                                kind: "DocumentScroller",
-                                components: [
-                                    {name: "document_view", kind: "DocumentView", fit: true}
                                 ]
                             },
                             {name: "back_toolbar", kind: "onyx.Toolbar", showing: false, components: [
@@ -159,12 +159,7 @@ enyo.kind(
             },
 
             toggleFullscreen: function () {
-                var bounds = this.$.document_scroller.getBounds(),
-                    scrollBounds = this.$.document_scroller.getScrollBounds(),
-                    right,
-                    top,
-                    padding = 10,
-                    node = this.hasNode(),
+                var node = this.hasNode(),
                     isFullscreen = document.webkitIsFullScreen || document.mozFullScreen || document.fullscreen;
 
                 if (node) {
@@ -186,12 +181,6 @@ enyo.kind(
                         }
                     }
                 }
-
-                right = bounds.width - scrollBounds.clientWidth + padding;
-                top = padding;
-
-                this.$.toggle_fullscreen_button.applyStyle("right", right + "px");
-                this.$.toggle_fullscreen_button.applyStyle("top", top + "px");
 
                 if (!isFullscreen) {
                     this.$.toggle_fullscreen_button.applyStyle("display", "block");
@@ -443,12 +432,7 @@ enyo.kind(
 
             handleDocumentSelected: function (inSender, inEvent) {
                 var docSelector,
-                    doc,
-                    bounds,
-                    scrollBounds,
-                    right,
-                    top,
-                    padding = 10;
+                    doc;
 
                 if (enyo.Panels.isScreenNarrow()) {
                     this.$.main_panels.setIndex(1);
@@ -464,15 +448,6 @@ enyo.kind(
                     this.$.document_view.displayDocument(doc);
                     this.$.document_scroller.setScrollTop(0);
                     this.$.document_scroller.setScrollLeft(0);
-
-                    bounds = this.$.document_scroller.getBounds();
-                    scrollBounds = this.$.document_scroller.getScrollBounds();
-
-                    right = bounds.width - scrollBounds.clientWidth + padding;
-                    top = padding;
-
-                    this.$.toggle_fullscreen_button.applyStyle("right", right + "px");
-                    this.$.toggle_fullscreen_button.applyStyle("top", top + "px");
                 }
             },
 
@@ -488,16 +463,7 @@ enyo.kind(
 
             handleDocumentScrolled: function (inSender, inEvent) {
                 var bounds = inEvent.bounds,
-                    scrollBounds = inEvent.scrollBounds,
-                    right,
-                    bottom,
-                    padding = 10;
-
-                right = bounds.width - scrollBounds.clientWidth + padding;
-                bottom = bounds.height - scrollBounds.clientHeight + padding;
-
-                this.$.to_top_button.applyStyle("right", right + "px");
-                this.$.to_top_button.applyStyle("bottom", bottom + "px");
+                    scrollBounds = inEvent.scrollBounds;
 
                 if (scrollBounds.top === 0) {
                     this.$.to_top_button.setShowing(false);

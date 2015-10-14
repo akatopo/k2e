@@ -59,8 +59,13 @@ function lint() {
 }
 
 function sassCompile() {
-  return gulp.src(`${BASE_SOURCE_PATH}/scss/*.scss`)
-    .pipe(cached('sass'))
+  return gulp.src([
+      `${BASE_SOURCE_PATH}/scss/*.scss`,
+      `!${BASE_SOURCE_PATH}/scss/_*.scss`
+    ])
+    // removing cache until workaround for files that import partials appearing unchanged
+    // when the imported partial's changed is found
+    // .pipe(cached('sass'))
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest(BASE_SOURCE_PATH))
     .pipe(livereload());
@@ -96,14 +101,17 @@ function distScripts() {
 }
 
 function distCss() {
-  return gulp.src(`${BASE_DEPLOY_PATH}/build/*.css`)
+  return gulp.src([
+      `${BASE_DEPLOY_PATH}/build/*.css`,
+      `${BASE_SOURCE_PATH}/print.css`
+    ])
     .pipe(gulp.dest('./dist/build'));
 }
 
 function distAssets() {
   return streamqueue({ objectMode: true },
     gulp.src('./k2e/assets/**/*', { base: './k2e' }),
-    gulp.src(`${BASE_DEPLOY_PATH}/lib/**/*`, { base: `${BASE_DEPLOY_PATH}` }),
+    gulp.src(`${BASE_DEPLOY_PATH}/lib/**/*`, { base: BASE_DEPLOY_PATH }),
     gulp.src(`${BASE_BOOTPLATE_PATH}/icon.png`)
   )
   .pipe(gulp.dest('./dist'));
@@ -135,7 +143,7 @@ function distFrontend(cb) {
 
 function dist(cb) {
   runSequence(
-    'dist-clean',
+    ['lint', 'dist-clean'],
     ['dist-frontend', 'dist-aspx', 'dist-config', 'dist-bin'],
     cb
   );

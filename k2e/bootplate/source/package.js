@@ -5,7 +5,6 @@ enyo.depends(
     "String_hashCode.js",
     "AsyncSemaphore.js",
     "Settings.js",
-    "fontello.css",
     "App.css",
     "App.js",
     "Constants.js",

@@ -1,0 +1,41 @@
+@import 'theme-mixins';
+@import 'fontello';
+
+@include k2e-base-theme();
+
+.onyx-toolbar,
+.k2e-settings,
+.k2e-sidebar,
+.k2e-toggle-fullscreen-button,
+.k2e-to-top-button {
+    display: none !important;
+}
+
+.k2e-document-scroller[style] {
+    height: auto !important;
+}
+
+.k2e-main-panel[style] {
+    transform: none !important;
+    width: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    // left: 0;
+}
+
+.k2e-document-view[style] {
+    padding: 0 !important;
+}
+
+.enyo-panels[style] {
+    width: auto !important;
+}
+
+.k2e-document-view {
+    @include k2e-light-theme();
+    background-color: transparent;
+}
+
+@page {
+    margin: 2cm;
+}

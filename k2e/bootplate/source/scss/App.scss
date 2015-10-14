@@ -3,7 +3,13 @@
 	This way, you can minify your application, and just remove the "source" folder for production
 */
 
+@import 'theme-mixins';
+@import 'fontello';
+
 $assetPath: "../../assets";
+$overlay-button-right: 15px;
+$overlay-button-bottom: 10px;
+$overlay-button-top: 10px;
 
 /***********************************************************************************************/
 
@@ -21,15 +27,13 @@ $assetPath: "../../assets";
 	@include apply-box-shadow(-4px, 0, 4px, rgba(0, 0, 0, 0.3));
 }
 
-.k2e-export-button {
-   background-color: #35A8EE !important;
+.onyx-toolbar .k2e-export-button {
+   background-color: #35A8EE;
 }
 
 .k2e-sidebar {
     width: 20%;
 }
-
-
 
 /***********************************************************************************************/
 /* Document selector list */
@@ -70,178 +74,41 @@ $assetPath: "../../assets";
 /***********************************************************************************************/
 /* Document Display */
 
+.k2e-to-top-button {
+    position: fixed;
+    // display: none;
+    z-index: 120;
+    right: $overlay-button-right;
+    bottom: $overlay-button-bottom;
+}
+
+.k2e-toggle-fullscreen-button {
+    position: fixed;
+    display: none;
+    z-index: 120;
+    top: $overlay-button-top;
+    right: $overlay-button-right;
+}
+
+.k2e-document-view {
+    @include k2e-base-theme();
+}
+
 /** Dark theme **/
 .k2e-document-view-dark {
-	background-color: #333; /* #323A40; */
-	color: #D6DBDF;
-
-    a {
-        color: #2FC2EF;
-        &:visited {
-            color: #2FC2EF;
-        }
-    }
-
-    .k2e-document-view-subtitle,
-    .k2e-document-view-clip-separator,
-    .k2e-document-view-clip-header {
-        border-color: #4E5358;
-        color: #A6B5C2;
-    }
-
-    .icon-quote-left {
-        color: #A6B5C2;
-    }
+    @include k2e-dark-theme();
 }
 
 /** Light theme **/
 .k2e-document-view-light {
-	background-color: #fdfdfa;
-	color: #080808;
-
-	h1 {
-		color: #0a0a0a;
-	}
-
-    a {
-        color: #cd0001;
-        &:visited {
-            color: #cd0001;
-        }
-    }
-
-    .k2e-document-view-subtitle,
-    .k2e-document-view-clip-separator,
-    .k2e-document-view-clip-header {
-        border-color: #d7d7d4;
-        color: #8d8d8d;
-    }
-
-    .icon-quote-left {
-        color: #8d8d8d;
-    }
+    @include k2e-light-theme();
 }
 
 /** OMG ponies theme **/
 .k2e-document-view-omg-ponies {
-    background-color: white; /* #323A40; */
-    color: pink;
-
-    a {
-        color: #2FC2EF;
-        &:visited {
-            color: #2FC2EF;
-        }
-    }
-
-    .k2e-document-view-subtitle,
-    .k2e-document-view-clip-separator,
-    .k2e-document-view-clip-header {
-        border-color: black;
-        color: black;
-    }
+    @include k2e-omg-ponies-theme();
 }
 
-/** document display default styles **/
-$document-horizontal-padding: 20%;
-$document-max-width: (1920 - 1920 * 0.2)px;// - $document-horizontal-padding;
-
-.k2e-document-view {
-	/*"minion-pro", Palatino,*/
-	font-size: 100%;
-	font-family: Georgia, serif;
-
-	box-sizing: border-box;
-	margin: 0 auto;
-	max-width: $document-max-width;
-	padding: 1.2em $document-horizontal-padding;
-	vertical-align: baseline;
-	line-height: 1;
-
-    a {
-        -ms-word-break: break-all;
-            word-break: break-all;
-
-            /* Non standard for webkit */
-            word-break: break-word;
-
-        -webkit-hyphens: auto;
-           -moz-hyphens: auto;
-                hyphens: auto;
-    }
-
-    h1 {
-        font-size: 2em;
-        font-weight: 700;
-        line-height: 1.3;
-        margin: 0;
-        padding: 0;
-        border: 0;
-    }
-
-    h2 {
-        font-size: 1.2em;
-        font-weight: 600;
-        margin: 0.8em 0 0.0455em 0;
-    }
-
-    p {
-        line-height: 1.55em;
-        margin: 1.2em 0;
-    }
-}
-
-.k2e-document-view > * {
-	-webkit-font-smoothing: antialiased;
-}
-
-.k2e-document-view-clip-header,
-.k2e-document-view-subtitle {
-	color: #707065; /* changed from theme */
-	font-size: 0.8em;
-	letter-spacing: 0.09em;
-	margin-top: 1.8em;
-	/*overflow: hidden;*/
-	padding-top: 0.9em;
-	overflow: visible;
-}
-
-.k2e-document-view-subtitle {
-	border-top: 1px solid #CDCDCC; /* changed from theme */
-}
-
-.k2e-document-view-clip-separator {
-	margin: 0 auto;
-	width: 20%;
-	/*height: 2px;*/
-	border-top: 2px dotted gray; /* changed from theme */
-}
-
-.k2e-to-top-button {
-    position: absolute;
-    // display: none;
-    z-index: 120;
-
-    color: #f2f2f2;
-    background-color: #555656;
-    border-color: rgba(15, 15, 15, 0.5);
-    /*margin-top: 0;
-    margin-bottom: 0;
-    height: 36px;*/
-}
-
-.k2e-toggle-fullscreen-button {
-    position: absolute;
-    display: none;
-    z-index: 120;
-
-    color: #f2f2f2;
-    background-color: #555656;
-    border-color: rgba(15, 15, 15, 0.5);
-    /*margin-top: 0;
-    margin-bottom: 0;
-    height: 36px;*/
-}
 
 /***********************************************************************************************/
 /* Settings panel */
@@ -329,7 +196,6 @@ $document-max-width: (1920 - 1920 * 0.2)px;// - $document-horizontal-padding;
 	font-size: 14px;
 	border: none;
     height: 36px;
-	// background: #4c4c4c url("#{$assetPath}/gradient.png") repeat-x 0 10px;
 }
 
 .k2e-accordion-item-expander {

@@ -12,8 +12,9 @@
         <meta name="apple-mobile-web-app-capable" content="yes"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <!-- css -->
-        <link href="build/enyo.css" rel="stylesheet"/>
-        <link href="build/app.css" rel="stylesheet"/>
+        <link href="build/enyo.css" rel="stylesheet" media="screen" />
+        <link href="build/app.css" rel="stylesheet" media="screen" />
+        <link href="build/print.css" rel="stylesheet" media="print" />
         <!-- js -->
         <script src="build/enyo.js"></script>
         <script src="build/app.js"></script>

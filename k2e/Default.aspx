@@ -18,7 +18,8 @@
         <script src="bootplate/lib/enyo/enyo.js" charset="utf-8"></script>
         <!-- application (debug) -->
         <script src="bootplate/source/package.js" charset="utf-8"></script>
-                <script type="text/template" id="sample-clippings">
+        <link href="bootplate/source/print.css" rel="stylesheet" type="text/css" media="print">
+        <script type="text/template" id="sample-clippings">
 Kindle User's Guide (Amazon)
 - Bookmark Loc. 183  | Added on Monday, February 15, 2010, 05:58 PM
 
@@ -389,7 +390,7 @@ Daring Fireball: Kindle Paperwhite (daringfireball.net)
 
 E-ink Kindles are the anti-iPad. Single-purpose vs. all-purpose. To remain relevant in an iPad (and Kindle Fire) world, a single-purpose device like the Kindle Paperwhite needs an obsessive focus on the reading experience. Page-turning buttons would make that experience better. That’s why iPods have dedicated hardware buttons for volume and play/pause. They’re optimized for audio playback, and a few buttons make that experience better. Apple tried going button-less with the iPod Shuffle in 2009 and it was a failed experiment. The buttoned version returned a year later.
 ==========
-        </script>
+    </script>
     </head>
     <body class="enyo-unselectable">
         <script>

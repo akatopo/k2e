@@ -1,7 +1,89 @@
+@charset "UTF-8";
 /*
 	Put anything you reference with "url()" in ../assets/
 	This way, you can minify your application, and just remove the "source" folder for production
 */
+@font-face {
+  font-family: 'fontello';
+  src: url("../../assets/fontello.eot?96003913");
+  src: url("../../assets/fontello.eot?96003913#iefix") format("embedded-opentype"), url("../../assets/fontello.woff?96003913") format("woff"), url("../../assets/fontello.ttf?96003913") format("truetype"), url("../../assets/fontello.svg?96003913#fontello") format("svg");
+  font-weight: normal;
+  font-style: normal; }
+
+/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
+/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: 'fontello';
+    src: url('../font/fontello.svg?96003913#fontello') format('svg');
+  }
+}
+*/
+[class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+  /* Font smoothing. That was taken from TWBS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */ }
+
+/* makes the font 33% larger relative to the icon container */
+.icon-large:before {
+  vertical-align: -10%;
+  font-size: 1.3333333333333333em; }
+
+.icon-play:before {
+  content: '\e800'; }
+
+/* '' */
+.icon-share:before {
+  content: '\e801'; }
+
+/* '' */
+.icon-check:before {
+  content: '\e802'; }
+
+/* '' */
+.icon-resize-full:before {
+  content: '\e803'; }
+
+/* '' */
+.icon-resize-small:before {
+  content: '\e804'; }
+
+/* '' */
+.icon-chevron-up:before {
+  content: '\e805'; }
+
+/* '' */
+.icon-menu:before {
+  content: '\e806'; }
+
+/* '' */
+.icon-quote-left:before {
+  content: '\e807'; }
+
+/* '' */
 /***********************************************************************************************/
 #app {
   background-color: #333; }
@@ -11,8 +93,8 @@
   -webkit-box-shadow: -4px 0 4px rgba(0, 0, 0, 0.3);
   box-shadow: -4px 0 4px rgba(0, 0, 0, 0.3); }
 
-.k2e-export-button {
-  background-color: #35A8EE !important; }
+.onyx-toolbar .k2e-export-button {
+  background-color: #35A8EE; }
 
 .k2e-sidebar {
   width: 20%; }
@@ -50,59 +132,20 @@
 
 /***********************************************************************************************/
 /* Document Display */
-/** Dark theme **/
-.k2e-document-view-dark {
-  background-color: #333;
-  /* #323A40; */
-  color: #D6DBDF; }
-  .k2e-document-view-dark a {
-    color: #2FC2EF; }
-    .k2e-document-view-dark a:visited {
-      color: #2FC2EF; }
-  .k2e-document-view-dark .k2e-document-view-subtitle,
-  .k2e-document-view-dark .k2e-document-view-clip-separator,
-  .k2e-document-view-dark .k2e-document-view-clip-header {
-    border-color: #4E5358;
-    color: #A6B5C2; }
-  .k2e-document-view-dark .icon-quote-left {
-    color: #A6B5C2; }
+.k2e-to-top-button {
+  position: fixed;
+  z-index: 120;
+  right: 15px;
+  bottom: 10px; }
 
-/** Light theme **/
-.k2e-document-view-light {
-  background-color: #fdfdfa;
-  color: #080808; }
-  .k2e-document-view-light h1 {
-    color: #0a0a0a; }
-  .k2e-document-view-light a {
-    color: #cd0001; }
-    .k2e-document-view-light a:visited {
-      color: #cd0001; }
-  .k2e-document-view-light .k2e-document-view-subtitle,
-  .k2e-document-view-light .k2e-document-view-clip-separator,
-  .k2e-document-view-light .k2e-document-view-clip-header {
-    border-color: #d7d7d4;
-    color: #8d8d8d; }
-  .k2e-document-view-light .icon-quote-left {
-    color: #8d8d8d; }
+.k2e-toggle-fullscreen-button {
+  position: fixed;
+  display: none;
+  z-index: 120;
+  top: 10px;
+  right: 15px; }
 
-/** OMG ponies theme **/
-.k2e-document-view-omg-ponies {
-  background-color: white;
-  /* #323A40; */
-  color: pink; }
-  .k2e-document-view-omg-ponies a {
-    color: #2FC2EF; }
-    .k2e-document-view-omg-ponies a:visited {
-      color: #2FC2EF; }
-  .k2e-document-view-omg-ponies .k2e-document-view-subtitle,
-  .k2e-document-view-omg-ponies .k2e-document-view-clip-separator,
-  .k2e-document-view-omg-ponies .k2e-document-view-clip-header {
-    border-color: black;
-    color: black; }
-
-/** document display default styles **/
 .k2e-document-view {
-  /*"minion-pro", Palatino,*/
   font-size: 100%;
   font-family: Georgia, serif;
   box-sizing: border-box;
@@ -133,52 +176,88 @@
   .k2e-document-view p {
     line-height: 1.55em;
     margin: 1.2em 0; }
+  .k2e-document-view > * {
+    -webkit-font-smoothing: antialiased; }
+  .k2e-document-view .k2e-document-view-clip-header,
+  .k2e-document-view .k2e-document-view-subtitle {
+    font-size: 0.8em;
+    letter-spacing: 0.09em;
+    margin-top: 1.8em;
+    /*overflow: hidden;*/
+    padding-top: 0.9em;
+    overflow: visible; }
+  .k2e-document-view .k2e-document-view-subtitle {
+    border-top-width: 1px;
+    border-top-style: solid; }
+  .k2e-document-view .k2e-document-view-clip-separator {
+    margin: 0 auto;
+    width: 20%;
+    border-top-width: 2px;
+    border-top-style: dotted; }
 
-.k2e-document-view > * {
-  -webkit-font-smoothing: antialiased; }
+/** Dark theme **/
+.k2e-document-view-dark {
+  background-color: #333;
+  color: #D6DBDF; }
+  .k2e-document-view-dark a {
+    color: #2FC2EF; }
+    .k2e-document-view-dark a:visited {
+      color: #2FC2EF; }
+  .k2e-document-view-dark .k2e-document-view-subtitle,
+  .k2e-document-view-dark .k2e-document-view-clip-separator,
+  .k2e-document-view-dark .k2e-document-view-clip-header {
+    border-color: #4E5358;
+    color: #A6B5C2; }
+  .k2e-document-view-dark .icon-quote-left {
+    color: #A6B5C2; }
+  .k2e-document-view-dark ~ .k2e-to-top-button {
+    color: #f2f2f2;
+    background-color: #555656;
+    border-color: rgba(15, 15, 15, 0.5); }
+  .k2e-document-view-dark .k2e-toggle-fullscreen-button {
+    color: #f2f2f2;
+    background-color: #555656;
+    border-color: rgba(15, 15, 15, 0.5); }
 
-.k2e-document-view-clip-header,
-.k2e-document-view-subtitle {
-  color: #707065;
-  /* changed from theme */
-  font-size: 0.8em;
-  letter-spacing: 0.09em;
-  margin-top: 1.8em;
-  /*overflow: hidden;*/
-  padding-top: 0.9em;
-  overflow: visible; }
+/** Light theme **/
+.k2e-document-view-light {
+  background-color: #fdfdfa;
+  color: #080808; }
+  .k2e-document-view-light h1 {
+    color: #0a0a0a; }
+  .k2e-document-view-light a {
+    color: #cd0001; }
+    .k2e-document-view-light a:visited {
+      color: #cd0001; }
+  .k2e-document-view-light .k2e-document-view-subtitle,
+  .k2e-document-view-light .k2e-document-view-clip-separator,
+  .k2e-document-view-light .k2e-document-view-clip-header {
+    border-color: #d7d7d4;
+    color: #8d8d8d; }
+  .k2e-document-view-light .icon-quote-left {
+    color: #8d8d8d; }
+  .k2e-document-view-light ~ .k2e-to-top-button {
+    color: #555656;
+    background-color: #f2f2f2;
+    border-color: rgba(15, 15, 15, 0.5); }
+  .k2e-document-view-light .k2e-toggle-fullscreen-button {
+    background-color: #f2f2f2;
+    color: #555656;
+    border-color: rgba(15, 15, 15, 0.5); }
 
-.k2e-document-view-subtitle {
-  border-top: 1px solid #CDCDCC;
-  /* changed from theme */ }
-
-.k2e-document-view-clip-separator {
-  margin: 0 auto;
-  width: 20%;
-  /*height: 2px;*/
-  border-top: 2px dotted gray;
-  /* changed from theme */ }
-
-.k2e-to-top-button {
-  position: absolute;
-  z-index: 120;
-  color: #f2f2f2;
-  background-color: #555656;
-  border-color: rgba(15, 15, 15, 0.5);
-  /*margin-top: 0;
-    margin-bottom: 0;
-    height: 36px;*/ }
-
-.k2e-toggle-fullscreen-button {
-  position: absolute;
-  display: none;
-  z-index: 120;
-  color: #f2f2f2;
-  background-color: #555656;
-  border-color: rgba(15, 15, 15, 0.5);
-  /*margin-top: 0;
-    margin-bottom: 0;
-    height: 36px;*/ }
+/** OMG ponies theme **/
+.k2e-document-view-omg-ponies {
+  background-color: white;
+  color: pink; }
+  .k2e-document-view-omg-ponies a {
+    color: #2FC2EF; }
+    .k2e-document-view-omg-ponies a:visited {
+      color: #2FC2EF; }
+  .k2e-document-view-omg-ponies .k2e-document-view-subtitle,
+  .k2e-document-view-omg-ponies .k2e-document-view-clip-separator,
+  .k2e-document-view-omg-ponies .k2e-document-view-clip-header {
+    border-color: black;
+    color: black; }
 
 /***********************************************************************************************/
 /* Settings panel */
