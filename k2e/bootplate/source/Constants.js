@@ -6,6 +6,7 @@ enyo.kind({
     statics: {
         "EXPORT_PATH": '/Default.aspx/Export',
         "AUTH_PATH": '/Auth.aspx',
+        "REVOKE_PATH": '/Default.aspx/Revoke',
         "AUTH_WINDOW_NAME": 'k2e Evernote authentication',
         "AUTH_WINDOW_FEATURES": 'width=800, height=600',
         "AUTH_DONE_QUERY_PARAM": 'authDone',

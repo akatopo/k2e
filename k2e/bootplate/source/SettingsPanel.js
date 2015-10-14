@@ -131,7 +131,7 @@ enyo.kind({
     revokeEvernotePermissions: function (inSender, inEvent) {
         this.$.settings_popup.begin("Revoking permissions...");
 
-        var loc = location.protocol + '//' + location.host + "/Default.aspx/Revoke",
+        var loc = location.protocol + '//' + location.host + Constants.REVOKE_PATH,
             ajax = new enyo.Ajax({
                 url: loc,
                 contentType: "application/json",
