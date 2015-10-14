@@ -158,7 +158,17 @@ enyo.kind({
         selected: false
     },
     components: [
-        {name: "checkbox", kind: "onyx.Checkbox", showing: false},
+        {
+            name: "checkbox",
+            kind: "onyx.Checkbox",
+            showing: false,
+            events: {
+                onDocumentMultiSelected: ""
+            },
+            handlers: {
+                onActivate: "doDocumentMultiSelected"
+            }
+        },
         {name: "label", classes: "enyo-inline k2e-document-selector-item-label"}
     ],
     events: {

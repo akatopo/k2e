@@ -56,6 +56,7 @@ enyo.kind(
                         kind: "onyx.Button",
                         classes: "k2e-export-button",
                         showing: false,
+                        disabled: true,
                         ontap: "prepareDocumentsAndExport",
                         components: [
                             {tag: "i", classes: "icon-share icon-large"},
@@ -118,6 +119,7 @@ enyo.kind(
 
             handlers: {
                 onDocumentSelected: "handleDocumentSelected",
+                onDocumentMultiSelected: "handleDocumentMultiSelected",
                 onClippingsTextChanged: "handleClippingsTextChanged",
                 onFullscreenRequest: "handleFullscreenRequest",
                 onDocumentScrolled: "handleDocumentScrolled",
@@ -472,6 +474,16 @@ enyo.kind(
                     this.$.toggle_fullscreen_button.applyStyle("right", right + "px");
                     this.$.toggle_fullscreen_button.applyStyle("top", top + "px");
                 }
+            },
+
+            handleDocumentMultiSelected: function (inSender, inEvent) {
+                if (!this.$.document_selector_list.getMultiSelected()) {
+                    console.warn("Document multiselected when multiple selection mode inactive");
+                    return;
+                }
+
+                var selectionKeys = this.$.document_selector_list.getMultiSelectionKeys();
+                this.$.export_selected_button.setDisabled(Object.keys(selectionKeys).length === 0);
             },
 
             handleDocumentScrolled: function (inSender, inEvent) {
