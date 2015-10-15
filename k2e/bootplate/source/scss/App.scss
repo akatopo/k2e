@@ -76,7 +76,6 @@ $overlay-button-top: 10px;
 
 .k2e-to-top-button {
     position: fixed;
-    // display: none;
     z-index: 120;
     right: $overlay-button-right;
     bottom: $overlay-button-bottom;
@@ -84,7 +83,6 @@ $overlay-button-top: 10px;
 
 .k2e-toggle-fullscreen-button {
     position: fixed;
-    display: none;
     z-index: 120;
     top: $overlay-button-top;
     right: $overlay-button-right;

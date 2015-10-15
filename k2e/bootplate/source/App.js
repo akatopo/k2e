@@ -32,7 +32,7 @@ enyo.kind(
             kind: "FittableRows",
 
             components: [
-                {kind: "enyo.Signals", onkeydown: "handleKeydown"},
+                {kind: "enyo.Signals", onkeydown: "handleKeydown", onFullscreenChange: "toggleDistractionFreeMode"},
                 {name: "clipping_picker_popup", kind: "ClippingPickerPopup"},
                 {name: "export_popup", kind: "ProgressPopup" },
                 {name: "app_toolbar", kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
@@ -85,6 +85,7 @@ enyo.kind(
                                     {
                                         name: "toggle_fullscreen_button",
                                         classes: "k2e-toggle-fullscreen-button",
+                                        showing: false,
                                         ontap: "toggleFullscreen",
                                         kind: "onyx.Button",
                                         components: [
@@ -121,7 +122,6 @@ enyo.kind(
                 onDocumentSelected: "handleDocumentSelected",
                 onDocumentMultiSelected: "handleDocumentMultiSelected",
                 onClippingsTextChanged: "handleClippingsTextChanged",
-                onFullscreenRequest: "handleFullscreenRequest",
                 onDocumentScrolled: "handleDocumentScrolled",
                 onThemeChanged: "handleThemeChanged",
                 onFontSizeChanged: "handleFontSizeChanged",
@@ -149,44 +149,23 @@ enyo.kind(
             },
 
             toggleDistractionFreeMode: function () {
-
                 if (this.$.settings.isAtMax()) {
                     // this.$.settings.animateToMin();
                     this.toggleSettings();
                 }
                 this.$.sidebar.setShowing(!this.$.sidebar.showing);
                 this.$.app_toolbar.setShowing(!this.$.app_toolbar.showing);
+                this.$.main_panels.reflow();
             },
 
             toggleFullscreen: function () {
-                var node = this.hasNode(),
-                    isFullscreen = document.webkitIsFullScreen || document.mozFullScreen || document.fullscreen;
+                var isFullscreen = this.isFullscreen();
 
-                if (node) {
-                    if (!isFullscreen) {
-                        if (node.webkitRequestFullscreen) {
-                            node.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-                        } else if (node.mozRequestFullScreen) {
-                            node.mozRequestFullScreen();
-                        } else {
-                            node.requestFullscreen();
-                        }
-                    } else {
-                        if (document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                        } else if (document.mozCancelFullScreen) {
-                            document.mozCancelFullScreen();
-                        } else {
-                            document.exitFullscreen();
-                        }
-                    }
-                }
+                this.$.toggle_fullscreen_button.setShowing(!isFullscreen);
 
-                if (!isFullscreen) {
-                    this.$.toggle_fullscreen_button.applyStyle("display", "block");
-                } else {
-                    this.$.toggle_fullscreen_button.applyStyle("display", "none");
-                }
+                return isFullscreen ?
+                    this.cancelFullscreen() :
+                    this.requestFullscreen();
             },
 
             showDocumentSelectorList: function () {
@@ -507,9 +486,6 @@ enyo.kind(
                     inEvent.altGraphKey ||
                     inEvent.metaKey;
 
-                this.log(inSender);
-                this.log(inEvent);
-
                 if (!modKeyPressed && inEvent.keyCode === 70) { // 'f'
                     this.toggleFullscreen();
                 } else if (!modKeyPressed && inEvent.keyCode === 74) { // 'j'
@@ -518,10 +494,6 @@ enyo.kind(
                     this.$.document_selector_list.selectPrevDocument();
                 }
                 return true;
-            },
-
-            handleFullscreenRequest: function (inSender, inEvent) {
-                this.toggleFullscreen();
             },
 
             toggleSettings: function (inSender, inEvent) {
@@ -617,6 +589,7 @@ enyo.kind(
 
             reflow: function () {
                 var isScreenNarrow = enyo.Panels.isScreenNarrow();
+                var isFullscreen = this.isFullscreen();
 
                 this.inherited(arguments);
 
@@ -625,6 +598,7 @@ enyo.kind(
                 if (!isScreenNarrow) {
                     this.$.main_panels.setIndex(0);
                 }
+                this.$.toggle_fullscreen_button.setShowing(isFullscreen);
             },
 
             // This is probably needed because of the hackery going on in SettingsPanel.js
@@ -647,10 +621,6 @@ enyo.kind(
                 self.set("cookieModel", cookieModel);
 
                 exportPreparationSem = new AsyncSemaphore({func: function () { self.exportDocuments(); } });
-
-                document.onwebkitfullscreenchange =
-                    document.onmozfullscreenchange =
-                    document.onfullscreenchange = function () { self.toggleDistractionFreeMode(); };
 
                 // FIXME: Get data by dnd or file chooser
                 // if (!window.XMLHttpRequest)

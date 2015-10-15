@@ -140,7 +140,6 @@
 
 .k2e-toggle-fullscreen-button {
   position: fixed;
-  display: none;
   z-index: 120;
   top: 10px;
   right: 15px; }
