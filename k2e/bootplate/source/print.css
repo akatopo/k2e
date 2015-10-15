@@ -80,62 +80,6 @@
   content: '\e807'; }
 
 /* '' */
-font-size: 100%;
-font-family: Georgia, serif;
-box-sizing: border-box;
-margin: 0 auto;
-max-width: 1536 px;
-padding: 1.2em 20%;
-vertical-align: baseline;
-line-height: 1;
-a {
-  -ms-word-break: break-all;
-  word-break: break-all;
-  /* Non standard for webkit */
-  word-break: break-word;
-  -webkit-hyphens: auto;
-  -moz-hyphens: auto;
-  hyphens: auto; }
-
-h1 {
-  font-size: 2em;
-  font-weight: 700;
-  line-height: 1.3;
-  margin: 0;
-  padding: 0;
-  border: 0; }
-
-h2 {
-  font-size: 1.2em;
-  font-weight: 600;
-  margin: 0.8em 0 0.0455em 0; }
-
-p {
-  line-height: 1.55em;
-  margin: 1.2em 0; }
-
-> * {
-  -webkit-font-smoothing: antialiased; }
-
-.k2e-document-view-clip-header,
-.k2e-document-view-subtitle {
-  font-size: 0.8em;
-  letter-spacing: 0.09em;
-  margin-top: 1.8em;
-  /*overflow: hidden;*/
-  padding-top: 0.9em;
-  overflow: visible; }
-
-.k2e-document-view-subtitle {
-  border-top-width: 1px;
-  border-top-style: solid; }
-
-.k2e-document-view-clip-separator {
-  margin: 0 auto;
-  width: 20%;
-  border-top-width: 2px;
-  border-top-style: dotted; }
-
 .onyx-toolbar,
 .k2e-settings,
 .k2e-sidebar,
@@ -159,9 +103,57 @@ p {
   width: auto !important; }
 
 .k2e-document-view {
+  font-size: 100%;
+  font-family: Georgia, serif;
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: 1536 px;
+  padding: 1.2em 20%;
+  vertical-align: baseline;
+  line-height: 1;
   background-color: #fdfdfa;
   color: #080808;
   background-color: transparent; }
+  .k2e-document-view a {
+    -ms-word-break: break-all;
+    word-break: break-all;
+    /* Non standard for webkit */
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto; }
+  .k2e-document-view h1 {
+    font-size: 2em;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+    padding: 0;
+    border: 0; }
+  .k2e-document-view h2 {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 0.8em 0 0.0455em 0; }
+  .k2e-document-view p {
+    line-height: 1.55em;
+    margin: 1.2em 0; }
+  .k2e-document-view > * {
+    -webkit-font-smoothing: antialiased; }
+  .k2e-document-view .k2e-document-view-clip-header,
+  .k2e-document-view .k2e-document-view-subtitle {
+    font-size: 0.8em;
+    letter-spacing: 0.09em;
+    margin-top: 1.8em;
+    /*overflow: hidden;*/
+    padding-top: 0.9em;
+    overflow: visible; }
+  .k2e-document-view .k2e-document-view-subtitle {
+    border-top-width: 1px;
+    border-top-style: solid; }
+  .k2e-document-view .k2e-document-view-clip-separator {
+    margin: 0 auto;
+    width: 20%;
+    border-top-width: 2px;
+    border-top-style: dotted; }
   .k2e-document-view h1 {
     color: #0a0a0a; }
   .k2e-document-view a {

@@ -1,7 +1,6 @@
 @import 'theme-mixins';
 @import 'fontello';
 
-@include k2e-base-theme();
 
 .onyx-toolbar,
 .k2e-settings,
@@ -32,6 +31,7 @@
 }
 
 .k2e-document-view {
+    @include k2e-base-theme();
     @include k2e-light-theme();
     background-color: transparent;
 }
