@@ -5,7 +5,7 @@ enyo.kind({
 
     kind: "onyx.Popup",
 
-    classes: "k2e-clipping-picker-popup onyx-toolbar-inline",
+    classes: "k2e-clipping-picker-popup",
 
     modal: true,
     floating: true,
@@ -18,10 +18,14 @@ enyo.kind({
     },
 
     components: [
-        {content: "Drag your kindle clippings here or "},
-        {kind: "onyx.Button", content: "Load from File", ontap: "loadFile"},
-        {tag: "span", style: "width: 0px; height: 0px; overflow: hidden;", components: [
-            {name: "file_picker", kind: "enyo.Input", type: "file", onchange: "handleFiles"}
+        {name: "error_message", classes: "k2e-color-error", showing: false,
+            content: "Invalid clippings provided, try loading a correct 'My Clippings.txt' file"},
+        {classes: "onyx-toolbar-inline", components: [
+            {content: "Drag your kindle clippings here or "},
+            {kind: "onyx.Button", content: "Load from File", ontap: "loadFile"},
+            {tag: "span", style: "width: 0px; height: 0px; overflow: hidden;", components: [
+                {name: "file_picker", kind: "enyo.Input", type: "file", onchange: "handleFiles"}
+            ]}
         ]}
 
     ],
@@ -32,6 +36,10 @@ enyo.kind({
 
     handlers: {
         onShow: "handleOnShow"
+    },
+
+    showErrorMessage: function () {
+        this.$.error_message.setShowing(true);
     },
 
     loadFile: function () {

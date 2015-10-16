@@ -88,6 +88,9 @@
 #app {
   background-color: #333; }
 
+.k2e-color-error {
+  color: #F01A1A; }
+
 .k2e-main-panel {
   -moz-box-shadow: -4px 0 4px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: -4px 0 4px rgba(0, 0, 0, 0.3);

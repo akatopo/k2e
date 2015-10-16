@@ -474,11 +474,16 @@ enyo.kind(
             },
 
             handleClippingsTextChanged: function (inSender, inEvent) {
-                this.log("handleClippingsTextChanged");
                 var clipText = this.$.clipping_picker_popup.getClippingsText();
-                this.documents = this.parseKinldeClippings(clipText);
-                this.$.document_selector_list.populate(this.documents);
-                this.$.clipping_picker_popup.hide();
+                try {
+                    this.documents = this.parseKindleClippings(clipText);
+                    this.$.document_selector_list.populate(this.documents);
+                    this.$.clipping_picker_popup.hide();
+                }
+                catch (e) {
+                    this.$.clipping_picker_popup.showErrorMessage();
+                    this.warn(e.message, e);
+                }
             },
 
             handleKeydown: function (inSender, inEvent) {
@@ -542,51 +547,107 @@ enyo.kind(
                 }
             },
 
-            parseKinldeClippings: function (kindleClippings) {
+            parseKindleClippings: function (kindleClippings) {
                 var docs = new Documents(),
-                    clippingRegExp = new RegExp(/^\s*(.+)\s\((.+)\)\s+-\s+(.+)\s+(.*)/),
-                    delimeter = "==========";
+                    delimeterRegExp = /\r?\n==========\r?\n/;
 
-                kindleClippings = kindleClippings.split("\n" + delimeter);
-
-                //assert(clippingRegExp.test(kindleClippings[73]));
-                (function () {
-                    var i,
-                        res,
-                        title,
-                        author,
-                        subtitle,
-                        type,
-                        loc,
-                        timeStamp,
-                        content;
-
-                    for (i = 0; i < kindleClippings.length; i += 1) {
-                        if (clippingRegExp.test(kindleClippings[i])) {
-                            res = clippingRegExp.exec(kindleClippings[i]);
-                            title = res[1];
-                            author = res[2];
-                            subtitle = res[3].split(/\s+\|\s+/);
-                            type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
-                            loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
-                            timeStamp = subtitle[subtitle.length - 1];
-                            content = linkify(enyo.dom.escape(res[4]), { targetBlank: true });
-
-                            // Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
-                            if (type !== "Bookmark" && type !== "Clipping") {
-                                docs.addClippingToDocument(
-                                    title,
-                                    author,
-                                    new Clipping({type: type, loc: loc, timeStamp: timeStamp,
-                                            content: content})
-                                );
-                            }
-                        }
-
-                    }
-                }());
+                kindleClippings = kindleClippings.split(delimeterRegExp);
+                kindleClippings.forEach(addClippingToDocuments);
 
                 return docs;
+
+                /////////////////////////////////////////////////////////////
+
+                function addClippingToDocuments(clipping) {
+                    var clippingRegExp = /^(.+)\r?\n- (.+)\r?\n?\r?\n?(.*)$/;
+                    var res;
+                    var title;
+                    var author;
+                    var titleAndAuthor;
+                    var subtitle;
+                    var type;
+                    var loc;
+                    var timeStamp;
+                    var content;
+                    clipping = clipping.trim();
+
+                    if (clipping === "") {
+                        return;
+                    }
+                    if (!clippingRegExp.test(clipping)) {
+                        throw {
+                            code: 1,
+                            message: "Invalid clipping format in clippings file"
+                        };
+                    }
+
+                    res = clippingRegExp.exec(clipping);
+                    titleAndAuthor = splitTitleAndAuthor(res[1]);
+                    title = titleAndAuthor[0];
+                    author = titleAndAuthor[1];
+                    subtitle = res[2].split(/\s+\|\s+/);
+                    type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
+                    loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
+                    timeStamp = subtitle[subtitle.length - 1];
+                    content = linkify(enyo.dom.escape(res[3]), { targetBlank: true });
+
+                    // Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
+                    if (type !== "Bookmark" && type !== "Clipping") {
+                        docs.addClippingToDocument(
+                            title,
+                            author,
+                            new Clipping({type: type, loc: loc, timeStamp: timeStamp,
+                                    content: content})
+                        );
+                    }
+                }
+
+                function splitTitleAndAuthor(s) {
+                    var author = "";
+                    var title = "";
+                    var splitIndex;
+
+                    splitIndex = getAuthorOpenParenIndex(s);
+
+                    if (splitIndex !== undefined) {
+                        title = s.substring(0, splitIndex);
+                        author = s.substring(splitIndex + 1, s.length - 1);
+                    }
+                    else {
+                        title = s;
+                    }
+
+                    return [
+                        title.trim() || 'Unknown Title',
+                        author.trim() || 'Unknown Author'
+                    ];
+
+                    /////////////////////////////////////////////////////////////
+
+                    // Best effort function to get an author name by finding the opening parenthesis
+                    // matching the rightmost closing parenthesis
+
+                    function getAuthorOpenParenIndex(s) {
+                        if (s[s.length - 1] !== ')') {
+                            return undefined;
+                        }
+
+                        var rightOpenParens = 1;
+
+                        for (var i = s.length - 2; i > -1; --i) {
+                            if (s[i] === '(') {
+                                --rightOpenParens;
+                            }
+                            if (s[i] === ')') {
+                                ++rightOpenParens;
+                            }
+                            if (rightOpenParens === 0) {
+                                return i;
+                            }
+                        }
+                        return undefined;
+                    }
+                }
             },
 
             reflow: function () {
@@ -633,7 +694,7 @@ enyo.kind(
                 // req.send(null);
 
                 // req.onreadystatechange = function () {
-                //     this.documents = parseKinldeClippings(req.responseText);
+                //     this.documents = parseKindleClippings(req.responseText);
                 //     self.$.document_selector_list.populate(testDocs);
                 // };
             }
