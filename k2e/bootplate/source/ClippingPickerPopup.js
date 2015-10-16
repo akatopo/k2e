@@ -40,6 +40,7 @@ enyo.kind({
 
     showErrorMessage: function () {
         this.$.error_message.setShowing(true);
+        this.rendered();
     },
 
     loadFile: function () {
