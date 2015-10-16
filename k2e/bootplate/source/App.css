@@ -99,6 +99,9 @@
 .k2e-sidebar {
   width: 20%; }
 
+.k2e-document-scroller {
+  height: 100% !important; }
+
 /***********************************************************************************************/
 /* Document selector list */
 .k2e-document-selector-item {

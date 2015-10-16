@@ -35,6 +35,12 @@ $overlay-button-top: 10px;
     width: 20%;
 }
 
+// hack for fulscreen reflow strangeness
+
+.k2e-document-scroller {
+  height: 100%!important;
+}
+
 /***********************************************************************************************/
 /* Document selector list */
 

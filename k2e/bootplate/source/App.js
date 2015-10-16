@@ -81,7 +81,7 @@ enyo.kind(
                                 name: "document_scroller",
                                 kind: "DocumentScroller",
                                 components: [
-                                    {name: "document_view", kind: "DocumentView", fit: true},
+                                    {name: "document_view", kind: "DocumentView"},
                                     {
                                         name: "toggle_fullscreen_button",
                                         classes: "k2e-toggle-fullscreen-button",
@@ -153,9 +153,11 @@ enyo.kind(
                     // this.$.settings.animateToMin();
                     this.toggleSettings();
                 }
-                this.$.sidebar.setShowing(!this.$.sidebar.showing);
                 this.$.app_toolbar.setShowing(!this.$.app_toolbar.showing);
+                this.$.sidebar.setShowing(!this.$.sidebar.showing);
+
                 this.$.main_panels.reflow();
+                this.reflow();
             },
 
             toggleFullscreen: function () {
@@ -595,7 +597,7 @@ enyo.kind(
 
                 this.$.settings_button_label.setShowing(!isScreenNarrow);
                 this.$.back_toolbar.setShowing(isScreenNarrow);
-                if (!isScreenNarrow) {
+                if (!isScreenNarrow && !isFullscreen) {
                     this.$.main_panels.setIndex(0);
                 }
                 this.$.toggle_fullscreen_button.setShowing(isFullscreen);
