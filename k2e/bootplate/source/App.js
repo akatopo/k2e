@@ -422,7 +422,7 @@ enyo.kind(
                 docSelector = inEvent.originator;
                 this.log(docSelector.getTitle());
                 this.log(docSelector.getIndex());
-                doc = this.documents.getDocumentByIndex(docSelector.getIndex());
+                doc = this.documents.getDocumentByKey(docSelector.getKey());
                 this.log(doc);
                 //this.$.document_view.setContent(doc.clippings[0].getContent());
                 this.$.document_view.displayDocument(doc);
@@ -477,6 +477,7 @@ enyo.kind(
                     this.documents = this.parseKindleClippings(clipText);
                     this.$.document_selector_list.populate(this.documents);
                     this.$.clipping_picker_popup.hide();
+                    this.$.document_selector_list.selectNextDocument();
                 }
                 catch (e) {
                     this.$.clipping_picker_popup.showErrorMessage();
@@ -586,7 +587,7 @@ enyo.kind(
                     subtitle = res[2].split(/\s+\|\s+/);
                     type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
                     loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
-                    timeStamp = subtitle[subtitle.length - 1];
+                    timeStamp = /^Added on (.*)$/.exec(subtitle[subtitle.length - 1])[1];
                     content = linkify(enyo.dom.escape(res[3]), { targetBlank: true });
 
                     // Skip kindle bookmarks and clippings (not to be confused with the Clipping class)

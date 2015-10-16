@@ -40,10 +40,11 @@ enyo.kind({
         var index = inEvent.index,
             item = inEvent.item,
             docMap = this.documentsRef.getDocMap(),
-            key = this.documentsRef.getKeyArray()[index];
+            key = this.sortedKeys[index];
 
         item.$.documentSelectorItem.setTitle(docMap[key].getTitle());
         item.$.documentSelectorItem.setIndex(index);
+        item.$.documentSelectorItem.setKey(key);
         this.items.push(item.$.documentSelectorItem);
         return true;
     },
@@ -83,14 +84,13 @@ enyo.kind({
     },
     getMultiSelectionKeys: function () {
         var i,
-            keyArray = this.documentsRef.getKeyArray(),
             multiSelKeys = {};
 
         for (i = 0; i < this.items.length; i += 1) {
             if (this.items[i].getMultiSelected() &&
                 this.items[i].isMarked()
             ) {
-                multiSelKeys[keyArray[i]] = true;
+                multiSelKeys[this.items[i].getKey()] = true;
             }
         }
 
@@ -140,6 +140,17 @@ enyo.kind({
     },
     populate: function (documents) {
         this.documentsRef = documents;
+        var docMap = this.documentsRef.getDocMap();
+        var keys = this.documentsRef.getKeyArray();
+
+        // descending (newest to oldest most recent clipping date) key sort
+        this.sortedKeys = keys.slice(0).sort(function (a, b) {
+            var aUnixTimestamp = docMap[a].mostRecentDate.valueOf();
+            var bUnixTimestamp = docMap[b].mostRecentDate.valueOf();
+            
+            return bUnixTimestamp - aUnixTimestamp; 
+        });
+
         this.$.DocumentSelectorRepeater.setCount(this.documentsRef.length);
     },
     create: function () {
@@ -154,7 +165,8 @@ enyo.kind({
     published: {
         index: -1,
         multiSelected: false,
-        selected: false
+        selected: false,
+        key: undefined
     },
     components: [
         {

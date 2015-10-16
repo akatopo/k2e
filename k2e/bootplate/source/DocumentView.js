@@ -8,28 +8,6 @@ enyo.kind({
     components: [],
 
     displayDocument: function (doc) {
-        var self = this,
-            i;
-
-        function appendClippingToDisplay(doc, i) {
-            var loc = doc.clippings[i].loc,
-                type = doc.clippings[i].type,
-                timestamp = doc.clippings[i].timeStamp,
-                content = doc.clippings[i].content;
-
-            self.createComponent({classes: "k2e-document-view-clip-header", components: [
-                {tag: "i", content: type + ", " + loc},
-                {tag: "span", content: " | "},
-                {tag: "i", content: timestamp }
-            ]});
-            self.createComponent(
-                {tag: "p", components: [
-                    {tag: "i", classes: "icon-quote-left icon-large"},
-                    {tag: null, allowHtml: true, content: " " + content}
-                ]}
-            );
-        }
-
         this.clearDocument();
 
         this.createComponent({tag: "h1", content: doc.title});
@@ -38,15 +16,43 @@ enyo.kind({
             {tag: "span", content: doc.author }
         ]});
 
-        if (doc.clippings.length !== 0) {
-            appendClippingToDisplay(doc, 0);
-            for (i = 1; i < doc.clippings.length; i += 1) {
-                this.createComponent({classes: "k2e-document-view-clip-separator"});
-                appendClippingToDisplay(doc, i);
-            }
-        }
+        var sortedClippings = doc.clippings.slice(0).sort(sortDescending);
+        sortedClippings.forEach(appendClippingToDisplay.bind(undefined, this));
 
         this.render();
+
+        /////////////////////////////////////////////////////////////
+
+        function sortDescending(a, b) {
+            var aUnixTimestamp = a.creationDate.valueOf();
+            var bUnixTimestamp = b.creationDate.valueOf();
+
+            return bUnixTimestamp - aUnixTimestamp;
+        }
+
+        function appendClippingToDisplay(component, clipping, index, sortedClippings) {
+            var loc = clipping.loc,
+                type = clipping.type,
+                timestamp = clipping.timeStamp,
+                content = clipping.content;
+
+            if (index !== 0) {
+                component.createComponent({classes: "k2e-document-view-clip-separator"});
+            }
+
+            component.createComponent({classes: "k2e-document-view-clip-header", components: [
+                {tag: "i", content: type + ", " + loc},
+                {tag: "span", content: " | "},
+                {tag: "i", content: "Added on " + timestamp }
+            ]});
+
+            component.createComponent(
+                {tag: "p", components: [
+                    {tag: "i", classes: "icon-quote-left icon-large"},
+                    {tag: null, allowHtml: true, content: " " + content}
+                ]}
+            );
+        }
     },
 
     clearDocument: function () {

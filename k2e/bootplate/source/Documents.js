@@ -1,14 +1,14 @@
-/* global Document, ClippingCollection */
+/* global Document, ClippingCollection, moment */
 
 enyo.kind({
     name: "ClippingCollection",
     kind: "enyo.Component",
     published: {
-        index: -1,
         title: "",
         author: "",
         isPeriodical: false,
-        clippings: undefined
+        clippings: undefined,
+        mostRecentDate: undefined
     },
     events: {
         onExportBegin: "",
@@ -18,6 +18,9 @@ enyo.kind({
     },
     addClipping: function (clipping) {
         this.getClippings().push(clipping);
+        this.mostRecentDate =
+            this.mostRecentDate && this.mostRecentDate.isAfter(clipping.creationDate) ?
+                this.mostRecentDate : clipping.creationDate;
     },
     create: function () {
         this.inherited(arguments);
@@ -49,9 +52,15 @@ enyo.kind({
         type: "",
         loc: "",
         timeStamp: "",
+        creationDate: undefined,
         content: "",
         suggestedTitle: "",
         suggestedUrl: ""
+    },
+    create: function () {
+        var DATE_FORMAT = "dddd, MMMM DD, YYYY, hh:mm A";
+        this.inherited(arguments);
+        this.creationDate = moment(this.timeStamp, DATE_FORMAT);
     },
     exportObject: function () {
         return {
@@ -87,8 +96,8 @@ enyo.kind({
 
         this.docMap[key].addClipping(clipping);
     },
-    getDocumentByIndex: function (index) {
-        return this.docMap[this.keyArray[index]];
+    getDocumentByKey: function (key) {
+        return this.docMap[key];
     },
     create: function () {
         this.inherited(arguments);
