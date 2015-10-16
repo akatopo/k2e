@@ -125,7 +125,8 @@ enyo.kind(
                 onDocumentScrolled: "handleDocumentScrolled",
                 onThemeChanged: "handleThemeChanged",
                 onFontSizeChanged: "handleFontSizeChanged",
-                onTextMarginChanged: "handleTextMarginChanged"
+                onTextMarginChanged: "handleTextMarginChanged",
+                onFullscreenRequest: "toggleFullscreen"
             },
 
             bindings: [
