@@ -22,19 +22,18 @@ enyo.kind({
     },
     handleDocumentSelected: function (inSender, inEvent) {
         var docSelectorItem = inEvent.originator;
+        if (this.selDocumentSelectorItem === docSelectorItem) {
+            return true; // stop event propagation
+        }
 
-        if (this.selDocumentSelectorItem !== docSelectorItem) {
-            docSelectorItem.setSelected(true);
-            if (this.selDocumentSelectorItem) {
-                this.selDocumentSelectorItem.setSelected(false);
-            }
-            this.selDocumentSelectorItem = docSelectorItem;
-            // TODO: isInView is protected. Is there a better way to find whether a node/control is in view?
-            if (!this.getStrategy().isInView(this.selDocumentSelectorItem.hasNode())) {
-                this.scrollToControl(this.selDocumentSelectorItem);
-            }
-        } else {
-            inEvent.reSelected = true;
+        if (this.selDocumentSelectorItem) {
+            this.selDocumentSelectorItem.setSelected(false);
+        }
+        docSelectorItem.setSelected(true);
+        this.selDocumentSelectorItem = docSelectorItem;
+        // TODO: isInView is protected. Is there a better way to find whether a node/control is in view?
+        if (!this.getStrategy().isInView(this.selDocumentSelectorItem.hasNode())) {
+            this.scrollToControl(this.selDocumentSelectorItem);
         }
     },
     handleSetupItem: function (inSender, inEvent) {
@@ -178,8 +177,7 @@ enyo.kind({
         ontap: "handleTap"
     },
     handleTap: function () {
-        var self = this;
-        this.doDocumentSelected(self);
+        this.doDocumentSelected();
     },
     setSelected: function (bool) {
         this.selected = bool;

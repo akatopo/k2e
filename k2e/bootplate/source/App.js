@@ -419,22 +419,20 @@ enyo.kind(
                     this.$.main_panels.setIndex(1);
                 }
 
-                if (!inEvent.reSelected) {
-                    docSelector = inEvent.originator;
-                    console.log(docSelector.getTitle());
-                    console.log(docSelector.getIndex());
-                    doc = this.documents.getDocumentByIndex(docSelector.getIndex());
-                    console.log(doc);
-                    //this.$.document_view.setContent(doc.clippings[0].getContent());
-                    this.$.document_view.displayDocument(doc);
-                    this.$.document_scroller.setScrollTop(0);
-                    this.$.document_scroller.setScrollLeft(0);
-                }
+                docSelector = inEvent.originator;
+                this.log(docSelector.getTitle());
+                this.log(docSelector.getIndex());
+                doc = this.documents.getDocumentByIndex(docSelector.getIndex());
+                this.log(doc);
+                //this.$.document_view.setContent(doc.clippings[0].getContent());
+                this.$.document_view.displayDocument(doc);
+                this.$.document_scroller.setScrollTop(0);
+                this.$.document_scroller.setScrollLeft(0);
             },
 
             handleDocumentMultiSelected: function (inSender, inEvent) {
                 if (!this.$.document_selector_list.getMultiSelected()) {
-                    console.warn("Document multiselected when multiple selection mode inactive");
+                    this.warn("Document multiselected when multiple selection mode inactive");
                     return;
                 }
 
