@@ -14,11 +14,25 @@ import sass from 'gulp-sass';
 import msbuild from 'gulp-msbuild';
 import jshint from 'gulp-jshint';
 import cached from 'gulp-cached';
+import autoprefixer from 'gulp-autoprefixer';
 
 const BASE_BOOTPLATE_PATH = './k2e/bootplate';
 const BASE_SOURCE_PATH = './k2e/bootplate/source';
 const BASE_DEPLOY_PATH = './k2e/bootplate/deploy';
 const BOWER_COMPONENTS = 'lib';
+const AUTOPREFIXER_OPTIONS = {
+  // Taken directly from bootstrap's grunt file
+  browsers: [
+    'Android 2.3',
+    'Android >= 4',
+    'Chrome >= 20',
+    'Firefox >= 24', // Firefox 24 is the latest ESR
+    'Explorer >= 8',
+    'iOS >= 6',
+    'Opera >= 12',
+    'Safari >= 6'
+  ]
+};
 
 gulp.task('lint', lint);
 
@@ -67,6 +81,7 @@ function sassCompile() {
     // when the imported partial's changed is found
     // .pipe(cached('sass'))
     .pipe(sass().on('error', sass.logError))
+    .pipe(autoprefixer(AUTOPREFIXER_OPTIONS))
     .pipe(gulp.dest(BASE_SOURCE_PATH))
     .pipe(livereload());
 }

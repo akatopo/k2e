@@ -5,7 +5,7 @@ enyo.kind({
     kind: enyo.Object,
     published: {
         themeName: '"Dark"',
-        fontSize: '"100"',
+        fontSize: '100',
         textMargin: '"20"',
         ignoredTitleList: '""',
         articleExtraction: "false",

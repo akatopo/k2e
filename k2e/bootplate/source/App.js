@@ -36,20 +36,14 @@ enyo.kind(
                 {name: "clipping_picker_popup", kind: "ClippingPickerPopup"},
                 {name: "export_popup", kind: "ProgressPopup" },
                 {name: "app_toolbar", kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
-                    {name: "settings_button", kind: "onyx.Button", ontap: "toggleSettings", components: [
+                    {name: "settings_button", kind: "onyx.Button", classes: "k2e-icon-button", ontap: "toggleSettings", components: [
                         {tag: "i", classes: "icon-menu icon-large"},
-                        {name: "settings_button_label", tag: "span", content: "Settings" }
                     ]},
-                    {content: "k2e", fit: true, style: "text-align: center;"},
+                    {content: "k2e", fit: true},
                     {
                         name: "export_button",
-                        kind: "onyx.Button",
-                        classes: "k2e-export-button",
-                        ontap: "prepareDocumentsAndExport",
-                        components: [
-                            {tag: "i", classes: "icon-share icon-large"},
-                            {name: "export_button_label", tag: "span", content: "Export to Evernote" }
-                        ]
+                        kind: "ExportButton",
+                        ontap: "prepareDocumentsAndExport"
                     },
                     {
                         name: "export_selected_button",
@@ -59,8 +53,8 @@ enyo.kind(
                         disabled: true,
                         ontap: "prepareDocumentsAndExport",
                         components: [
-                            {tag: "i", classes: "icon-share icon-large"},
-                            {name: "export_selected_button_label", tag: "span", content: "Export Selected to Evernote" }
+                            {tag: "i", classes: "icon-evernote icon-large"},
+                            {name: "export_selected_button_label", tag: "span", content: "Export Selected Clippings" }
                         ]
                     }
                 ]},
@@ -70,9 +64,8 @@ enyo.kind(
                         {name: "sidebar", classes: "k2e-sidebar", layoutKind: "FittableRowsLayout", components: [
                             {fit: true, name: "document_selector_list", kind: "DocumentSelectorList"},
                             {name: "sidebar_toolbar", kind: "onyx.Toolbar", layoutKind: "FittableColumnsLayout", components: [
-                                {name: "multi_select_button", kind: "onyx.Button", ontap: "toggleMultiSelection", components: [
-                                    {tag: "i", classes: "icon-check icon-large"},
-                                    {name: "multi_select_button_label", tag: "span", style: "padding-left: 5px;", content: " Select Documents" }
+                                {name: "multi_select_button", kind: "onyx.Button", classes: "k2e-icon-button", ontap: "toggleMultiSelection", components: [
+                                    {tag: "i", classes: "icon-check icon-large"}
                                 ]}
                             ]}
                         ]},
@@ -84,27 +77,28 @@ enyo.kind(
                                     {name: "document_view", kind: "DocumentView"},
                                     {
                                         name: "toggle_fullscreen_button",
-                                        classes: "k2e-toggle-fullscreen-button",
-                                        showing: false,
+                                        classes: "k2e-toggle-fullscreen-button k2e-icon-button k2e-hidden",
                                         ontap: "toggleFullscreen",
                                         kind: "onyx.Button",
                                         components: [
                                             {tag: "i", classes: "icon-resize-small icon-large"}
                                         ]
                                     },
-                                ]
-                            },
-                            {
-                                name: "to_top_button",
-                                classes: "k2e-to-top-button",
-                                kind: "ToTopAnimatedButton",
-                                ontap: "scrollDocumentToTop",
-                                components: [
-                                    {tag: "i", classes: "icon-chevron-up icon-large"}
+                                    {
+                                        name: "to_top_button",
+                                        classes: "k2e-to-top-button k2e-icon-button k2e-hidden",
+                                        kind: "onyx.Button",
+                                        ontap: "scrollDocumentToTop",
+                                        components: [
+                                            {tag: "i", classes: "icon-chevron-up icon-large"}
+                                        ]
+                                    },
                                 ]
                             },
                             {name: "back_toolbar", kind: "onyx.Toolbar", showing: false, components: [
-                                {kind: "onyx.Button", content: "Back", ontap: "showDocumentSelectorList"}
+                                {kind: "onyx.Button", classes: "k2e-icon-button", ontap: "showDocumentSelectorList", components: [
+                                    {tag: "i", classes: "icon-left-big icon-large"}
+                                ]}
                             ]}
                         ]}
                     ]}
@@ -130,7 +124,7 @@ enyo.kind(
             },
 
             bindings: [
-                { from: "cookieModel", to: "$.settings.cookieModel" }
+                { from: ".cookieModel", to: ".$.settings.cookieModel" }
             ],
 
             cookieModel: undefined,
@@ -164,7 +158,8 @@ enyo.kind(
             toggleFullscreen: function () {
                 var isFullscreen = this.isFullscreen();
 
-                this.$.toggle_fullscreen_button.setShowing(!isFullscreen);
+                this.$.toggle_fullscreen_button.addRemoveClass("visible", !isFullscreen);
+                this.$.document_scroller.addRemoveClass("k2e-fullscreen", !isFullscreen);
 
                 return isFullscreen ?
                     this.cancelFullscreen() :
@@ -409,23 +404,24 @@ enyo.kind(
             },
 
             scrollDocumentToTop: function (inSender, inEvent) {
-                this.$.document_scroller.scrollToTop();
+                this.$.document_scroller.scrollTo(0, 0);
             },
 
             handleDocumentSelected: function (inSender, inEvent) {
                 var docSelector,
                     doc;
-
                 if (enyo.Panels.isScreenNarrow()) {
                     this.$.main_panels.setIndex(1);
                 }
+                if (inEvent.reSelected) {
+                    return;
+                }
 
                 docSelector = inEvent.originator;
+                doc = this.documents.getDocumentByKey(docSelector.getKey());
                 this.log(docSelector.getTitle());
                 this.log(docSelector.getIndex());
-                doc = this.documents.getDocumentByKey(docSelector.getKey());
                 this.log(doc);
-                //this.$.document_view.setContent(doc.clippings[0].getContent());
                 this.$.document_view.displayDocument(doc);
                 this.$.document_scroller.setScrollTop(0);
                 this.$.document_scroller.setScrollLeft(0);
@@ -438,18 +434,13 @@ enyo.kind(
                 }
 
                 var selectionKeys = this.$.document_selector_list.getMultiSelectionKeys();
-                this.$.export_selected_button.setDisabled(Object.keys(selectionKeys).length === 0);
+                this.$.export_button.setDisabled(Object.keys(selectionKeys).length === 0);
             },
 
             handleDocumentScrolled: function (inSender, inEvent) {
-                var bounds = inEvent.bounds,
-                    scrollBounds = inEvent.scrollBounds;
+                var isNotAtTop = inEvent.scrollBounds.top !== 0;
 
-                if (scrollBounds.top === 0) {
-                    this.$.to_top_button.setShowing(false);
-                } else {
-                    this.$.to_top_button.setShowing(true);
-                }
+                this.$.to_top_button.addRemoveClass("visible", isNotAtTop);
             },
 
             handleExportBegin: function (inSender, inEvent) {
@@ -510,12 +501,11 @@ enyo.kind(
             },
 
             toggleMultiSelection: function (inSender, inEvent) {
+                var exportButton = this.$.export_button;
                 var multiSelectButton = this.$.multi_select_button;
-                multiSelectButton.addRemoveClass("active", !multiSelectButton.hasClass("active"));
                 this.$.document_selector_list.toggleMultiSelection();
-                this.$.export_button.setShowing(!this.$.export_button.getShowing());
-                this.$.export_selected_button.setShowing(!this.$.export_selected_button.getShowing());
-
+                exportButton.set("exportSelected", !exportButton.exportSelected);
+                multiSelectButton.addRemoveClass("active", !multiSelectButton.hasClass("active"));
                 this.$.app_toolbar.reflow();
             },
 
@@ -527,23 +517,16 @@ enyo.kind(
             },
 
             handleFontSizeChanged: function (inSender, inEvent) {
-                var settings = new SettingsSingleton();
-
                 this.log(inEvent);
-                // if (inEvent.sizePercent) {
-                //     this.$.document_scroller.applyStyle("font-size", inEvent.sizePercent + "%");
-                // }
                 if (this.$.document_scroller) {
-                    this.$.document_scroller.applyStyle("font-size", settings.getSetting("fontSize") + "%");
+                    this.$.document_scroller.applyStyle("font-size", inEvent.sizePercent + "%");
                 }
             },
 
             handleTextMarginChanged: function (inSender, inEvent) {
-                var settings = new SettingsSingleton(),
-                    padding = settings.getSetting("textMargin") + "%";
                 if (this.$.document_view) {
-                    this.$.document_view.applyStyle("padding-left", padding);
-                    this.$.document_view.applyStyle("padding-right", padding);
+                    this.$.document_view.removeClass("k2e-document-view-padding-" + inEvent.previous);
+                    this.$.document_view.addClass("k2e-document-view-padding-" + inEvent.current);
                 }
             },
 
@@ -656,12 +639,12 @@ enyo.kind(
 
                 this.inherited(arguments);
 
-                this.$.settings_button_label.setShowing(!isScreenNarrow);
                 this.$.back_toolbar.setShowing(isScreenNarrow);
                 if (!isScreenNarrow && !isFullscreen) {
                     this.$.main_panels.setIndex(0);
                 }
-                this.$.toggle_fullscreen_button.setShowing(isFullscreen);
+                this.$.toggle_fullscreen_button.addRemoveClass("visible", isFullscreen);
+                this.$.export_button.set("form", (isScreenNarrow &&'short') || 'long');
             },
 
             // This is probably needed because of the hackery going on in SettingsPanel.js
@@ -674,10 +657,13 @@ enyo.kind(
             create: function () {
                 var self = this;
                 self.inherited(arguments);
+                var settings = new SettingsSingleton();
+                var padding = settings.getSetting("textMargin");
+                var sizePercent = settings.getSetting("fontSize");
 
                 self.handleThemeChanged();
-                self.handleFontSizeChanged();
-                self.handleTextMarginChanged();
+                self.handleFontSizeChanged(undefined, { sizePercent:  sizePercent });
+                self.handleTextMarginChanged(undefined, { current: padding });
 
                 var cookieModel = new CookieModel();
                 cookieModel.fetch();

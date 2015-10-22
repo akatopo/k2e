@@ -22,10 +22,19 @@ enyo.kind({
             content: "Invalid clippings provided, try loading a correct 'My Clippings.txt' file"},
         {classes: "onyx-toolbar-inline", components: [
             {content: "Drag your kindle clippings here or "},
-            {kind: "onyx.Button", content: "Load from File", ontap: "loadFile"},
+            {kind: "onyx.Button", classes: "onyx-blue", ontap: "loadFile", components: [
+                {tag: "i", classes: "icon-upload icon-large"},
+                {tag: "span", content: "Load from File" }
+            ]},
             {tag: "span", style: "width: 0px; height: 0px; overflow: hidden;", components: [
                 {name: "file_picker", kind: "enyo.Input", type: "file", onchange: "handleFiles"}
             ]}
+        ]},
+        {classes: "k2e-clipping-picker-popup-info", components: [
+            {tag: "span", content: "The clippings file is in the "},
+            {tag: "b", content: "documents"},
+            {tag: "span", content: " folder of your kindle as "},
+            {tag: "b", content: "My clippings.txt"},
         ]}
 
     ],

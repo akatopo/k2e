@@ -4,12 +4,17 @@ enyo.kind({
     name: "DocumentSelectorList",
     kind: "enyo.Scroller",
     style: "height: 100%",
+    strategyKind: "ScrollStrategy",
     components: [
-        {fit: true, name: "DocumentSelectorRepeater", kind: "enyo.Repeater",
-            onSetupItem: "handleSetupItem", count: 0,
+        {
+            name: "DocumentSelectorRepeater",
+            kind: "enyo.Repeater",
+            onSetupItem: "handleSetupItem",
+            count: 0,
             components: [
                 {kind: "DocumentSelectorItem"}
-            ]}
+            ]
+        }
     ],
     published: {
         documentsRef: undefined,
@@ -23,7 +28,8 @@ enyo.kind({
     handleDocumentSelected: function (inSender, inEvent) {
         var docSelectorItem = inEvent.originator;
         if (this.selDocumentSelectorItem === docSelectorItem) {
-            return true; // stop event propagation
+            inEvent.reSelected = true;
+            return;
         }
 
         if (this.selDocumentSelectorItem) {
@@ -33,7 +39,7 @@ enyo.kind({
         this.selDocumentSelectorItem = docSelectorItem;
         // TODO: isInView is protected. Is there a better way to find whether a node/control is in view?
         if (!this.getStrategy().isInView(this.selDocumentSelectorItem.hasNode())) {
-            this.scrollToControl(this.selDocumentSelectorItem);
+            this.scrollIntoView(this.selDocumentSelectorItem, false);
         }
     },
     handleSetupItem: function (inSender, inEvent) {
@@ -147,8 +153,8 @@ enyo.kind({
         this.sortedKeys = keys.slice(0).sort(function (a, b) {
             var aUnixTimestamp = docMap[a].mostRecentDate.valueOf();
             var bUnixTimestamp = docMap[b].mostRecentDate.valueOf();
-            
-            return bUnixTimestamp - aUnixTimestamp; 
+
+            return bUnixTimestamp - aUnixTimestamp;
         });
 
         this.$.DocumentSelectorRepeater.setCount(this.documentsRef.length);
@@ -169,18 +175,21 @@ enyo.kind({
         key: undefined
     },
     components: [
-        {
-            name: "checkbox",
-            kind: "onyx.Checkbox",
-            showing: false,
-            events: {
-                onDocumentMultiSelected: ""
+        { classes: "k2e-document-selector-item-separator" },
+        { classes: "k2e-document-selector-item-container", components: [
+            {
+                name: "checkbox",
+                kind: "onyx.Checkbox",
+                showing: false,
+                events: {
+                    onDocumentMultiSelected: ""
+                },
+                handlers: {
+                    onActivate: "doDocumentMultiSelected"
+                }
             },
-            handlers: {
-                onActivate: "doDocumentMultiSelected"
-            }
-        },
-        {name: "label", classes: "enyo-inline k2e-document-selector-item-label"}
+            {name: "label", classes: "enyo-inline k2e-document-selector-item-label"}
+        ]}
     ],
     events: {
         onDocumentSelected: ""

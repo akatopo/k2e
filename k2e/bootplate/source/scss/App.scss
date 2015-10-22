@@ -1,47 +1,99 @@
 /*
-	Put anything you reference with "url()" in ../assets/
-	This way, you can minify your application, and just remove the "source" folder for production
+  Put anything you reference with "url()" in ../assets/
+  This way, you can minify your application, and just remove the "source" folder for production
 */
 
+@import 'variables';
 @import 'theme-mixins';
 @import 'fontello';
 
-$assetPath: "../../assets";
 $overlay-button-right: 15px;
 $overlay-button-bottom: 10px;
 $overlay-button-top: 10px;
 
 /***********************************************************************************************/
 
-@mixin apply-box-shadow($offset-x, $offset-y, $blur-radius, $color) {
-    -moz-box-shadow: $offset-x $offset-y $blur-radius $color;
-    -webkit-box-shadow: $offset-x $offset-y $blur-radius $color;
-    box-shadow: $offset-x $offset-y $blur-radius $color;
-}
-
 #app {
-	background-color: #333;
+  background-color: #333;
 }
 
 .k2e-color-error {
-    color: #F01A1A;
+  color: $color-error;
 }
 
 .k2e-main-panel {
-	@include apply-box-shadow(-4px, 0, 4px, rgba(0, 0, 0, 0.3));
+  box-shadow: -4px 0 4px rgba(0, 0, 0, 0.3);
 }
 
 .onyx-toolbar .k2e-export-button {
-   background-color: #35A8EE;
+  background-color: $color-evernote-green;
+}
+
+.onyx-button {
+  transition: visibility 0s ease-in 0.3s,
+    opacity 0.3s ease-in;
+}
+
+.onyx-radiobutton {
+  color: #292929;
+}
+
+.onyx-button:hover,
+.onyx-radiobutton:hover {
+  cursor: pointer;
+}
+.onyx-slider-knob:hover {
+  cursor: move;
 }
 
 .k2e-sidebar {
-    width: 20%;
+  width: 25%;
+}
+
+.k2e-icon-button {
+  padding: 6px;
+}
+
+.onyx-toolbar .k2e-icon-button {
+  background-image: none;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.onyx-toolbar .k2e-icon-button:hover {
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+}
+
+.onyx-toolbar .k2e-icon-button.active:hover {
+  text-shadow: none;
+}
+
+.onyx-toolbar .k2e-icon-button.active {
+  border-color: rgba(0, 0, 0, 0.5);
+  background-color: #707070;
+  box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.onyx-button.k2e-caution-button {
+  background-color: lighten($color-error, 10%);
+  color: $color-light;
+}
+
+.k2e-hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.k2e-hidden.visible {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
 }
 
 // hack for fulscreen reflow strangeness
 
-.k2e-document-scroller {
+.k2e-document-scroller.k2e-fullscreen {
   height: 100%!important;
 }
 
@@ -49,175 +101,280 @@ $overlay-button-top: 10px;
 /* Document selector list */
 
 .k2e-document-selector-item {
-	/*padding-top: 5px;
-	padding-bottom: 5px;
-	padding-left: 5px;
-	margin-top: 1px;
-	margin-bottom: 1px;*/
-	border-bottom: 1px solid #0E0E0E;
-	background-color: #333;
-	color: white;
-	padding: 16px 12px;
-    height: (2*16+32px); // checkbox is 32px x 32px
-	overflow: hidden;
-	white-space: nowrap;
-	position: relative;
+  background-color: #333;
+  color: $color-light;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.k2e-document-selector-item.onyx-selected
-{
-	background-color: #226B9A;
+.k2e-document-selector-item-container {
+  // border: 2px solid transparent;
+  padding: 16px 12px;
+  height: 32px; // checkbox is 32px x 32px
+}
+
+.k2e-document-selector-item-separator {
+  left: 2%;
+  right: 2%;
+  border-top: 1px solid #666;
+  position: absolute;
+  transition: border-color 0.2s ease-in-out;
+
+  @media (max-width: $screen-narrow-min) {
+    left: 2%;
+    right: 2%;
+  }
+
+  @media (min-width: $screen-narrow-max) and (max-width: $screen-md-max) {
+    left: 5%;
+    right: 5%;
+  }
+}
+
+.k2e-document-selector-item.onyx-selected {
+  background-color: #226B9A;
+}
+
+.k2e-document-selector-item:hover {
+  background-color: #226B9A;
+}
+
+.k2e-document-selector-item:first-child .k2e-document-selector-item-separator,
+.k2e-document-selector-item:hover .k2e-document-selector-item-separator,
+.k2e-document-selector-item:hover + .k2e-document-selector-item .k2e-document-selector-item-separator {
+  border-color: transparent;
+}
+
+// .k2e-document-selector-item.onyx-selected .k2e-document-selector-item-container {
+//   border-color: #666;
+// }
+.k2e-document-selector-item.onyx-selected:hover .k2e-document-selector-item-container {
+  border-color: transparent;
+}
+
+.k2e-document-selector-item.onyx-selected .k2e-document-selector-item-separator,
+.k2e-document-selector-item.onyx-selected + .k2e-document-selector-item .k2e-document-selector-item-separator {
+  border-color: transparent;
 }
 
 .k2e-document-selector-item-label {
-	overflow: hidden; 
-	text-overflow: ellipsis;
-	width: 90%; /* hack */
-	padding-left: 10px;
-	line-height: (32px - 1px); // vertically aligned text
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90%; /* hack */
+  padding-left: 10px;
+  line-height: (32px - 1px); // vertically aligned text
 }
 
 .k2e-document-selector-item .onyx-checkbox {
-    vertical-align: baseline;
+  vertical-align: baseline;
 }
 
 /***********************************************************************************************/
 /* Document Display */
 
 .k2e-to-top-button {
-    position: fixed;
-    z-index: 120;
-    right: $overlay-button-right;
-    bottom: $overlay-button-bottom;
+  position: fixed;
+  z-index: 120;
+  right: $overlay-button-right;
+  bottom: $overlay-button-bottom;
 }
 
 .k2e-toggle-fullscreen-button {
-    position: fixed;
-    z-index: 120;
-    top: $overlay-button-top;
-    right: $overlay-button-right;
+  position: fixed;
+  z-index: 120;
+  top: $overlay-button-top;
+  right: $overlay-button-right;
 }
 
 .k2e-document-view {
-    @include k2e-base-theme();
+  @include k2e-base-theme();
 }
 
 /** Dark theme **/
 .k2e-document-view-dark {
-    @include k2e-dark-theme();
+  @include k2e-dark-theme();
+  // @include k2e-light-theme();
 }
 
 /** Light theme **/
 .k2e-document-view-light {
-    @include k2e-light-theme();
+  @include k2e-light-theme();
 }
 
 /** OMG ponies theme **/
 .k2e-document-view-omg-ponies {
-    @include k2e-omg-ponies-theme();
+  @include k2e-omg-ponies-theme();
 }
 
+.k2e-document-view-padding-10 {
+  padding-left: 10%;
+  padding-right: 10%;
+
+  @media (max-width: $screen-xs-max) {
+    padding-left: 2%;
+    padding-right: 2%;
+  }
+}
+
+.k2e-document-view-padding-20 {
+  padding-left: 15%;
+  padding-right: 15%;
+
+  @media (max-width: $screen-xs-max) {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+}
+
+.k2e-document-view-padding-30 {
+  padding-left: 20%;
+  padding-right: 20%;
+
+  @media (max-width: $screen-xs-max) {
+    padding-left: 10%;
+    padding-right: 10%;
+  }
+}
+
+.k2e-document-view-padding-40 {
+  padding-left: 25%;
+  padding-right: 25%;
+
+  @media (max-width: $screen-xs-max) {
+    padding-left: 15%;
+    padding-right: 15%;
+  }
+}
 
 /***********************************************************************************************/
 /* Settings panel */
 
-/*.k2e-settings-panel {
-	width: 400px;
-}*/
-
 .k2e-settings-panel > * {
-	padding: 10px;
-	min-height: 30px;
-	line-height: 30px;
+  padding: 10px;
+  min-height: 30px;
+  line-height: 30px;
 }
 
 .k2e-settings-item {
-    background-color: #444;
-    border-color: #555;
-    color: white;
-	padding: 8px;
+  background-color: #444;
+  border-color: #555;
+  color: $color-light;
+  padding: 8px;
 
-    &:first-child {
-        border-top-color: #555;
-    }
+  @media (max-width: $screen-xs-min) {
+    // padding: 4px;
+    font-size: 90%
+  }
+
+  &:first-child {
+    border-top-color: #555;
+  }
+}
+
+.k2e-settings-item.k2e-settings-item-caution {
+  border-color: lighten($color-error, 10%);
+
+  &:first-child {
+    border-top-color: lighten($color-error, 10%);
+  }
 }
 
 .k2e-settings-item-label-disabled {
-	color: gray;
+  color: gray;
 }
 
 .k2e-settings-text-input {
-	display: inline-block;
-	width: 140px;
+  display: inline-block;
+  width: 140px;
 }
 
 .k2e-settings-action-item-button {
-	width: 100px;
+  width: 100px;
 }
 
 .k2e-settings {
-	position: absolute;
-	top: 57px; /* main toolbar height */
-	left: 0;
-	bottom: 0;
-	background: #333;
-	z-index: 1;
-	width: 480px;
+  position: absolute;
+  top: 57px; /* main toolbar height */
+  left: 0;
+  bottom: 0;
+  background: #333;
+  z-index: 1;
+  width: 480px;
+
+  @media (max-width: $screen-xs-min) {
+    width: 100%;
+  }
 }
 
 .k2e-settings-active {
-    @include apply-box-shadow(4px, 0, 4px, rgba(0, 0, 0, 0.3));
+  box-shadow: 4px 0 4px rgba(0, 0, 0, 0.3);
 }
 
 /***********************************************************************************************/
 /* Clipping picker popup */
 
 .k2e-clipping-picker-popup {
-	/*width: 95%;*/
-	/*height: 95%;*/
-	/*vertical-align: middle;*/
-	text-align: center;
-	padding: 30px;
+  /*width: 95%;*/
+  /*height: 95%;*/
+  /*vertical-align: middle;*/
+  text-align: center;
+  padding: 30px;
+}
+
+.k2e-clipping-picker-popup-info {
+ color: #CCC;
+ font-size: 80%;
 }
 
 /***********************************************************************************************/
 /* Popup */
 
 .k2e-progress-popup {
-	padding: 30px;
-	text-align: center;
+  padding: 30px;
+  text-align: center;
 }
 
 /***********************************************************************************************/
 /* Accordion */
 
 .k2e-accordion {
-	padding: 10px;
+  padding: 10px;
 }
 
 .k2e-accordion-item-header {
-	margin-top: 10px;
-	margin-bottom: 5px;
-	background-color: #4C4C4C;
-	text-transform: uppercase;
-	font-weight: bold;
-	font-size: 14px;
-	border: none;
-    height: 36px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  background-color: #4C4C4C;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+  border: none;
+  height: 36px;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .k2e-accordion-item-expander {
-    width: 36px;
-    height: 36px;
-    margin: 0;
-    line-height: (36px - 1px);
-    text-align: center;
-    color: white;
-    font-size: 10px;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  line-height: (36px - 1px);
+  text-align: center;
+  color: $color-light;
+  font-size: 10px;
+
+  i:before {
+    margin-top: 13px;
+  }
 }
 
 .k2e-accordion-item-content {
-	border-left: 1px solid #555;
-	padding-left: 5px;
-	color: white;
+  border-left: 1px solid #555;
+  padding-left: 5px;
+  color: $color-light;
 }

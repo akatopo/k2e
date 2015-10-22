@@ -1,7 +1,16 @@
+@import 'variables';
+
+@mixin k2e-icon-button-reset {
+    background-image: none;
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    color: $color-light;
+}
 
 @mixin k2e-base-theme {
     $document-horizontal-padding: 20%;
-    $document-max-width: (1920 - 1920 * 0.2)px;// - $document-horizontal-padding;
+    $document-max-width: (1920 - 1920 * 0.2px);// - $document-horizontal-padding;
 
     font-size: 100%;
     font-family: Georgia, serif; //"minion-pro", Palatino
@@ -9,20 +18,16 @@
     box-sizing: border-box;
     margin: 0 auto;
     max-width: $document-max-width;
-    padding: 1.2em $document-horizontal-padding;
+    padding-top: 1.2em;
+    padding-bottom: 1.2em;
     vertical-align: baseline;
     line-height: 1;
 
     a {
-        -ms-word-break: break-all;
-            word-break: break-all;
-
-            /* Non standard for webkit */
-            word-break: break-word;
-
-        -webkit-hyphens: auto;
-           -moz-hyphens: auto;
-                hyphens: auto;
+        word-break: break-all;
+        /* Non standard for webkit */
+        word-break: break-word;
+        hyphens: auto;
     }
 
     h1 {
@@ -94,14 +99,18 @@
         color: #A6B5C2;
     }
 
-    ~ .k2e-to-top-button {
-        color: #f2f2f2;
+    .k2e-to-top-button {
+        color: $color-light;
         background-color: #555656;
         border-color: rgba(15, 15, 15, 0.5);
+
+        @media (max-width: $screen-narrow-max) {
+            @include k2e-icon-button-reset;
+        }
     }
 
     .k2e-toggle-fullscreen-button {
-        color: #f2f2f2;
+        color: $color-light;
         background-color: #555656;
         border-color: rgba(15, 15, 15, 0.5);
     }
@@ -133,14 +142,18 @@
         color: #8d8d8d;
     }
 
-    ~ .k2e-to-top-button {
+    .k2e-to-top-button {
         color: #555656;
-        background-color: #f2f2f2;
+        background-color: $color-light;
         border-color: rgba(15, 15, 15, 0.5);
+
+        @media (max-width: $screen-narrow-max) {
+            @include k2e-icon-button-reset;
+        }
     }
 
     .k2e-toggle-fullscreen-button {
-        background-color: #f2f2f2;
+        background-color: $color-light;
         color: #555656;
         border-color: rgba(15, 15, 15, 0.5);
     }
@@ -148,9 +161,19 @@
 
 @mixin k2e-omg-ponies-theme {
     background-color: white;
-    color: pink;
+    background: url('#{$path-assets}/ponies-blurred.png') no-repeat center center fixed; 
+    background-size: cover;
+    
+    color: black;
+    text-shadow: -.07em .07em white;
+    
+    h1 {
+        -webkit-text-stroke: 1px black;
+        color: pink;
+    }
 
     a {
+        text-shadow: -.07em .07em darken(#2FC2EF, 50%);
         color: #2FC2EF;
         &:visited {
             color: #2FC2EF;
@@ -162,5 +185,21 @@
     .k2e-document-view-clip-header {
         border-color: black;
         color: black;
+    }
+
+    .k2e-to-top-button {
+        color: #555656;
+        background-color: $color-light;
+        border-color: rgba(15, 15, 15, 0.5);
+
+        @media (max-width: $screen-narrow-max) {
+            @include k2e-icon-button-reset;
+        }
+    }
+
+    .k2e-toggle-fullscreen-button {
+        background-color: $color-light;
+        color: #555656;
+        border-color: rgba(15, 15, 15, 0.5);
     }
 }

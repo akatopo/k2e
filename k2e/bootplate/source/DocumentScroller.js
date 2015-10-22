@@ -11,6 +11,7 @@ enyo.kind({
     handlers: {
         onScroll: "onScrollHandler"
     },
+    strategyKind: "ScrollStrategy",
     onScrollHandler: function (inSender, inEvent) {
         var bounds = this.getBounds(),
             scrollBounds = this.getScrollBounds();

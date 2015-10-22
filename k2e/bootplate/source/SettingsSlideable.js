@@ -15,13 +15,13 @@ enyo.kind({
     cookieModel: undefined,
 
     components: [
-        {name: "scroller", kind: "enyo.Scroller", fit: true, style: "height: 100%", components: [
+        {name: "scroller", kind: "enyo.Scroller", strategyKind: "ScrollStrategy", fit: true, style: "height: 100%", components: [
             { name: "panel", kind: "SettingsPanel"}
         ]}
     ],
 
     bindings: [
-        { from: "cookieModel", to: "$.panel.cookieModel" }
+        { from: ".cookieModel", to: ".$.panel.cookieModel" }
     ],
 
     toggle: function () {
