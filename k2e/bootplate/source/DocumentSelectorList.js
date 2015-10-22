@@ -80,13 +80,10 @@ enyo.kind({
         }
     },
     disableMultiSelection: function () {
-        var i;
-
+        this.items.forEach(function (item) {
+            item.setMultiSelected(false);
+        });
         this.multiSelected = false;
-
-        for (i = 0; i < this.items.length; i += 1) {
-            this.items[i].setMultiSelected(false);
-        }
     },
     getMultiSelectionKeys: function () {
         var i,

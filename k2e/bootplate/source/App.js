@@ -504,6 +504,7 @@ enyo.kind(
                 var exportButton = this.$.export_button;
                 var multiSelectButton = this.$.multi_select_button;
                 this.$.document_selector_list.toggleMultiSelection();
+                exportButton.setDisabled(!exportButton.exportSelected);
                 exportButton.set("exportSelected", !exportButton.exportSelected);
                 multiSelectButton.addRemoveClass("active", !multiSelectButton.hasClass("active"));
                 this.$.app_toolbar.reflow();
