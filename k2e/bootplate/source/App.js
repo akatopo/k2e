@@ -484,12 +484,18 @@ enyo.kind(
                     inEvent.altGraphKey ||
                     inEvent.metaKey;
 
-                if (!modKeyPressed && inEvent.keyCode === 70) { // 'f'
+                if (modKeyPressed) {
+                    return;
+                }
+
+                if (inEvent.keyCode === 70) { // 'f'
                     this.toggleFullscreen();
-                } else if (!modKeyPressed && inEvent.keyCode === 74) { // 'j'
+                } else if (inEvent.keyCode === 74) { // 'j'
                     this.$.document_selector_list.selectNextDocument();
-                } else if (!modKeyPressed && inEvent.keyCode === 75) { // 'k'
+                } else if (inEvent.keyCode === 75) { // 'k'
                     this.$.document_selector_list.selectPrevDocument();
+                } else if (inEvent.keyCode === 27) { // esc
+                    this.$.main_panels.setIndex(0);
                 }
                 return true;
             },
