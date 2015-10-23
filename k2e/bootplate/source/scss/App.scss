@@ -36,11 +36,16 @@ $overlay-button-top: 10px;
 
 .onyx-radiobutton {
   color: #292929;
+  text-shadow: none;
 }
 
 .onyx-button:hover,
 .onyx-radiobutton:hover {
   cursor: pointer;
+}
+.onyx-button.disabled:hover,
+.onyx-button[disabled]:hover {
+  cursor: default;
 }
 .onyx-slider-knob:hover {
   cursor: move;
@@ -138,26 +143,24 @@ $overlay-button-top: 10px;
   background-color: #226B9A;
 }
 
-.k2e-document-selector-item:hover {
-  background-color: #226B9A;
-}
-
-.k2e-document-selector-item:first-child .k2e-document-selector-item-separator,
-.k2e-document-selector-item:hover .k2e-document-selector-item-separator,
-.k2e-document-selector-item:hover + .k2e-document-selector-item .k2e-document-selector-item-separator {
-  border-color: transparent;
-}
-
-// .k2e-document-selector-item.onyx-selected .k2e-document-selector-item-container {
-//   border-color: #666;
-// }
-.k2e-document-selector-item.onyx-selected:hover .k2e-document-selector-item-container {
+.k2e-document-selector-item:first-child .k2e-document-selector-item-separator {
   border-color: transparent;
 }
 
 .k2e-document-selector-item.onyx-selected .k2e-document-selector-item-separator,
 .k2e-document-selector-item.onyx-selected + .k2e-document-selector-item .k2e-document-selector-item-separator {
   border-color: transparent;
+}
+
+@media (min-width: $screen-narrow-max) {
+  .k2e-document-selector-item:hover {
+    background-color: #226B9A;
+  }
+
+  .k2e-document-selector-item:hover .k2e-document-selector-item-separator,
+  .k2e-document-selector-item:hover + .k2e-document-selector-item .k2e-document-selector-item-separator {
+    border-color: transparent;
+  }
 }
 
 .k2e-document-selector-item-label {
