@@ -1,19 +1,23 @@
-/*global enyo */
+(function () {
 
 enyo.kind({
-    name: "AsyncSemaphore",
-    kind: "enyo.Component",
-    published: {
-        lock: 0,
-        func: undefined
-    },
-    v: function () {
-        this.lock += 1;
-    },
-    p: function () {
-        this.lock -= 1;
-        if (this.lock === 0 && this.func) {
-            this.func();
-        }
+  name: 'AsyncSemaphore',
+  kind: 'enyo.Component',
+  published: {
+    lock: 0,
+    func: undefined
+  },
+  v: function () {
+    ++this.lock;
+  },
+  p: function () {
+    --this.lock;
+    if (this.lock === 0 && this.func) {
+      this.func();
     }
+  }
 });
+
+})();
+
+

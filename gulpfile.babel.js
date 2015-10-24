@@ -15,6 +15,7 @@ import msbuild from 'gulp-msbuild';
 import jshint from 'gulp-jshint';
 import cached from 'gulp-cached';
 import autoprefixer from 'gulp-autoprefixer';
+import jscs from 'gulp-jscs';
 
 const BASE_BOOTPLATE_PATH = './k2e/bootplate';
 const BASE_SOURCE_PATH = './k2e/bootplate/source';
@@ -68,6 +69,9 @@ function lint() {
   return gulp.src(`${BASE_SOURCE_PATH}/*.js`)
     .pipe(cached('linting'))
     .pipe(jshint())
+    .pipe(jscs())
+    .pipe(jscs.reporter())
+    .pipe(jscs.reporter('fail'))
     .pipe(jshint.reporter(jshintStylish))
     .pipe(jshint.reporter('fail'));
 }

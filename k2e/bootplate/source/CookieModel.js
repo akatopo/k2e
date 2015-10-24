@@ -1,11 +1,9 @@
 (function () {
 
 enyo.kind({
-    name:  "CookieModel",
-
-    kind: "enyo.Model",
-
-    source: "cookieSource"
+  name: 'CookieModel',
+  kind: 'enyo.Model',
+  source: 'cookieSource'
 });
 
 })();
