@@ -1,4 +1,4 @@
-/*global AsyncSemaphore, SettingsSingleton, linkify, Clipping, Documents, Element, CookieModel, Constants */
+/* global k2e */
 
 (function () {
 
@@ -30,20 +30,20 @@ enyo.kind({
 
   components: [
     {kind: 'enyo.Signals', onkeydown: 'handleKeydown', onFullscreenChange: 'toggleDistractionFreeMode'},
-    {name: 'clippingPickerPopup', kind: 'ClippingPickerPopup'},
-    {name: 'exportPopup', kind: 'ProgressPopup' },
+    {name: 'clippingPickerPopup', kind: 'k2e.ClippingPickerPopup'},
+    {name: 'exportPopup', kind: 'k2e.ProgressPopup' },
     {name: 'appToolbar', kind: 'onyx.Toolbar', layoutKind: 'FittableColumnsLayout', components: [
       {name: 'settingsButton', kind: 'onyx.Button', classes: 'k2e-icon-button', ontap: 'toggleSettings', components: [
         {tag: 'i', classes: 'icon-menu icon-large'}
       ]},
       {content: 'k2e', fit: true},
-      {name: 'exportButton', kind: 'ExportButton', ontap: 'prepareDocumentsAndExport'}
+      {name: 'exportButton', kind: 'k2e.ExportButton', ontap: 'prepareDocumentsAndExport'}
     ]},
-    {name: 'settings', kind: 'SettingsSlideable'},
+    {name: 'settings', kind: 'k2e.settings.SettingsSlideable'},
     {kind: 'FittableColumns', fit: true, components: [
       {name: 'mainPanels', kind: 'Panels', fit: true, arrangerKind: 'CollapsingArranger', realtimeFit: true, wrap: false, components: [
         {name: 'sidebar', classes: 'k2e-sidebar', layoutKind: 'FittableRowsLayout', components: [
-          {name: 'documentSelectorList', fit: true, kind: 'DocumentSelectorList'},
+          {name: 'documentSelectorList', fit: true, kind: 'k2e.annotations.DocumentSelectorList'},
           {name: 'sidebarToolbar', kind: 'onyx.Toolbar', layoutKind: 'FittableColumnsLayout', components: [
             {name: 'multiSelectButton', kind: 'onyx.Button', classes: 'k2e-icon-button', ontap: 'toggleMultiSelection', components: [
               {tag: 'i', classes: 'icon-check icon-large'}
@@ -51,8 +51,8 @@ enyo.kind({
           ]}
         ]},
         {kind: 'FittableRows', classes: 'k2e-main-panel', fit: true, components: [
-          {name: 'documentScroller', kind: 'DocumentScroller', components: [
-            {name: 'documentView', kind: 'DocumentView'},
+          {name: 'documentScroller', kind: 'k2e.annotations.DocumentScroller', fit: true, components: [
+            {name: 'documentView', kind: 'k2e.annotations.DocumentView'},
             {name: 'toggleFullscreenButton', classes: 'k2e-toggle-fullscreen-button k2e-icon-button k2e-hidden',
               ontap: 'toggleFullscreen', kind: 'onyx.Button', components: [
                 {tag: 'i', classes: 'icon-resize-small icon-large'}
@@ -139,7 +139,7 @@ enyo.kind({
 
   exportDocuments: function (inSender, inEvent) {
     this.log('Export processing done');
-    var loc = location.protocol + '//' + location.host + Constants.EXPORT_PATH;
+    var loc = location.protocol + '//' + location.host + k2e.Constants.EXPORT_PATH;
     var ajax = new enyo.Ajax({
       url: loc,
       contentType: 'application/json',
@@ -173,8 +173,8 @@ enyo.kind({
     if (inResponse === 401) {
       var cookieModel = self.$.settings.get('cookieModel');
       cookieModel.fetch();
-      cookieModel.set(Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
-      cookieModel.set(Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
+      cookieModel.set(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
+      cookieModel.set(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
       cookieModel.commit();
       this.$.exportPopup.failed('Export failed', 'Try exporting again');
     }
@@ -186,7 +186,7 @@ enyo.kind({
   },
 
   evernoteAuthPopup: function (cb, err) {
-    var popup = window.open(Constants.AUTH_PATH, Constants.AUTH_WINDOW_NAME, Constants.AUTH_WINDOW_FEATURES);
+    var popup = window.open(k2e.Constants.AUTH_PATH, k2e.Constants.AUTH_WINDOW_NAME, k2e.Constants.AUTH_WINDOW_FEATURES);
 
     var pollTimer = window.setInterval(function () {
       try {
@@ -194,11 +194,11 @@ enyo.kind({
           window.clearInterval(pollTimer);
           (err || function () {})();
         }
-        else if (popup.document.URL.indexOf(Constants.AUTH_DONE_QUERY_PARAM) !== -1) {
+        else if (popup.document.URL.indexOf(k2e.Constants.AUTH_DONE_QUERY_PARAM) !== -1) {
           window.clearInterval(pollTimer);
           popup.close();
-          if (document.cookie.indexOf(Constants.ACCESS_TOKEN_COOKIE_NAME) !== -1 &&
-              document.cookie.indexOf(Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) !== -1
+          if (document.cookie.indexOf(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME) !== -1 &&
+              document.cookie.indexOf(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) !== -1
           ) {
             (cb || function () {})();
           }
@@ -214,8 +214,8 @@ enyo.kind({
   prepareDocumentsAndExport: function (/*inSender, inEvent*/) {
     this.$.exportPopup.begin('Exporting clippings...');
 
-    if (document.cookie.indexOf(Constants.ACCESS_TOKEN_COOKIE_NAME) !== -1 &&
-        document.cookie.indexOf(Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) !== -1
+    if (document.cookie.indexOf(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME) !== -1 &&
+        document.cookie.indexOf(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) !== -1
     ) {
       this.cookieModel.fetch();
       doExport(this);
@@ -232,7 +232,7 @@ enyo.kind({
     function doExport(app) {
       app.handleExportBegin();
 
-      var settings = new SettingsSingleton();
+      var settings = new k2e.settings.SettingsSingleton();
       var ignoredTitleSet = {};
       var ignoredTitleList = settings.getSetting('ignoredTitleList');
       var docExportArray;
@@ -287,7 +287,7 @@ enyo.kind({
 
   setSuggestedDataToClipping: function (clippingExport, makeQuotedFlag, retryFlag) {
     var self = this;
-    var settings = new SettingsSingleton();
+    var settings = new k2e.settings.SettingsSingleton();
     var quoted = (makeQuotedFlag === undefined) ? true : makeQuotedFlag;
     var retry = (retryFlag === undefined) ? true : retryFlag;
     var loc = settings.getSetting('googleSearchApiLoc');
@@ -492,7 +492,7 @@ enyo.kind({
   },
 
   handleThemeChanged: function (inSender, inEvent) {
-    var settings = new SettingsSingleton();
+    var settings = new k2e.settings.SettingsSingleton();
 
     this.log(inEvent);
     this.setTheme(settings.getSetting('themeName'));
@@ -513,7 +513,7 @@ enyo.kind({
   },
 
   parseKindleClippings: function (kindleClippings) {
-    var docs = new Documents();
+    var docs = new k2e.annotations.Documents();
     var delimeterRegExp = /\r?\n==========\r?\n/;
 
     kindleClippings = kindleClippings.split(delimeterRegExp);
@@ -554,14 +554,14 @@ enyo.kind({
       type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
       loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
       timeStamp = /^Added on (.*)$/.exec(subtitle[subtitle.length - 1])[1];
-      content = linkify(enyo.dom.escape(res[3]), { targetBlank: true });
+      content = k2e.util.linkify(enyo.dom.escape(res[3]), { targetBlank: true });
 
       // Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
       if (type !== 'Bookmark' && type !== 'Clipping') {
         docs.addClippingToDocument(
           title,
           author,
-          new Clipping({type: type, loc: loc, timeStamp: timeStamp,
+          new k2e.annotations.Clipping({type: type, loc: loc, timeStamp: timeStamp,
             content: content})
           );
       }
@@ -629,9 +629,7 @@ enyo.kind({
     this.$.exportButton.set('form', (isScreenNarrow && 'short') || 'long');
   },
 
-  // This is probably needed because of the hackery going on in SettingsPanel.js
   rendered: function () {
-    var self = this;
     this.inherited(arguments);
     this.$.clippingPickerPopup.show();
   },
@@ -639,7 +637,7 @@ enyo.kind({
   create: function () {
     var self = this;
     self.inherited(arguments);
-    var settings = new SettingsSingleton();
+    var settings = new k2e.settings.SettingsSingleton();
     var padding = settings.getSetting('textMargin');
     var sizePercent = settings.getSetting('fontSize');
 
@@ -647,11 +645,11 @@ enyo.kind({
     self.handleFontSizeChanged(undefined, { sizePercent:  sizePercent });
     self.handleTextMarginChanged(undefined, { current: padding });
 
-    var cookieModel = new CookieModel();
+    var cookieModel = new k2e.CookieModel();
     cookieModel.fetch();
     self.set('cookieModel', cookieModel);
 
-    exportPreparationSem = new AsyncSemaphore({func: function () { self.exportDocuments(); } });
+    exportPreparationSem = new k2e.util.AsyncSemaphore({func: function () { self.exportDocuments(); } });
 
     // FIXME: Get data by dnd or file chooser
     // if (!window.XMLHttpRequest)

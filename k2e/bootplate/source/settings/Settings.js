@@ -1,7 +1,9 @@
-/*global DefaultSettings */
+/* global k2e */
+
+(function () {
 
 enyo.kind({
-  name: 'DefaultSettings',
+  name: 'k2e.settings.DefaultSettings',
   kind: enyo.Object,
   published: {
     themeName: '"Dark"',
@@ -15,6 +17,8 @@ enyo.kind({
     googleSearchApiLoc: '"https://www.googleapis.com/customsearch/v1?"'
   }
 });
+
+k2e.settings.SettingsSingleton = SettingsSingleton;
 
 function SettingsSingleton() {
   if (arguments.callee.singletonInstance) {
@@ -31,7 +35,7 @@ function SettingsSingleton() {
   };
   arguments.callee.singletonInstance = this;
 
-  this.defaultSettings = new DefaultSettings();
+  this.defaultSettings = new k2e.settings.DefaultSettings();
 
   this.setSetting = function (settingName, settingValue) {
     if (settingExists(settingName)) {
@@ -61,7 +65,4 @@ function SettingsSingleton() {
   };
 }
 
-function SettingsSingletonInstance() {
-  var instance = new SettingsSingleton();
-  return instance;
-}
+})();

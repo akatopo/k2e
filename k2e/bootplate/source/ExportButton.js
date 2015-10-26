@@ -6,7 +6,7 @@ var LABELS = {
 };
 
 enyo.kind({
-  name: 'ExportButton',
+  name: 'k2e.ExportButton',
   kind: 'onyx.Button',
   classes: 'k2e-export-button',
   form: 'long',

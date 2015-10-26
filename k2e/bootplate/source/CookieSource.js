@@ -1,8 +1,8 @@
-/* global CookieSource, CookieModel, Cookies */
+/* global k2e, Cookies */
 (function () {
 
 enyo.kind({
-  name: 'CookieSource',
+  name: 'k2e.CookieSource',
   kind: 'enyo.Source',
   fetch: function (rec, opts) {
     opts.success(Cookies.get());
@@ -26,6 +26,6 @@ enyo.kind({
   }
 });
 
-new CookieSource({ name: 'cookieSource' });
+new k2e.CookieSource({ name: 'cookieSource' });
 
 })();

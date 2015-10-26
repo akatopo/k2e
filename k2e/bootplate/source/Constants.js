@@ -1,7 +1,7 @@
 (function () {
 
 enyo.kind({
-  name: 'Constants',
+  name: 'k2e.Constants',
   kind: 'enyo.Object',
   statics: {
     'EXPORT_PATH': '/Default.aspx/Export',

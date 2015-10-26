@@ -1,7 +1,7 @@
 (function () {
 
 enyo.kind({
-  name: 'DocumentView',
+  name: 'k2e.annotations.DocumentView',
   classes: 'k2e-document-view',
   components: [],
   displayDocument: function (doc) {

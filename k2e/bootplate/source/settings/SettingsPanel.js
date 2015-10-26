@@ -1,9 +1,9 @@
-/* global CookieSource, CookieModel, Cookies, SettingsSingleton, Constants */
+/* global k2e */
 
 (function () {
 
 enyo.kind({
-  name: 'SettingsPanel',
+  name: 'k2e.settings.SettingsPanel',
   kind: 'enyo.Control',
   classes: 'k2e-settings-panel',
   handlers: {
@@ -13,8 +13,8 @@ enyo.kind({
     onFullscreenRequest: ''
   },
   components: [
-    {name: 'settingsPopup', kind: 'ProgressPopup'},
-    {kind: 'Accordion', components: [
+    {name: 'settingsPopup', kind: 'k2e.ProgressPopup'},
+    {kind: 'k2e.Accordion', components: [
       {content: 'Appearance', components: [
         {kind: 'onyx.Groupbox', components: [
           {name: 'themeName', kind: 'SettingsValueItem', inputComponent: { kind: 'SettingsThemeRadioGroup' }, label: 'Theme'},
@@ -34,14 +34,14 @@ enyo.kind({
       //           label: 'Periodical Article Extraction', onSettingChanged: 'handleExtractionSettingChanged'},
       //         {name: 'periodicalTitleList', kind: 'SettingsValueItem', inputComponent: {kind: 'SettingsTextInput'},
       //                 label: 'Periodical titles',
-      //                 disabled: !(new SettingsSingleton()).getSetting('articleExtraction')},
+      //                 disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
       //         {name: 'googleSearchApiKey', kind: 'SettingsValueItem', inputComponent: {kind: 'SettingsTextInput', type: 'password'},
       //                 label: 'Google Search Api Key',
-      //                 disabled: !(new SettingsSingleton()).getSetting('articleExtraction')},
+      //                 disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
       //         {name: 'googleSearchApiCx', kind: 'SettingsValueItem', defaultInputKind: 'SettingsTextInput', label: 'Google Search Api Cx',
-      //                 disabled: !(new SettingsSingleton()).getSetting('articleExtraction')},
+      //                 disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
       //         {name: 'googleSearchApiLoc', kind: 'SettingsValueItem', defaultInputKind: 'SettingsTextInput', label: 'Google Search Api Url',
-      //                 disabled: !(new SettingsSingleton()).getSetting('articleExtraction')}
+      //                 disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')}
       //     ]}
       // ]},
       {content: 'Local Storage', components: [
@@ -69,14 +69,14 @@ enyo.kind({
             ],
             disabledComputed: function () {
               return !(
-                  !!this.get('cookieModel.' + Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) &&
-                  !!this.get('cookieModel.' + Constants.ACCESS_TOKEN_COOKIE_NAME)
+                  !!this.get('cookieModel.' + k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) &&
+                  !!this.get('cookieModel.' + k2e.Constants.ACCESS_TOKEN_COOKIE_NAME)
               );
             },
             bindings: [
               { from: '.disabledComputed', to: '.disabled'},
-              { from: '.cookieModel.' + Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, to: '.modelDep1' },
-              { from: '.cookieModel.' + Constants.ACCESS_TOKEN_COOKIE_NAME, to: '.modelDep2' }
+              { from: '.cookieModel.' + k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, to: '.modelDep1' },
+              { from: '.cookieModel.' + k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, to: '.modelDep2' }
             ]
           }
         ]}
@@ -96,7 +96,7 @@ enyo.kind({
     this.log(settingsItem.getName());
 
 
-    new SettingsSingleton().setSetting(name, value);
+    new k2e.settings.SettingsSingleton().setSetting(name, value);
 
     return true;
   },
@@ -115,7 +115,7 @@ enyo.kind({
   revokeEvernotePermissions: function (inSender, inEvent) {
     this.$.settingsPopup.begin('Revoking permissions...');
 
-    var loc = location.protocol + '//' + location.host + Constants.REVOKE_PATH;
+    var loc = location.protocol + '//' + location.host + k2e.Constants.REVOKE_PATH;
     var ajax = new enyo.Ajax({
       url: loc,
       contentType: 'application/json',
@@ -129,8 +129,8 @@ enyo.kind({
     var cookieModel = this.cookieModel;
     function processResponse(inSender, inEvent) {
       cookieModel.fetch();
-      cookieModel.set(Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
-      cookieModel.set(Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
+      cookieModel.set(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
+      cookieModel.set(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
       cookieModel.commit();
       this.done('Permissions revoked successfully');
     }
@@ -144,7 +144,7 @@ enyo.kind({
 
     localStorage.clear();
 
-    var settings = new SettingsSingleton();
+    var settings = new k2e.settings.SettingsSingleton();
     var defaultsArray = settings.defaultSettings.published;
     var key;
 
@@ -244,7 +244,7 @@ enyo.kind({
     return true;
   },
   create: function () {
-    var settings = new SettingsSingleton();
+    var settings = new k2e.settings.SettingsSingleton();
     this.inherited(arguments);
 
     this.createComponent({fit: true});

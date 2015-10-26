@@ -3,7 +3,7 @@
 (function () {
 
 enyo.kind({
-  name: 'ClippingPickerPopup',
+  name: 'k2e.ClippingPickerPopup',
   kind: 'onyx.Popup',
   classes: 'k2e-clipping-picker-popup',
   modal: true,

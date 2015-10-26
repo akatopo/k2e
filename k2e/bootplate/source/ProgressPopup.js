@@ -1,7 +1,7 @@
 (function () {
 
 enyo.kind({
-  name: 'ProgressPopup',
+  name: 'k2e.ProgressPopup',
   classes: 'k2e-progress-popup',
   kind: 'onyx.Popup',
   modal: true,

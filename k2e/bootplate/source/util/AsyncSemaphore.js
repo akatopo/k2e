@@ -1,7 +1,7 @@
 (function () {
 
 enyo.kind({
-  name: 'AsyncSemaphore',
+  name: 'k2e.util.AsyncSemaphore',
   kind: 'enyo.Component',
   published: {
     lock: 0,
@@ -19,5 +19,3 @@ enyo.kind({
 });
 
 })();
-
-

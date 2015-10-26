@@ -1,12 +1,12 @@
 (function () {
 
 enyo.kind({
-  name: 'DocumentSelectorList',
+  name: 'k2e.annotations.DocumentSelectorList',
   kind: 'enyo.Scroller',
   style: 'height: 100%',
   strategyKind: 'ScrollStrategy',
   components: [
-    {name: 'DocumentSelectorRepeater', kind: 'enyo.Repeater', onSetupItem: 'handleSetupItem',
+    {name: 'documentSelectorRepeater', kind: 'enyo.Repeater', onSetupItem: 'handleSetupItem',
       count: 0, components: [
         {kind: 'DocumentSelectorItem'}
     ]}
@@ -154,7 +154,7 @@ enyo.kind({
       return bUnixTimestamp - aUnixTimestamp;
     });
 
-    this.$.DocumentSelectorRepeater.setCount(this.documentsRef.length);
+    this.$.documentSelectorRepeater.setCount(this.documentsRef.length);
   },
   create: function () {
     this.inherited(arguments);

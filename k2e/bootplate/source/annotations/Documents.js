@@ -1,9 +1,9 @@
-/* global Document, ClippingCollection, moment */
+/* global Document, k2e, moment */
 
 (function () {
 
 enyo.kind({
-  name: 'ClippingCollection',
+  name: 'k2e.annotations.ClippingCollection',
   kind: 'enyo.Component',
   published: {
     title: '',
@@ -48,7 +48,7 @@ enyo.kind({
 });
 
 enyo.kind({
-  name: 'Clipping',
+  name: 'k2e.annotations.Clipping',
   kind: 'enyo.Component',
   published: {
     type: '',
@@ -77,7 +77,7 @@ enyo.kind({
 });
 
 enyo.kind({
-  name: 'Documents',
+  name: 'k2e.annotations.Documents',
   kind: 'enyo.Component',
   published: {
     docMap: undefined,
@@ -88,7 +88,7 @@ enyo.kind({
     var key = title + author;
 
     if (!this.docMap[key]) {
-      this.docMap[key] = new ClippingCollection({
+      this.docMap[key] = new k2e.annotations.ClippingCollection({
         title: title,
         author: author
       });

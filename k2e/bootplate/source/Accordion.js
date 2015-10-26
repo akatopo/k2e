@@ -1,13 +1,13 @@
 (function () {
 
 enyo.kind({
-  name: 'Accordion',
+  name: 'k2e.Accordion',
   classes: 'k2e-accordion',
-  defaultKind: 'AccordionItem'
+  defaultKind: 'k2e.AccordionItem'
 });
 
 enyo.kind({
-  name: 'AccordionItem',
+  name: 'k2e.AccordionItem',
 
   published: {
     content: 'Heading'

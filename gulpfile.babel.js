@@ -66,7 +66,7 @@ gulp.task('dist', dist);
 //////////////////////////////////////////////////////////////
 
 function lint() {
-  return gulp.src(`${BASE_SOURCE_PATH}/*.js`)
+  return gulp.src(`${BASE_SOURCE_PATH}/**/*.js`)
     .pipe(cached('linting'))
     .pipe(jshint())
     .pipe(jscs())
@@ -97,7 +97,7 @@ function watch() {
 
   livereload.listen();
   gulp.watch(`${sourcePath}/scss/*.scss`, ['sass']);
-  gulp.watch(`${sourcePath}/*.js`, livereload.reload);
+  gulp.watch(`${sourcePath}/**/*.js`, livereload.reload);
 }
 
 function buildBackend() {

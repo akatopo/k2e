@@ -1,8 +1,8 @@
 (function () {
 
 enyo.kind({
-  name: 'SettingsSlideable',
-  kind: 'Slideable',
+  name: 'k2e.settings.SettingsSlideable',
+  kind: 'enyo.Slideable',
   classes: 'k2e-settings',
   min: -100,
   max: 0,
@@ -13,7 +13,7 @@ enyo.kind({
   components: [
     {name: 'scroller', kind: 'enyo.Scroller', strategyKind: 'ScrollStrategy', fit: true,
       style: 'height: 100%', components: [
-        {name: 'panel', kind: 'SettingsPanel'}
+        {name: 'panel', kind: 'k2e.settings.SettingsPanel'}
     ]}
   ],
   bindings: [

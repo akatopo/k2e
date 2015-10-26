@@ -1,7 +1,7 @@
 (function () {
 
 enyo.kind({
-  name: 'CookieModel',
+  name: 'k2e.CookieModel',
   kind: 'enyo.Model',
   source: 'cookieSource'
 });

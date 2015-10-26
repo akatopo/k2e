@@ -1,3 +1,9 @@
+/* global k2e */
+
+(function (util) {
+
+util.linkify = linkify;
+
 /* <![CDATA[ */
 /* File:        linkify.js
  * Version:     20101010_1000
@@ -58,3 +64,5 @@ function linkify(text, options) {
     ' href="$2$5$8$11$14">$2$5$8$11$14</a>$3$6$9$12';
   return text.replace(urlPattern, urlReplace);
 }
+
+})(k2e.util);

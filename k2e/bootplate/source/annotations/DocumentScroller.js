@@ -1,9 +1,8 @@
 (function () {
 
 enyo.kind({
-  name: 'DocumentScroller',
+  name: 'k2e.annotations.DocumentScroller',
   kind: 'enyo.Scroller',
-  fit: true,
   classes: 'k2e-document-scroller',
   events: {
     onDocumentScrolled: ''
