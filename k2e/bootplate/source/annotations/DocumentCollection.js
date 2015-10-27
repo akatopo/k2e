@@ -33,19 +33,17 @@ enyo.kind({
     this.keyArray = [];
   },
   exportObject: function (options) {
+    var self = this;
     var ignoredTitleSet = (options && options.ignoredTitleSet) || false;
     var selectedKeySet = (options && options.selectedKeySet) || false;
     var documentsExport = { documents: [] };
-    var i;
-    var doc;
-    var docExport;
     var exportFunc;
 
     // selectedKeySet has priority over ignoredTitleSet
     if (selectedKeySet) {
       exportFunc = function (doc) {
         if (selectedKeySet.hasOwnProperty(doc.title + doc.author)) {
-          docExport = doc.exportObject();
+          var docExport = doc.exportObject();
           documentsExport.documents.push(docExport);
         }
       };
@@ -53,23 +51,22 @@ enyo.kind({
     else if (ignoredTitleSet) {
       exportFunc = function (doc) {
         if (!ignoredTitleSet.hasOwnProperty(doc.title)) {
-          docExport = doc.exportObject();
+          var docExport = doc.exportObject();
           documentsExport.documents.push(docExport);
         }
       };
     }
     else {
       exportFunc = function (doc) {
-        docExport = doc.exportObject();
+        var docExport = doc.exportObject();
         documentsExport.documents.push(docExport);
       };
     }
 
-    for (i = 0; i < this.keyArray.length; i += 1) {
-      doc = this.docMap[this.keyArray[i]];
-
+    this.keyArray.forEach(function (key) {
+      var doc = self.docMap[key];
       exportFunc(doc);
-    }
+    });
 
     return documentsExport;
   }

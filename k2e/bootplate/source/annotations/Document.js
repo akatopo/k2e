@@ -28,13 +28,11 @@ enyo.kind({
   },
   exportObject: function () {
     var clipExportArray = [];
-    var clipExport;
-    var i;
 
-    for (i = 0; i < this.clippings.length; i += 1) {
-      clipExport = this.clippings[i].exportObject();
+    this.clippings.forEach(function (clipping) {
+      var clipExport = clipping.exportObject();
       clipExportArray.push(clipExport);
-    }
+    });
 
     return {
       title: this.title,

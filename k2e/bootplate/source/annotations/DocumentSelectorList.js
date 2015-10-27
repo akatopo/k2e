@@ -69,13 +69,10 @@ enyo.kind({
     }
   },
   enableMultiSelection: function () {
-    var i;
-
     this.multiSelected = true;
-
-    for (i = 0; i < this.items.length; i += 1) {
-      this.items[i].setMultiSelected(true);
-    }
+    this.items.forEach(function (item) {
+      item.setMultiSelected(true);
+    });
   },
   disableMultiSelection: function () {
     this.items.forEach(function (item) {
@@ -84,16 +81,13 @@ enyo.kind({
     this.multiSelected = false;
   },
   getMultiSelectionKeys: function () {
-    var i;
     var multiSelKeys = {};
 
-    for (i = 0; i < this.items.length; i += 1) {
-      if (this.items[i].getMultiSelected() &&
-          this.items[i].isMarked()
-      ) {
-        multiSelKeys[this.items[i].getKey()] = true;
+    this.items.forEach(function (item) {
+      if (item.getMultiSelected() && item.isMarked()) {
+        multiSelKeys[item.getKey()] = true;
       }
-    }
+    });
 
     return multiSelKeys;
   },

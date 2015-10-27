@@ -6,10 +6,10 @@ var exportPreparationSem;
 var docsExport;
 var arrayToSet = function (array) {
   var set = {};
-  var i;
-  for (i = 0; i < array.length; i += 1) {
-    set[array[i]] = true;
-  }
+
+  array.forEach(function (elem) {
+    set[elem] = true;
+  });
 
   return set;
 };
@@ -256,26 +256,17 @@ enyo.kind({
         periodicalTitleSet = arrayToSet(periodicalTitleList.split(','));
       }
 
-      (function () {
-        var dEx;
-        var cEx;
-        var j;
-        var i;
-
-        for (i = 0; i < docExportArray.length; i += 1) {
-          dEx = docExportArray[i];
-          if (settings.getSetting('articleExtraction') === true) {
-            app.log('Tagging documents as periodicals');
-            if (periodicalTitleSet.hasOwnProperty(dEx.title)) {
-              dEx.isPeriodical = true;
-              for (j = 0; j < dEx.clippings.length; j += 1) {
-                cEx = dEx.clippings[j];
-                app.setSuggestedDataToClipping(cEx);
-              }
-            }
+      docExportArray.forEach(function (documentExportObject) {
+        if (settings.getSetting('articleExtraction') === true) {
+          app.log('Tagging documents as periodicals');
+          if (periodicalTitleSet.hasOwnProperty(documentExportObject.title)) {
+            documentExportObject.isPeriodical = true;
+            documentExportObject.clippings.forEach(function (clippingExportObject) {
+              app.setSuggestedDataToClipping(clippingExportObject);
+            });
           }
         }
-      }());
+      });
 
       app.handleExportEnd();
     }

@@ -30,21 +30,24 @@ enyo.kind({
     return true;
   },
   valueChanged: function () {
+    var self = this;
     this.log(this.getComponents());
 
-    var comps = this.getComponents();
-    var i;
-    for (i = 1; i < comps.length; i += 1) {
-      if (comps[i].getContent() === this.value) {
-        comps[i].setActive(true);
-        this.doInputValueChanged();
-        this.doThemeChanged();
+    var components = this.getComponents().slice(1);
+    var found = components.some(function (component) {
+      if (component.getContent() === self.value) {
+        component.setActive(true);
+        self.doInputValueChanged();
+        self.doThemeChanged();
+
         return true;
       }
-    }
+    });
 
-    // value not found
-    if (this.$.group.getActive()) {
+    if (found) {
+      return true;
+    }
+    else if (this.$.group.getActive()) {
       this.value = this.$.group.getActive().getContent();
     }
     else {
@@ -55,11 +58,12 @@ enyo.kind({
     this.log(this.value);
   },
   disabledChanged: function () {
-    var comps = this.getComponents();
-    var i;
-    for (i = 1; i < comps.length; i += 1) {
-      comps[i].setDisabled(this.disabled);
-    }
+    var self = this;
+    var components = this.getComponents().slice(1);
+
+    components.forEach(function (component) {
+      component.setDisabled(self.disabled);
+    });
   }
 });
 
