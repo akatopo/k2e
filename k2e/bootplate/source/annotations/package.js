@@ -1,6 +1,9 @@
 enyo.depends(
+  'Clipping.js',
+  'Document.js',
+  'DocumentCollection.js',
   'DocumentSelectorList.js',
-  'Documents.js',
+  'DocumentSelectorItem.js',
   'DocumentView.js',
   'DocumentScroller.js'
 );

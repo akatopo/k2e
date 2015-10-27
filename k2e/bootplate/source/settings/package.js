@@ -1,5 +1,15 @@
 enyo.depends(
-  'Settings.js',
+  'DefaultSettings.js',
+  'SettingsSingleton.js',
   'SettingsSlideable.js',
-  'SettingsPanel.js'
+  'SettingsPanel.js',
+  'SettingsItem.js',
+  'SettingsActionItem.js',
+  'SettingsValueItem.js',
+  'SettingsTextInput.js',
+  'SettingsToggleButton.js',
+  'SettingsThemeRadioGroup.js',
+  'SettingsFontSizeSlider.js',
+  'SettingsTextMarginSlider.js',
+  'RevokeEvernotePermissionsActionItem.js'
 );

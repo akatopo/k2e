@@ -513,17 +513,17 @@ enyo.kind({
   },
 
   parseKindleClippings: function (kindleClippings) {
-    var docs = new k2e.annotations.Documents();
+    var docs = new k2e.annotations.DocumentCollection();
     var delimeterRegExp = /\r?\n==========\r?\n/;
 
     kindleClippings = kindleClippings.split(delimeterRegExp);
-    kindleClippings.forEach(addClippingToDocuments);
+    kindleClippings.forEach(addClippingToDocumentCollection);
 
     return docs;
 
     /////////////////////////////////////////////////////////////
 
-    function addClippingToDocuments(clipping) {
+    function addClippingToDocumentCollection(clipping) {
       var clippingRegExp = /^(.+)\r?\n- (.+)\r?\n?\r?\n?(.*)$/;
       var res;
       var title;

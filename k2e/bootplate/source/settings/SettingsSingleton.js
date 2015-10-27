@@ -1,24 +1,8 @@
 /* global k2e */
 
-(function () {
+(function (settings) {
 
-enyo.kind({
-  name: 'k2e.settings.DefaultSettings',
-  kind: enyo.Object,
-  published: {
-    themeName: '"Dark"',
-    fontSize: '100',
-    textMargin: '"20"',
-    ignoredTitleList: '""',
-    articleExtraction: 'false',
-    periodicalTitleList: '""',
-    googleSearchApiKey: '""',
-    googleSearchApiCx: '""',
-    googleSearchApiLoc: '"https://www.googleapis.com/customsearch/v1?"'
-  }
-});
-
-k2e.settings.SettingsSingleton = SettingsSingleton;
+settings.SettingsSingleton = SettingsSingleton;
 
 function SettingsSingleton() {
   if (arguments.callee.singletonInstance) {
@@ -28,14 +12,11 @@ function SettingsSingleton() {
   var storage = window.localStorage;
   var self = this;
   var settingExists = function (settingName) {
-    if (self.defaultSettings[settingName]) {
-      return true;
-    }
-    return false;
+    return !!self.defaultSettings[settingName];
   };
   arguments.callee.singletonInstance = this;
 
-  this.defaultSettings = new k2e.settings.DefaultSettings();
+  this.defaultSettings = enyo.clone(k2e.settings.DefaultSettings.settings);
 
   this.setSetting = function (settingName, settingValue) {
     if (settingExists(settingName)) {
@@ -65,4 +46,4 @@ function SettingsSingleton() {
   };
 }
 
-})();
+})(k2e.settings);
