@@ -19,17 +19,21 @@ enyo.kind({
   bindings: [
     { from: '.cookieModel', to: '.$.panel.cookieModel' }
   ],
-  toggle: function () {
-    this.addRemoveClass('active', this.isAtMin());
-
-    if (this.isAtMin()) {
-      this.animateToMax();
-    }
-    else {
-      this.animateToMin();
-      this.$.scroller.scrollToTop();
-    }
-  }
+  toggle: toggle
 });
+
+/////////////////////////////////////////////////////////////
+
+function toggle() {
+  this.addRemoveClass('active', this.isAtMin());
+
+  if (this.isAtMin()) {
+    this.animateToMax();
+  }
+  else {
+    this.animateToMin();
+    this.$.scroller.scrollToTop();
+  }
+}
 
 })();

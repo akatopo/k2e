@@ -16,20 +16,23 @@ enyo.kind({
     {name: 'slider', kind: 'onyx.Slider', min: 10, max: 40, value: 20, increment: 10,
       onChanging: 'handleSliderValueChanged', onChange: 'handleSliderValueChanged'}
   ],
-  valueChanged: function () {
-    this.$.slider.setValue(this.value);
-    this.doInputValueChanged();
-    this.doTextMarginChanged();
-  },
-  getValue: function () {
-    return this.value;
-  },
-  handleSliderValueChanged: function (inSender, inEvent) {
-    var previous = this.value;
-    this.value = this.$.slider.getValue();
-    this.doInputValueChanged();
-    this.doTextMarginChanged({ previous: previous, current: this.value });
-  }
+  valueChanged: valueChanged,
+  handleSliderValueChanged: handleSliderValueChanged
 });
+
+/////////////////////////////////////////////////////////////
+
+function valueChanged() {
+  this.$.slider.setValue(this.value);
+  this.doInputValueChanged();
+  this.doTextMarginChanged();
+}
+
+function handleSliderValueChanged(inSender, inEvent) {
+  var previous = this.value;
+  this.value = this.$.slider.getValue();
+  this.doInputValueChanged();
+  this.doTextMarginChanged({ previous: previous, current: this.value });
+}
 
 })();

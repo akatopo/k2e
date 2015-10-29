@@ -29,35 +29,32 @@ enyo.kind({
   handlers: {
     ontap: 'handleTap'
   },
-  handleTap: function () {
-    this.doDocumentSelected();
-  },
-  setSelected: function (bool) {
-    this.selected = bool;
-    this.addRemoveClass('onyx-selected', this.selected);
-    this.addRemoveClass('onyx-blue', this.selected);
-  },
-  setTitle: function (titleString) {
-    this.$.label.setContent(titleString);
-  },
-  getTitle: function () {
-    return this.$.label.getContent();
-  },
-  setMultiSelected: function (bool) {
-    if (bool) {
-      this.multiSelected = true;
-      this.$.checkbox.setChecked(false);
-      this.$.checkbox.show();
-    }
-    else {
-      this.multiSelected = false;
-      this.$.checkbox.hide();
-      this.$.checkbox.setChecked(false);
-    }
-  },
-  isMarked: function () {
-    return this.$.checkbox.getChecked();
-  }
+  handleTap: function () { this.doDocumentSelected(); },
+  setTitle: function (titleString) { this.$.label.setContent(titleString); },
+  getTitle: function () { return this.$.label.getContent(); },
+  isMarked: function () { return this.$.checkbox.getChecked(); },
+  setMultiSelected: setMultiSelected,
+  setSelected: setSelected
 });
+
+/////////////////////////////////////////////////////////////
+
+function setSelected(bool) {
+  this.selected = bool;
+  this.addRemoveClass('onyx-selected', this.selected);
+}
+
+function setMultiSelected(bool) {
+  if (bool) {
+    this.multiSelected = true;
+    this.$.checkbox.setChecked(false);
+    this.$.checkbox.show();
+  }
+  else {
+    this.multiSelected = false;
+    this.$.checkbox.hide();
+    this.$.checkbox.setChecked(false);
+  }
+}
 
 })();

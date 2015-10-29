@@ -18,53 +18,61 @@ enyo.kind({
       {name: 'ponies', content: 'OMG ponies'}
     ]}
   ],
-  handleActivate: function (inSender, inEvent) {
-    if (inEvent.originator.getActive()) {
-      this.log(inEvent.originator.getContent());
-      this.value = inEvent.originator.getContent();
-    }
+  handleActivate: handleActivate,
+  valueChanged: valueChanged,
+  disabledChanged: disabledChanged
 
-    this.doInputValueChanged();
-    this.doThemeChanged();
+});
 
-    return true;
-  },
-  valueChanged: function () {
-    var self = this;
-    this.log(this.getComponents());
+/////////////////////////////////////////////////////////////
 
-    var components = this.getComponents().slice(1);
-    var found = components.some(function (component) {
-      if (component.getContent() === self.value) {
-        component.setActive(true);
-        self.doInputValueChanged();
-        self.doThemeChanged();
+function handleActivate(inSender, inEvent) {
+  if (inEvent.originator.getActive()) {
+    this.log(inEvent.originator.getContent());
+    this.value = inEvent.originator.getContent();
+  }
 
-        return true;
-      }
-    });
+  this.doInputValueChanged();
+  this.doThemeChanged();
 
-    if (found) {
+  return true;
+}
+
+function valueChanged() {
+  var self = this;
+  this.log(this.getComponents());
+
+  var components = this.getComponents().slice(1);
+  var found = components.some(function (component) {
+    if (component.getContent() === self.value) {
+      component.setActive(true);
+      self.doInputValueChanged();
+      self.doThemeChanged();
+
       return true;
     }
-    else if (this.$.group.getActive()) {
-      this.value = this.$.group.getActive().getContent();
-    }
-    else {
-      this.value = '';
-    }
+  });
 
-
-    this.log(this.value);
-  },
-  disabledChanged: function () {
-    var self = this;
-    var components = this.getComponents().slice(1);
-
-    components.forEach(function (component) {
-      component.setDisabled(self.disabled);
-    });
+  if (found) {
+    return true;
   }
-});
+  else if (this.$.group.getActive()) {
+    this.value = this.$.group.getActive().getContent();
+  }
+  else {
+    this.value = '';
+  }
+
+  this.log(this.value);
+}
+
+function disabledChanged() {
+  var self = this;
+  var components = this.getComponents().slice(1);
+
+  components.forEach(function (component) {
+    component.setDisabled(self.disabled);
+  });
+}
 
 })();

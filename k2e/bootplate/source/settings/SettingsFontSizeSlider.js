@@ -16,15 +16,16 @@ enyo.kind({
     { from: '.value', to: '$.slider.value', oneWay: false }
   ],
   components: [
-      {name: 'slider', kind: 'onyx.Slider', min: 40, max: 160, increment: 20}
+    {name: 'slider', kind: 'onyx.Slider', min: 40, max: 160, increment: 20}
   ],
-  getValue: function () {
-    return this.value;
-  },
-  valueChanged: function () {
-    this.doInputValueChanged({ newValue: this.value });
-    this.doFontSizeChanged({ sizePercent: this.value });
-  }
+  valueChanged: valueChanged
 });
+
+/////////////////////////////////////////////////////////////
+
+function valueChanged() {
+  this.doInputValueChanged({ newValue: this.value });
+  this.doFontSizeChanged({ sizePercent: this.value });
+}
 
 })();

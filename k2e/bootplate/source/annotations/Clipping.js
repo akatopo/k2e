@@ -14,21 +14,27 @@ enyo.kind({
     suggestedTitle: '',
     suggestedUrl: ''
   },
-  create: function () {
-    var DATE_FORMAT = 'dddd, MMMM DD, YYYY, hh:mm A';
-    this.inherited(arguments);
-    this.creationDate = moment(this.timeStamp, DATE_FORMAT);
-  },
-  exportObject: function () {
-    return {
-      type: this.type,
-      loc: this.loc,
-      timeStamp: this.timeStamp,
-      content: this.content,
-      suggestedTitle: this.suggestedTitle,
-      suggestedUrl: this.suggestedUrl
-    };
-  }
+  create: create,
+  exportObject: exportObject
 });
+
+/////////////////////////////////////////////////////////////
+
+function create() {
+  var DATE_FORMAT = 'dddd, MMMM DD, YYYY, hh:mm A';
+  this.inherited(arguments);
+  this.creationDate = moment(this.timeStamp, DATE_FORMAT);
+}
+
+function exportObject() {
+  return {
+    type: this.type,
+    loc: this.loc,
+    timeStamp: this.timeStamp,
+    content: this.content,
+    suggestedTitle: this.suggestedTitle,
+    suggestedUrl: this.suggestedUrl
+  };
+}
 
 })();

@@ -14,13 +14,19 @@ enyo.kind({
   bindings: [
     { from: '.label', to: '.$.label.content' }
   ],
-  disabledChanged: function () {
-    this.$.label.addRemoveClass('k2e-settings-item-label-disabled', this.disabled);
-  },
-  create: function () {
-    this.inherited(arguments);
-    this.disabledChanged();
-  }
+  disabledChanged: disabledChanged,
+  create: create
 });
+
+/////////////////////////////////////////////////////////////
+
+function disabledChanged() {
+  this.$.label.addRemoveClass('k2e-settings-item-label-disabled', this.disabled);
+}
+
+function create() {
+  this.inherited(arguments);
+  this.disabledChanged();
+}
 
 })();

@@ -7,15 +7,17 @@ enyo.kind({
     lock: 0,
     func: undefined
   },
-  v: function () {
-    ++this.lock;
-  },
-  p: function () {
-    --this.lock;
-    if (this.lock === 0 && this.func) {
-      this.func();
-    }
-  }
+  v: function () { ++this.lock; },
+  p: p
 });
+
+/////////////////////////////////////////////////////////////
+
+function p() {
+  --this.lock;
+  if (this.lock === 0 && this.func) {
+    this.func();
+  }
+}
 
 })();

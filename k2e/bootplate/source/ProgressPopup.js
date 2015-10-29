@@ -13,28 +13,36 @@ enyo.kind({
     {name: 'spinner', kind: 'onyx.Spinner'},
     {name: 'message', content: ''}
   ],
-  done: function (message) {
-    changeMessage.call(this, message);
-    window.setTimeout(this.hide.bind(this), calculateTimeout(this.$.message.content));
-  },
-  begin: function (message) {
-    changeMessage.call(this, message, true);
-    this.show();
-  },
-  failed: function (caption, messages) {
-    if (!Array.isArray(messages)) {
-      messages = messages ? [messages] : [];
-    }
-
-    changeMessage.call(
-      this,
-      caption +
-      (messages.length !== 0 ? ': ' : '') +
-      messages.join('\n')
-    );
-    window.setTimeout(this.hide.bind(this), calculateTimeout(this.$.message.content));
-  }
+  done: done,
+  begin: begin,
+  failed: failed
 });
+
+/////////////////////////////////////////////////////////////
+
+function done(message) {
+  changeMessage.call(this, message);
+  window.setTimeout(this.hide.bind(this), calculateTimeout(this.$.message.content));
+}
+
+function begin(message) {
+  changeMessage.call(this, message, true);
+  this.show();
+}
+
+function failed(caption, messages) {
+  if (!Array.isArray(messages)) {
+    messages = messages ? [messages] : [];
+  }
+
+  changeMessage.call(
+    this,
+    caption +
+    (messages.length !== 0 ? ': ' : '') +
+    messages.join('\n')
+  );
+  window.setTimeout(this.hide.bind(this), calculateTimeout(this.$.message.content));
+}
 
 function changeMessage(message, spinnerToggle) {
   var spinnerFunc = spinnerToggle ? this.$.spinner.show : this.$.spinner.hide;

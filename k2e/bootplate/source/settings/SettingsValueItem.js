@@ -19,36 +19,43 @@ enyo.kind({
   ],
   defaultInputKind: 'onyx.Checkbox',
   inputComponent: null,
-  getValue: function () {
-    return this.$.input.getValue();
-  },
-  valueChanged: function () {
-    this.log(this);
-    this.$.input.setValue(this.value);
-  },
-  handleInputValueChanged: function (inSender, inEvent) {
-    this.doSettingChanged({ newValue: inEvent.newValue });
-    return true;
-  },
-  create: function () {
-    var settings = new k2e.settings.SettingsSingleton();
-    this.inherited(arguments);
-
-    this.createComponent({fit: true});
-    if (this.inputComponent) {
-      this.inputComponent.name = 'input';
-      this.createComponent(this.inputComponent);
-    }
-    else {
-      this.createComponent({name: 'input', kind: this.defaultInputKind});
-    }
-
-    this.value = settings.getSetting(this.getName());
-    this.valueChanged();
-  },
-  rendered: function () {
-    this.inherited(arguments);
-  }
+  getValue: getValue,
+  valueChanged: valueChanged,
+  handleInputValueChanged: handleInputValueChanged,
+  create: create
 });
+
+/////////////////////////////////////////////////////////////
+
+function getValue() {
+  return this.$.input.getValue();
+}
+
+function valueChanged() {
+  this.log(this);
+  this.$.input.setValue(this.value);
+}
+
+function handleInputValueChanged(inSender, inEvent) {
+  this.doSettingChanged({ newValue: inEvent.newValue });
+  return true;
+}
+
+function create() {
+  var settings = new k2e.settings.SettingsSingleton();
+  this.inherited(arguments);
+
+  this.createComponent({fit: true});
+  if (this.inputComponent) {
+    this.inputComponent.name = 'input';
+    this.createComponent(this.inputComponent);
+  }
+  else {
+    this.createComponent({name: 'input', kind: this.defaultInputKind});
+  }
+
+  this.value = settings.getSetting(this.getName());
+  this.valueChanged();
+}
 
 })();

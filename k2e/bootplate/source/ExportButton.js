@@ -21,12 +21,16 @@ enyo.kind({
   computed: {
     content: ['form', 'exportSelected']
   },
-  content: function () {
-    var form = this.form === 'long' ? 'long' : 'short';
-    var labelType = this.exportSelected ? 'exportSelected' : 'exportAll';
-
-    return LABELS[labelType][form];
-  }
+  content: content
 });
+
+/////////////////////////////////////////////////////////////
+
+function content() {
+  var form = this.form === 'long' ? 'long' : 'short';
+  var labelType = this.exportSelected ? 'exportSelected' : 'exportAll';
+
+  return LABELS[labelType][form];
+}
 
 })();

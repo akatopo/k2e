@@ -12,6 +12,7 @@ enyo.kind({
   events: {
     onFullscreenRequest: ''
   },
+  cookieModel: undefined,
   components: [
     {name: 'settingsPopup', kind: 'k2e.ProgressPopup'},
     {kind: 'k2e.Accordion', components: [
@@ -70,83 +71,86 @@ enyo.kind({
   bindings: [
     { from: '.cookieModel', to: '.$.revokeEvernotePermissions.cookieModel' }
   ],
-  cookieModel: undefined,
-  handleSettingChanged: function (inSender, inEvent) {
-    var settingsItem = inEvent.originator;
-    var value = JSON.stringify(inEvent.newValue || settingsItem.getValue());
-    var name = settingsItem.getName();
-
-    this.log(settingsItem.getValue());
-    this.log(settingsItem.getName());
-
-
-    new k2e.settings.SettingsSingleton().setSetting(name, value);
-
-    return true;
-  },
-  handleExtractionSettingChanged: function (inSender, inEvent) {
-    if (this.$.periodicalTitleList &&
-        this.$.googleSearchApiKey &&
-        this.$.googleSearchApiCx &&
-        this.$.googleSearchApiLoc
-    ) {
-      this.$.periodicalTitleList.setDisabled(!inEvent.originator.getValue());
-      this.$.googleSearchApiKey.setDisabled(!inEvent.originator.getValue());
-      this.$.googleSearchApiCx.setDisabled(!inEvent.originator.getValue());
-      this.$.googleSearchApiLoc.setDisabled(!inEvent.originator.getValue());
-    }
-  },
-  revokeEvernotePermissions: function (inSender, inEvent) {
-    this.$.settingsPopup.begin('Revoking permissions...');
-
-    var loc = location.protocol + '//' + location.host + k2e.Constants.REVOKE_PATH;
-    var ajax = new enyo.Ajax({
-      url: loc,
-      contentType: 'application/json',
-      method: 'POST'
-    });
-    ajax.go();
-
-    ajax.response(this.$.settingsPopup, processResponse);
-    ajax.error(this.$.settingsPopup, processError);
-
-    var cookieModel = this.cookieModel;
-    function processResponse(inSender, inEvent) {
-      cookieModel.fetch();
-      cookieModel.set(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
-      cookieModel.set(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
-      cookieModel.commit();
-      this.done('Permissions revoked successfully');
-    }
-
-    function processError(inSender, inEvent) {
-      this.failed('Revocation failed');
-    }
-  },
-  restoreDefaults: function () {
-    var self = this;
-    this.log('restore defaults');
-
-    localStorage.clear();
-
-    var settings = new k2e.settings.SettingsSingleton();
-    var defaultsMap = settings.defaultSettings;
-
-    Object.keys(defaultsMap).forEach(function (key) {
-      self.$[key].setValue(settings.getDefaultSetting(key));
-      self.$[key].valueChanged();
-    });
-
-  },
-  importSettings: function () {
-    this.log('Import settings');
-  },
-  exportSettings: function () {
-    this.log('Export settings');
-  },
-  clearCache: function () {
-    this.log('clear cache');
-  }
+  handleSettingChanged: handleSettingChanged,
+  handleExtractionSettingChanged: handleExtractionSettingChanged,
+  revokeEvernotePermissions: revokeEvernotePermissions,
+  restoreDefaults: restoreDefaults,
+  importSettings: function () { this.log('Import settings'); },
+  exportSettings: function () { this.log('Export settings'); },
+  clearCache: function () { this.log('clear cache'); }
 });
+
+/////////////////////////////////////////////////////////////
+
+function handleSettingChanged(inSender, inEvent) {
+  var settingsItem = inEvent.originator;
+  var value = JSON.stringify(inEvent.newValue || settingsItem.getValue());
+  var name = settingsItem.getName();
+
+  this.log(settingsItem.getValue());
+  this.log(settingsItem.getName());
+
+
+  new k2e.settings.SettingsSingleton().setSetting(name, value);
+
+  return true;
+}
+
+function handleExtractionSettingChanged(inSender, inEvent) {
+  if (this.$.periodicalTitleList &&
+      this.$.googleSearchApiKey &&
+      this.$.googleSearchApiCx &&
+      this.$.googleSearchApiLoc
+  ) {
+    this.$.periodicalTitleList.setDisabled(!inEvent.originator.getValue());
+    this.$.googleSearchApiKey.setDisabled(!inEvent.originator.getValue());
+    this.$.googleSearchApiCx.setDisabled(!inEvent.originator.getValue());
+    this.$.googleSearchApiLoc.setDisabled(!inEvent.originator.getValue());
+  }
+}
+
+function revokeEvernotePermissions(inSender, inEvent) {
+  this.$.settingsPopup.begin('Revoking permissions...');
+
+  var loc = location.protocol + '//' + location.host + k2e.Constants.REVOKE_PATH;
+  var ajax = new enyo.Ajax({
+    url: loc,
+    contentType: 'application/json',
+    method: 'POST'
+  });
+  ajax.go();
+
+  ajax.response(this.$.settingsPopup, processResponse);
+  ajax.error(this.$.settingsPopup, processError);
+
+  var cookieModel = this.cookieModel;
+  function processResponse(inSender, inEvent) {
+    cookieModel.fetch();
+    cookieModel.set(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
+    cookieModel.set(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
+    cookieModel.commit();
+    this.done('Permissions revoked successfully');
+  }
+
+  function processError(inSender, inEvent) {
+    this.failed('Revocation failed');
+  }
+}
+
+function restoreDefaults() {
+  var self = this;
+  this.log('restore defaults');
+
+  localStorage.clear();
+
+  var settings = new k2e.settings.SettingsSingleton();
+  var defaultsMap = settings.defaultSettings;
+
+  Object.keys(defaultsMap).forEach(function (key) {
+    self.$[key].setValue(settings.getDefaultSetting(key));
+    self.$[key].valueChanged();
+  });
+
+}
 
 })();
