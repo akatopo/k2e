@@ -38,13 +38,13 @@ enyo.kind({
     onClippingsTextChanged: ''
   },
   handlers: {
-    onShow: 'handleOnShow'
+    onShow: 'handleShow'
   },
   showErrorMessage: showErrorMessage,
   loadFile: loadFile,
   clippingsTextChanged: function clippingsTextChanged() { this.doClippingsTextChanged(); },
   handleFiles: handleFiles,
-  handleOnShow: handleOnShow
+  handleShow: handleShow
 });
 
 /////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ function handleFiles(inSender, inEvent) {
   }
 }
 
-function handleOnShow() {
+function handleShow() {
   var self = this;
   var popupNode = this.hasNode();
   var pickerNode = this.$.filePicker.hasNode();

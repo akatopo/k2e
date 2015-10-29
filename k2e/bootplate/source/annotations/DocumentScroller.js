@@ -8,15 +8,15 @@ enyo.kind({
     onDocumentScrolled: ''
   },
   handlers: {
-    onScroll: 'handleOnScroll'
+    onScroll: 'handleScroll'
   },
   strategyKind: 'ScrollStrategy',
-  handleOnScroll: handleOnScroll
+  handleScroll: handleScroll
 });
 
 /////////////////////////////////////////////////////////////
 
-function handleOnScroll(inSender, inEvent) {
+function handleScroll(inSender, inEvent) {
   var bounds = this.getBounds();
   var scrollBounds = this.getScrollBounds();
   this.doDocumentScrolled({'bounds': bounds, 'scrollBounds': scrollBounds});
