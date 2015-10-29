@@ -3,7 +3,6 @@
 enyo.kind({
   name: 'k2e.annotations.DocumentSelectorList',
   kind: 'enyo.Scroller',
-  style: 'height: 100%',
   strategyKind: 'ScrollStrategy',
   components: [
     {name: 'documentSelectorRepeater', kind: 'enyo.Repeater', onSetupItem: 'handleSetupItem',

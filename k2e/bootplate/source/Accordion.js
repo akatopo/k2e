@@ -19,8 +19,8 @@ enyo.kind({
       {name: 'expander', classes: 'k2e-accordion-item-expander', components: [
         {tag: 'i', classes: 'icon-play'}
       ]},
-      {classes: 'k2e-accordion-item-content', style: 'height: 100%; margin: 0;', components: [
-        {name: 'headerText', content: 'Heading', style: 'display: table-cell; vertical-align: middle; height: 36px'}
+      {classes: 'k2e-accordion-item-content', components: [
+        {tag: null, name: 'headerText', content: 'Heading'}
       ]}
     ]},
     {name: 'client', kind: 'onyx.Drawer', open: false, orient: 'v', animated: true}

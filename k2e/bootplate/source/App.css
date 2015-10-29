@@ -467,6 +467,9 @@
 .k2e-settings-action-item-button {
   width: 100px; }
 
+.k2e-settings-item-slider {
+  width: 200px; }
+
 .k2e-settings {
   position: absolute;
   top: 57px;
@@ -534,4 +537,8 @@
 .k2e-accordion-item-content {
   border-left: 1px solid #555;
   padding-left: 5px;
-  color: #F2F2F2; }
+  color: #F2F2F2;
+  height: 100%;
+  margin: 0;
+  line-height: 36px;
+  height: 36px; }

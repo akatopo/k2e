@@ -23,7 +23,7 @@ enyo.kind({
         {tag: 'i', classes: 'icon-upload icon-large'},
         {tag: 'span', content: 'Load from File' }
       ]},
-      {tag: 'span', style: 'width: 0px; height: 0px; overflow: hidden;', components: [
+      {tag: 'span', showing: false, components: [
         {name: 'filePicker', kind: 'enyo.Input', type: 'file', onchange: 'handleFiles'}
       ]}
     ]},

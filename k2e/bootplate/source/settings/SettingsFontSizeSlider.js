@@ -2,8 +2,8 @@
 
 enyo.kind({
   name: 'k2e.settings.SettingsFontSizeSlider',
-  kind: 'Control',
-  style: 'width: 200px',
+  kind: 'enyo.Control',
+  classes: 'k2e-settings-item-slider',
   published: {
     value: 100,
     disabled: false
