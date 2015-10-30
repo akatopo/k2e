@@ -21,7 +21,7 @@ enyo.kind({
           {name: 'themeName', kind: 'k2e.settings.SettingsValueItem',
             inputComponent: { kind: 'k2e.settings.SettingsThemeRadioGroup' }, label: 'Theme'},
           {name: 'fullscreen', kind: 'k2e.settings.SettingsActionItem', label: 'Fullscreen',
-            buttonLabel: 'Toggle', ontap: 'doFullscreenRequest'},
+            buttonLabel: 'Toggle', onActivated: 'handleToggleFullscreenActivated' },
           {name: 'fontSize', kind: 'k2e.settings.SettingsValueItem',
             inputComponent: {kind: 'k2e.settings.SettingsFontSizeSlider'}, label: 'Font Size'},
           {name: 'textMargin', kind: 'k2e.settings.SettingsValueItem',
@@ -73,6 +73,7 @@ enyo.kind({
   ],
   handleSettingChanged: handleSettingChanged,
   handleExtractionSettingChanged: handleExtractionSettingChanged,
+  handleToggleFullscreenActivated: function () { this.doFullscreenRequest(); },
   revokeEvernotePermissions: revokeEvernotePermissions,
   restoreDefaults: restoreDefaults,
   importSettings: function () { this.log('Import settings'); },
@@ -146,7 +147,10 @@ function restoreDefaults() {
   var settings = new k2e.settings.SettingsSingleton();
   var defaultsMap = settings.defaultSettings;
 
-  Object.keys(defaultsMap).forEach(function (key) {
+  Object.keys(defaultsMap).filter(function (key) {
+    return self.$.hasOwnProperty(key);
+  })
+  .forEach(function (key) {
     self.$[key].setValue(settings.getDefaultSetting(key));
     self.$[key].valueChanged();
   });

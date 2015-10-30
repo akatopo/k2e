@@ -8,8 +8,9 @@ enyo.kind({
     onInputValueChanged: ''
   },
   handlers: {
-    onChange: 'doInputValueChanged'
-  }
+    onChange: 'handleChange'
+  },
+  handleChange: function () { this.doInputValueChanged(); }
 });
 
 })();
