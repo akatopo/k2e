@@ -22,10 +22,10 @@ enyo.kind({
 
 /////////////////////////////////////////////////////////////
 
-function valueChanged() {
+function valueChanged(oldValue) {
   this.$.slider.setValue(this.value);
   this.doInputValueChanged();
-  this.doTextMarginChanged();
+  this.doTextMarginChanged({ previous: oldValue, current: this.value });
 }
 
 function handleSliderValueChanged(inSender, inEvent) {
