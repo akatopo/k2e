@@ -116,12 +116,22 @@
   text-shadow: none; }
 
 .onyx-button:hover,
-.onyx-radiobutton:hover {
+.onyx-radiobutton:hover,
+.onyx-toggle-button:hover {
   cursor: pointer; }
 
 .onyx-button.disabled:hover,
-.onyx-button[disabled]:hover {
+.onyx-button[disabled]:hover,
+.onyx-toggle-button.disabled:hover,
+.onyx-toggle-button[disabled]:hover,
+.onyx-radiobutton.disabled:hover,
+.onyx-radiobutton[disabled]:hover {
   cursor: default; }
+
+.onyx-radiobutton.disabled,
+.onyx-radiobutton[disabled] {
+  opacity: 0.4;
+  filter: alpha(opacity=40); }
 
 .onyx-slider-knob:hover {
   cursor: move; }

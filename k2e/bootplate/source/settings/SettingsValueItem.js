@@ -6,39 +6,27 @@ enyo.kind({
   name: 'k2e.settings.SettingsValueItem',
   kind: 'k2e.settings.SettingsItem',
   published: {
-    value: ''
+    value: '',
+    defaultInputKind: 'onyx.Checkbox',
+    inputComponent: null
   },
   events: {
     onSettingChanged: ''
   },
-  handlers: {
-    onInputValueChanged: 'handleInputValueChanged'
-  },
   bindings: [
-    { from: '.disabled', to: '.$.input.disabled' }
+    { from: '.disabled', to: '.$.input.disabled' },
+    { from: '.value', to: '.$.input.value', oneWay: false }
   ],
-  defaultInputKind: 'onyx.Checkbox',
-  inputComponent: null,
-  getValue: getValue,
   valueChanged: valueChanged,
-  handleInputValueChanged: handleInputValueChanged,
   create: create
 });
 
 /////////////////////////////////////////////////////////////
 
-function getValue() {
-  return this.$.input.getValue();
-}
 
 function valueChanged() {
   this.log(this);
-  this.$.input.setValue(this.value);
-}
-
-function handleInputValueChanged(inSender, inEvent) {
-  this.doSettingChanged({ newValue: inEvent.newValue });
-  return true;
+  this.doSettingChanged({ newValue: this.value });
 }
 
 function create() {
@@ -54,8 +42,7 @@ function create() {
     this.createComponent({name: 'input', kind: this.defaultInputKind});
   }
 
-  this.value = settings.getSetting(this.getName());
-  this.valueChanged();
+  this.set('value', settings.getSetting(this.name));
 }
 
 })();

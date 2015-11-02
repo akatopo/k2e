@@ -7,7 +7,6 @@ enyo.depends(
   'SettingsActionItem.js',
   'SettingsValueItem.js',
   'SettingsTextInput.js',
-  'SettingsToggleButton.js',
   'SettingsThemeRadioGroup.js',
   'SettingsFontSizeSlider.js',
   'SettingsTextMarginSlider.js',

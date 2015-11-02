@@ -12,7 +12,12 @@ enyo.kind({
     'AUTH_DONE_QUERY_PARAM': 'authDone',
     'ACCESS_TOKEN_COOKIE_NAME': 'K2eAccessToken',
     'CONSUMER_PUBLIC_KEY_COOKIE_NAME': 'ConsumerPublicKey',
-    'POPUP_TIMEOUT_MS': 4000
+    'POPUP_TIMEOUT_MS': 4000,
+    'THEME_INFO': [
+      { name: 'Dark', class: 'k2e-document-view-dark' },
+      { name: 'Light', class: 'k2e-document-view-light' },
+      { name: 'OMG ponies', class: 'k2e-document-view-omg-ponies'}
+    ]
   }
 });
 

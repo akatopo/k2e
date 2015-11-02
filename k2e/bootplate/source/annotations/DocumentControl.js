@@ -1,14 +1,13 @@
 /* global k2e */
 
-(function () {
+(function (Constants) {
 
-var THEME_CLASS_NAME_MAP = {
-  'Dark': 'k2e-document-view-dark',
-  'Light': 'k2e-document-view-light',
-  'OMG ponies': 'k2e-document-view-omg-ponies'
-};
+var THEME_CLASS_NAME_MAP = Constants.THEME_INFO.reduce(function (map, current) {
+  map[current.name] = current.class;
+  return map;
+}, {});
 
-var DEFAULT_THEME_CLASS = THEME_CLASS_NAME_MAP.Dark;
+var DEFAULT_THEME_CLASS = Constants.THEME_INFO[0].name;
 
 enyo.kind({
   name: 'k2e.annotations.DocumentControl',
@@ -111,5 +110,5 @@ function rendered() {
   this.set('theme', theme);
 }
 
-})();
+})(k2e.Constants);
 

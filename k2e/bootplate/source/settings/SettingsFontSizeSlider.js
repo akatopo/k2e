@@ -18,14 +18,7 @@ enyo.kind({
   components: [
     {name: 'slider', kind: 'onyx.Slider', min: 40, max: 160, increment: 20}
   ],
-  valueChanged: valueChanged
+  valueChanged: function () { this.doFontSizeChanged({ sizePercent: this.value }); }
 });
-
-/////////////////////////////////////////////////////////////
-
-function valueChanged() {
-  this.doInputValueChanged({ newValue: this.value });
-  this.doFontSizeChanged({ sizePercent: this.value });
-}
 
 })();
