@@ -29,35 +29,36 @@ enyo.kind({
         ]}
       ]},
       // {content: 'Export', components: [
-      //     {kind: 'onyx.Groupbox', components: [
-      //         {name: 'ignoredTitleList', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'k2e.settings.SettingsTextInput', label: 'Titles to Ignore'}
-      //     ]}
+      //   {kind: 'onyx.Groupbox', components: [
+      //     {name: 'ignoredTitleList', kind: 'k2e.settings.SettingsValueItem',
+      //       defaultInputKind: 'k2e.settings.SettingsTextInput', label: 'Titles to Ignore'}
+      //   ]}
       // ]},
       // {content: 'Article Extraction', components: [
-      //     {kind: 'onyx.Groupbox', components: [
-      //         {name: 'articleExtraction', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'k2e.settings.SettingsToggleButton',
-      //           label: 'Periodical Article Extraction', onSettingChanged: 'handleExtractionSettingChanged'},
-      //         {name: 'periodicalTitleList', kind: 'k2e.settings.SettingsValueItem', inputComponent: {kind: 'k2e.settings.SettingsTextInput'},
-      //                 label: 'Periodical titles',
-      //                 disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
-      //         {name: 'googleSearchApiKey', kind: 'k2e.settings.SettingsValueItem', inputComponent: {kind: 'k2e.settings.SettingsTextInput', type: 'password'},
-      //                 label: 'Google Search Api Key',
-      //                 disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
-      //         {name: 'googleSearchApiCx', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'k2e.settings.SettingsTextInput', label: 'Google Search Api Cx',
-      //                 disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
-      //         {name: 'googleSearchApiLoc', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'k2e.settings.SettingsTextInput', label: 'Google Search Api Url',
-      //                 disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')}
-      //     ]}
+      //   {kind: 'onyx.Groupbox', components: [
+      //     {name: 'articleExtraction', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'k2e.settings.SettingsToggleButton',
+      //       label: 'Periodical Article Extraction', onSettingChanged: 'handleExtractionSettingChanged'},
+      //     {name: 'periodicalTitleList', kind: 'k2e.settings.SettingsValueItem', inputComponent: {kind: 'k2e.settings.SettingsTextInput'},
+      //       label: 'Periodical titles', disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
+      //     {name: 'googleSearchApiKey', kind: 'k2e.settings.SettingsValueItem',
+      //       inputComponent: {kind: 'k2e.settings.SettingsTextInput', type: 'password'},
+      //       label: 'Google Search Api Key', disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
+      //     {name: 'googleSearchApiCx', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'k2e.settings.SettingsTextInput',
+      //       label: 'Google Search Api Cx', disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
+      //     {name: 'googleSearchApiLoc', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'k2e.settings.SettingsTextInput',
+      //       label: 'Google Search Api Url', disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')}
+      //   ]}
       // ]},
       {content: 'Local Storage', components: [
         {kind: 'onyx.Groupbox', components: [
           {name: 'clearSettings', kind: 'k2e.settings.SettingsActionItem',
-            label: 'Restore Default Settings', buttonLabel: 'Restore', onActivated: 'restoreDefaults'}
-          // {name: 'clearCache', kind: 'k2e.settings.SettingsActionItem', label: 'Clear Cache', buttonLabel: 'Clear', onActivated: 'clearCache' },
-          // {name: 'exportSettings', kind: 'k2e.settings.SettingsActionItem', label: 'Export Settings', buttonLabel: 'Export',
-          //   onActivated: 'exportSettings'},
-          // {name: 'importSettings', kind: 'k2e.settings.SettingsActionItem', label: 'Import Settings', buttonLabel: 'Import',
-          //   onActivated: 'importSettings'}
+            label: 'Restore Default Settings', buttonLabel: 'Restore', onActivated: 'restoreDefaults'}//,
+          // {name: 'clearCache', kind: 'k2e.settings.SettingsActionItem', label: 'Clear Cache',
+          //   buttonLabel: 'Clear', onActivated: 'clearCache' },
+          // {name: 'exportSettings', kind: 'k2e.settings.SettingsActionItem', label: 'Export Settings',
+          //   buttonLabel: 'Export', onActivated: 'exportSettings'},
+          // {name: 'importSettings', kind: 'k2e.settings.SettingsActionItem', label: 'Import Settings',
+          //   buttonLabel: 'Import', onActivated: 'importSettings'}
         ]}
       ]},
       {content: 'Permissions', components: [

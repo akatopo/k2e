@@ -96,12 +96,6 @@ $overlay-button-top: 10px;
   transition-delay: 0s;
 }
 
-// hack for fulscreen reflow strangeness
-
-.k2e-document-scroller.k2e-fullscreen {
-  height: 100%!important;
-}
-
 /***********************************************************************************************/
 /* Document selector list */
 
@@ -199,7 +193,6 @@ $overlay-button-top: 10px;
 /** Dark theme **/
 .k2e-document-view-dark {
   @include k2e-dark-theme();
-  // @include k2e-light-theme();
 }
 
 /** Light theme **/

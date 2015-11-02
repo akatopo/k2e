@@ -5,5 +5,5 @@ enyo.depends(
   'DocumentSelectorList.js',
   'DocumentSelectorItem.js',
   'DocumentView.js',
-  'DocumentScroller.js'
+  'DocumentControl.js'
 );

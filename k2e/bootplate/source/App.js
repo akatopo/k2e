@@ -4,24 +4,6 @@
 
 var exportPreparationSem;
 var docsExport;
-var arrayToSet = function (array) {
-  var set = {};
-
-  array.forEach(function (elem) {
-    set[elem] = true;
-  });
-
-  return set;
-};
-var getThemeClassFromName = function (themeName) {
-  var classNameMap = {
-    'Dark': 'k2e-document-view-dark',
-    'Light': 'k2e-document-view-light',
-    'OMG ponies': 'k2e-document-view-omg-ponies'
-  };
-
-  return classNameMap[themeName];
-};
 
 enyo.kind({
   name: 'k2e.App',
@@ -49,17 +31,7 @@ enyo.kind({
           ]}
         ]},
         {kind: 'FittableRows', classes: 'k2e-main-panel', fit: true, components: [
-          {name: 'documentScroller', kind: 'k2e.annotations.DocumentScroller', fit: true, components: [
-            {name: 'documentView', kind: 'k2e.annotations.DocumentView'},
-            {name: 'toggleFullscreenButton', classes: 'k2e-toggle-fullscreen-button k2e-icon-button k2e-hidden',
-              ontap: 'toggleFullscreen', kind: 'onyx.Button', components: [
-                {tag: 'i', classes: 'icon-resize-small icon-large'}
-            ]},
-            {name: 'toTopButton', kind: 'onyx.Button', classes: 'k2e-to-top-button k2e-icon-button k2e-hidden',
-              ontap: 'scrollDocumentToTop', components: [
-                {tag: 'i', classes: 'icon-chevron-up icon-large'}
-            ]}
-          ]},
+          {name: 'documentControl', kind: 'k2e.annotations.DocumentControl', fit: true},
           {name: 'backToolbar', kind: 'onyx.Toolbar', showing: false, components: [
             {kind: 'onyx.Button', classes: 'k2e-icon-button', ontap: 'showDocumentSelectorList', components: [
               {tag: 'i', classes: 'icon-left-big icon-large'}
@@ -80,7 +52,6 @@ enyo.kind({
     onDocumentSelected: 'handleDocumentSelected',
     onDocumentMultiSelected: 'handleDocumentMultiSelected',
     onClippingsTextChanged: 'handleClippingsTextChanged',
-    onDocumentScrolled: 'handleDocumentScrolled',
     onThemeChanged: 'handleThemeChanged',
     onFontSizeChanged: 'handleFontSizeChanged',
     onTextMarginChanged: 'handleTextMarginChanged',
@@ -90,8 +61,6 @@ enyo.kind({
     { from: '.cookieModel', to: '.$.settings.cookieModel' }
   ],
 
-  setTheme: function (themeName) { this.setCurrentThemeClass(getThemeClassFromName(themeName)); },
-  setCurrentThemeClass: setCurrentThemeClass,
   toggleDistractionFreeMode: toggleDistractionFreeMode,
   toggleFullscreen: toggleFullscreen,
   showDocumentSelectorList: showDocumentSelectorList,
@@ -102,10 +71,8 @@ enyo.kind({
   prepareDocumentsAndExport: prepareDocumentsAndExport,
   setSuggestedDataToClipping: setSuggestedDataToClipping,
   processQueryError: processQueryError,
-  scrollDocumentToTop: scrollDocumentToTop,
   handleDocumentSelected: handleDocumentSelected,
   handleDocumentMultiSelected: handleDocumentMultiSelected,
-  handleDocumentScrolled: handleDocumentScrolled,
   handleExportBegin: handleExportBegin,
   handleExportEnd: handleExportEnd,
   handleQueryBegin: handleQueryBegin,
@@ -125,19 +92,18 @@ enyo.kind({
 
 /////////////////////////////////////////////////////////////
 
-function setCurrentThemeClass(themeClass) {
-  var oldThemeClass = this.currentThemeClass;
-  // hack to rectify onThemeChanged getting fired on init
-  if (this.$.documentScroller) {
-    this.currentThemeClass = themeClass;
-    this.$.documentScroller.removeClass(oldThemeClass);
-    this.$.documentScroller.addClass(this.currentThemeClass);
-  }
+function arrayToSet(array) {
+  var set = {};
+
+  array.forEach(function (elem) {
+    set[elem] = true;
+  });
+
+  return set;
 }
 
 function toggleDistractionFreeMode() {
   if (this.$.settings.isAtMax()) {
-    // this.$.settings.animateToMin();
     this.toggleSettings();
   }
   this.$.appToolbar.setShowing(!this.$.appToolbar.showing);
@@ -150,8 +116,7 @@ function toggleDistractionFreeMode() {
 function toggleFullscreen() {
   var isFullscreen = this.isFullscreen();
 
-  this.$.toggleFullscreenButton.addRemoveClass('visible', !isFullscreen);
-  this.$.documentScroller.addRemoveClass('k2e-fullscreen', !isFullscreen);
+  this.$.documentControl.set('fullscreen', !isFullscreen);
 
   return isFullscreen ?
       this.cancelFullscreen() :
@@ -389,10 +354,6 @@ function processQueryError(inSender, inResponse) {
   this.handleQueryEnd();
 }
 
-function scrollDocumentToTop(inSender, inEvent) {
-  this.$.documentScroller.scrollTo(0, 0);
-}
-
 function handleDocumentSelected(inSender, inEvent) {
   var docSelector;
   var doc;
@@ -409,9 +370,7 @@ function handleDocumentSelected(inSender, inEvent) {
   this.log(docSelector.getTitle());
   this.log(docSelector.getIndex());
   this.log(doc);
-  this.$.documentView.displayDocument(doc);
-  this.$.documentScroller.setScrollTop(0);
-  this.$.documentScroller.setScrollLeft(0);
+  this.$.documentControl.set('document', doc);
 }
 
 function handleDocumentMultiSelected(inSender, inEvent) {
@@ -422,12 +381,6 @@ function handleDocumentMultiSelected(inSender, inEvent) {
 
   var selectionKeys = this.$.documentSelectorList.getMultiSelectionKeys();
   this.$.exportButton.setDisabled(Object.keys(selectionKeys).length === 0);
-}
-
-function handleDocumentScrolled(inSender, inEvent) {
-  var isNotAtTop = inEvent.scrollBounds.top !== 0;
-
-  this.$.toTopButton.addRemoveClass('visible', isNotAtTop);
 }
 
 function handleExportBegin(inSender, inEvent) {
@@ -506,25 +459,31 @@ function toggleMultiSelection(inSender, inEvent) {
   this.$.appToolbar.reflow();
 }
 
-function handleThemeChanged(inSender, inEvent) {
-  var settings = new k2e.settings.SettingsSingleton();
+function handleThemeChanged(inSender, inEvent) { // TODO: get this via event object
+  if (!this.$.documentControl) {
+    return;
+  }
 
-  this.log(inEvent);
-  this.setTheme(settings.getSetting('themeName'));
+  var settings = new k2e.settings.SettingsSingleton();
+  var theme = settings.getSetting('themeName');
+
+  this.$.documentControl.set('theme', theme);
 }
 
 function handleFontSizeChanged(inSender, inEvent) {
-  this.log(inEvent);
-  if (this.$.documentScroller) {
-    this.$.documentScroller.applyStyle('font-size', inEvent.sizePercent + '%');
+  if (!this.$.documentControl) {
+    return;
   }
+
+  this.$.documentControl.set('fontSize', +inEvent.sizePercent);
 }
 
 function handleTextMarginChanged(inSender, inEvent) {
-  if (this.$.documentView) {
-    this.$.documentView.removeClass('k2e-document-view-padding-' + inEvent.previous);
-    this.$.documentView.addClass('k2e-document-view-padding-' + inEvent.current);
+  if (!this.$.documentControl) {
+    return;
   }
+
+  this.$.documentControl.set('margin', +inEvent.current);
 }
 
 function parseKindleClippings(kindleClippings) {
@@ -640,7 +599,7 @@ function reflow() {
   if (!isScreenNarrow && !isFullscreen) {
     this.$.mainPanels.setIndex(0);
   }
-  this.$.toggleFullscreenButton.addRemoveClass('visible', isFullscreen);
+  this.$.documentControl.set('fullscreen', isFullscreen);
   this.$.exportButton.set('form', (isScreenNarrow && 'short') || 'long');
 }
 
@@ -650,21 +609,13 @@ function rendered() {
 }
 
 function create() {
-  var self = this;
   this.inherited(arguments);
-  var settings = new k2e.settings.SettingsSingleton();
-  var padding = settings.getSetting('textMargin');
-  var sizePercent = settings.getSetting('fontSize');
-
-  this.handleThemeChanged();
-  this.handleFontSizeChanged(undefined, { sizePercent:  sizePercent });
-  this.handleTextMarginChanged(undefined, { current: padding });
 
   var cookieModel = new k2e.CookieModel();
   cookieModel.fetch();
   this.set('cookieModel', cookieModel);
 
-  exportPreparationSem = new k2e.util.AsyncSemaphore({func: this.exportDocuments.bind(this)/* function () { self.exportDocuments(); }*/ });
+  exportPreparationSem = new k2e.util.AsyncSemaphore({ func: this.exportDocuments.bind(this) });
 
   // FIXME: Get data by dnd or file chooser
   // if (!window.XMLHttpRequest)
