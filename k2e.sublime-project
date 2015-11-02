@@ -6,12 +6,24 @@
         "node_modules",
         "dist",
         "packages",
-        "build"
+        "build",
+        "bootplate/lib",
+        "k2e/evernote"
       ],
       "path": "."
     }
   ],
   "settings": {
-    "tab_size": 2
+    "tab_size": 2,
+    "todoreview": {
+      "exclude_folders": [
+        "*node_modules*",
+        "*dist*",
+        "*packages*",
+        "*build*",
+        "*bootplate/lib*",
+        "*k2e/evernote*"
+      ]
+    }
   }
 }
