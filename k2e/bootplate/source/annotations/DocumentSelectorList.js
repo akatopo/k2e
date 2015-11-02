@@ -41,6 +41,7 @@ function create() {
 
 function handleDocumentSelected(inSender, inEvent) {
   var docSelectorItem = inEvent.originator;
+
   if (this.selDocumentSelectorItem === docSelectorItem) {
     inEvent.reSelected = true;
     return;
@@ -51,9 +52,14 @@ function handleDocumentSelected(inSender, inEvent) {
   }
   docSelectorItem.setSelected(true);
   this.selDocumentSelectorItem = docSelectorItem;
+
   // TODO: isInView is protected. Is there a better way to find whether a node/control is in view?
   if (!this.getStrategy().isInView(this.selDocumentSelectorItem.hasNode())) {
-    this.scrollIntoView(this.selDocumentSelectorItem, false);
+    var curItemIndex = this.selDocumentSelectorItem.index;
+    var prevItem = this.items[Math.max(curItemIndex - 1, 0)];
+    var alignWithTop = !this.getStrategy().isInView(prevItem.hasNode());
+
+    this.scrollIntoView(this.selDocumentSelectorItem, alignWithTop);
   }
 }
 
