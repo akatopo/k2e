@@ -36,18 +36,13 @@ function create() {
 }
 
 function exportObject() {
-  var clipExportArray = [];
-
-  this.clippings.forEach(function (clipping) {
-    var clipExport = clipping.exportObject();
-    clipExportArray.push(clipExport);
-  });
-
   return {
     title: this.title,
     author: this.author,
-    isPeriodical: this.isPeriodical,
-    clippings: clipExportArray
+    isPeriodical: !!this.isPeriodical,
+    clippings: this.clippings.map(function (clipping) {
+      return clipping.exportObject();
+    })
   };
 }
 

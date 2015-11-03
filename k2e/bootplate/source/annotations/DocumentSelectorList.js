@@ -22,14 +22,11 @@ enyo.kind({
   create: create,
   handleDocumentSelected: handleDocumentSelected,
   handleSetupItem: handleSetupItem,
-  setMultiSelected: setMultiSelected,
-  toggleMultiSelection: toggleMultiSelection,
-  enableMultiSelection: enableMultiSelection,
-  disableMultiSelection: disableMultiSelection,
+  multiSelectedChanged: multiSelectedChanged,
   getMultiSelectionKeys: getMultiSelectionKeys,
   selectNextDocument: selectNextDocument,
   selectPrevDocument: selectPrevDocument,
-  populate: populate
+  documentsRefChanged: documentsRefChanged
 });
 
 /////////////////////////////////////////////////////////////
@@ -48,9 +45,9 @@ function handleDocumentSelected(inSender, inEvent) {
   }
 
   if (this.selDocumentSelectorItem) {
-    this.selDocumentSelectorItem.setSelected(false);
+    this.selDocumentSelectorItem.set('selected', false);
   }
-  docSelectorItem.setSelected(true);
+  docSelectorItem.set('selected', true);
   this.selDocumentSelectorItem = docSelectorItem;
 
   // TODO: isInView is protected. Is there a better way to find whether a node/control is in view?
@@ -69,46 +66,19 @@ function handleSetupItem(inSender, inEvent) {
   var docMap = this.documentsRef.getDocMap();
   var key = this.sortedKeys[index];
 
-  item.$.documentSelectorItem.setTitle(docMap[key].getTitle());
-  item.$.documentSelectorItem.setIndex(index);
-  item.$.documentSelectorItem.setKey(key);
+  item.$.documentSelectorItem.set('title', docMap[key].title);
+  item.$.documentSelectorItem.set('index', index);
+  item.$.documentSelectorItem.set('key', key);
   this.items.push(item.$.documentSelectorItem);
 
   return true;
 }
 
-function setMultiSelected(inValue) {
-  if (inValue) {
-    this.multiSelected = true;
-    this.enableMultiSelection();
-  }
-  else {
-    this.multiSelected = false;
-    this.disableMultiSelection();
-  }
-}
-
-function toggleMultiSelection() {
-  if (this.multiSelected) {
-    this.disableMultiSelection();
-  }
-  else {
-    this.enableMultiSelection();
-  }
-}
-
-function enableMultiSelection() {
-  this.multiSelected = true;
+function multiSelectedChanged() {
+  var multiSelected = !!this.multiSelected;
   this.items.forEach(function (item) {
-    item.setMultiSelected(true);
+    item.set('multiSelected', multiSelected);
   });
-}
-
-function disableMultiSelection() {
-  this.items.forEach(function (item) {
-    item.setMultiSelected(false);
-  });
-  this.multiSelected = false;
 }
 
 function getMultiSelectionKeys() {
@@ -127,21 +97,21 @@ function selectNextDocument() {
   var curIndex;
   var selDocument;
 
-  if (this.items.length !== 0) {
-    if (!this.selDocumentSelectorItem) {
-      selDocument = this.items[0];
+  if (this.items.length === 0) {
+    return;
+  }
+
+  if (!this.selDocumentSelectorItem) {
+    selDocument = this.items[0];
+    selDocument.doDocumentSelected();
+  }
+  else {
+    curIndex = this.selDocumentSelectorItem.index;
+    if (curIndex > -1 && curIndex < this.items.length - 1) {
+      ++curIndex;
+
+      selDocument = this.items[curIndex];
       selDocument.doDocumentSelected();
-    }
-    else {
-      curIndex = this.selDocumentSelectorItem.getIndex();
-      if (curIndex >= 0 && curIndex < this.items.length - 1) {
-        curIndex += 1;
-
-        selDocument = this.items[curIndex];
-        selDocument.doDocumentSelected();
-      }
-
-      this.log(this.selDocumentSelectorItem.getIndex());
     }
   }
 }
@@ -150,27 +120,26 @@ function selectPrevDocument() {
   var curIndex;
   var selDocument;
 
-  if (this.items.length !== 0) {
-    if (!this.selDocumentSelectorItem) {
-      selDocument = this.items[this.items.length - 1];
+  if (this.items.length === 0) {
+    return;
+  }
+
+  if (!this.selDocumentSelectorItem) {
+    selDocument = this.items[this.items.length - 1];
+    selDocument.doDocumentSelected();
+  }
+  else {
+    curIndex = this.selDocumentSelectorItem.getIndex();
+    if (curIndex > 0 && curIndex < this.items.length) {
+      --curIndex;
+
+      selDocument = this.items[curIndex];
       selDocument.doDocumentSelected();
-    }
-    else {
-      curIndex = this.selDocumentSelectorItem.getIndex();
-      if (curIndex >= 1 && curIndex < this.items.length) {
-        curIndex -= 1;
-
-        selDocument = this.items[curIndex];
-        selDocument.doDocumentSelected();
-      }
-
-      this.log(this.selDocumentSelectorItem.getIndex());
     }
   }
 }
 
-function populate(documents) {
-  this.documentsRef = documents;
+function documentsRefChanged() {
   var docMap = this.documentsRef.getDocMap();
   var keys = this.documentsRef.getKeyArray();
 

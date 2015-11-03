@@ -380,7 +380,7 @@ function handleDocumentMultiSelected(inSender, inEvent) {
   }
 
   var selectionKeys = this.$.documentSelectorList.getMultiSelectionKeys();
-  this.$.exportButton.setDisabled(Object.keys(selectionKeys).length === 0);
+  this.$.exportButton.set('disabled', Object.keys(selectionKeys).length === 0);
 }
 
 function handleExportBegin(inSender, inEvent) {
@@ -407,7 +407,7 @@ function handleClippingsTextChanged(inSender, inEvent) {
   var clipText = this.$.clippingPickerPopup.getClippingsText();
   try {
     this.documents = this.parseKindleClippings(clipText);
-    this.$.documentSelectorList.populate(this.documents);
+    this.$.documentSelectorList.set('documentsRef', this.documents);
     this.$.clippingPickerPopup.hide();
     this.$.documentSelectorList.selectNextDocument();
   }
@@ -452,8 +452,8 @@ function toggleSettings(inSender, inEvent) {
 function toggleMultiSelection(inSender, inEvent) {
   var exportButton = this.$.exportButton;
   var multiSelectButton = this.$.multiSelectButton;
-  this.$.documentSelectorList.toggleMultiSelection();
-  exportButton.setDisabled(!exportButton.exportSelected);
+  this.$.documentSelectorList.set('multiSelected', !this.$.documentSelectorList.multiSelected);
+  exportButton.set('disabled', !exportButton.exportSelected);
   exportButton.set('exportSelected', !exportButton.exportSelected);
   multiSelectButton.addRemoveClass('active', !multiSelectButton.hasClass('active'));
   this.$.appToolbar.reflow();
@@ -616,19 +616,6 @@ function create() {
   this.set('cookieModel', cookieModel);
 
   exportPreparationSem = new k2e.util.AsyncSemaphore({ func: this.exportDocuments.bind(this) });
-
-  // FIXME: Get data by dnd or file chooser
-  // if (!window.XMLHttpRequest)
-  //     return;
-
-  // var req = new XMLHttpRequest();
-  // req.open('GET', 'assets/clippings.txt');
-  // req.send(null);
-
-  // req.onreadystatechange = function () {
-  //     this.documents = parseKindleClippings(req.responseText);
-  //     self.$.documentSelectorList.populate(testDocs);
-  // };
 }
 
 })();

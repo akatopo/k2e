@@ -4,6 +4,7 @@ enyo.kind({
   name: 'k2e.annotations.DocumentSelectorItem',
   classes: 'k2e-document-selector-item enyo-border-box',
   published: {
+    title: '',
     index: -1,
     multiSelected: false,
     selected: false,
@@ -29,31 +30,29 @@ enyo.kind({
   handlers: {
     ontap: 'handleTap'
   },
+  bindings: [
+    { from: '.title', to: '.$.label.content' }
+  ],
   handleTap: function () { this.doDocumentSelected(); },
-  setTitle: function (titleString) { this.$.label.setContent(titleString); },
-  getTitle: function () { return this.$.label.getContent(); },
   isMarked: function () { return this.$.checkbox.getChecked(); },
-  setMultiSelected: setMultiSelected,
-  setSelected: setSelected
+  multiSelectedChanged: multiSelectedChanged,
+  selectedChanged: selectedChanged
 });
 
 /////////////////////////////////////////////////////////////
 
-function setSelected(bool) {
-  this.selected = bool;
+function selectedChanged() {
   this.addRemoveClass('onyx-selected', this.selected);
 }
 
-function setMultiSelected(bool) {
-  if (bool) {
-    this.multiSelected = true;
-    this.$.checkbox.setChecked(false);
+function multiSelectedChanged() {
+  if (this.multiSelected) {
+    this.$.checkbox.set('checked', false);
     this.$.checkbox.show();
   }
   else {
-    this.multiSelected = false;
+    // No need to emit doDocumentMultiSelected event, so don't set checked to false
     this.$.checkbox.hide();
-    this.$.checkbox.setChecked(false);
   }
 }
 
