@@ -26,12 +26,14 @@ enyo.kind({
 /////////////////////////////////////////////////////////////
 
 function handleActivate(inSender, inEvent) {
-  if (inEvent.originator.getActive()) {
-    this.log(inEvent.originator.getContent());
-    this.set('value', inEvent.originator.getContent());
+  if (!inEvent.originator.getActive()) {
+    return;
   }
 
-  this.doThemeChanged();
+  var themeName = inEvent.originator.getContent();
+  this.log(inEvent.originator.getContent());
+  this.set('value', themeName);
+  this.doThemeChanged({ name: themeName });
 
   return true;
 }
@@ -44,7 +46,7 @@ function valueChanged() {
   var found = components.some(function (component) {
     if (component.getContent() === self.value) {
       component.setActive(true);
-      self.doThemeChanged();
+      self.doThemeChanged({ name: self.value });
 
       return true;
     }

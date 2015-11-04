@@ -176,12 +176,14 @@ function processExportError(inSender, inResponse) {
 
 function evernoteAuthPopup(cb, err) {
   var popup = window.open(k2e.Constants.AUTH_PATH, k2e.Constants.AUTH_WINDOW_NAME, k2e.Constants.AUTH_WINDOW_FEATURES);
+  cb = cb || function () {};
+  err = err || function () {};
 
   var pollTimer = window.setInterval(function () {
     try {
       if (popup.closed) {
         window.clearInterval(pollTimer);
-        (err || function () {})();
+        err();
       }
       else if (popup.document.URL.indexOf(k2e.Constants.AUTH_DONE_QUERY_PARAM) !== -1) {
         window.clearInterval(pollTimer);
@@ -189,10 +191,10 @@ function evernoteAuthPopup(cb, err) {
         if (document.cookie.indexOf(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME) !== -1 &&
             document.cookie.indexOf(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) !== -1
         ) {
-          (cb || function () {})();
+          cb();
         }
         else {
-          (err || function () {})();
+          err();
         }
       }
     }
@@ -459,15 +461,12 @@ function toggleMultiSelection(inSender, inEvent) {
   this.$.appToolbar.reflow();
 }
 
-function handleThemeChanged(inSender, inEvent) { // TODO: get this via event object
+function handleThemeChanged(inSender, inEvent) {
   if (!this.$.documentControl) {
     return;
   }
 
-  var settings = new k2e.settings.SettingsSingleton();
-  var theme = settings.getSetting('themeName');
-
-  this.$.documentControl.set('theme', theme);
+  this.$.documentControl.set('theme', inEvent.name);
 }
 
 function handleFontSizeChanged(inSender, inEvent) {
@@ -557,8 +556,8 @@ function parseKindleClippings(kindleClippings) {
     }
 
     return [
-    title.trim() || 'Unknown Title',
-    author.trim() || 'Unknown Author'
+      title.trim() || 'Unknown Title',
+      author.trim() || 'Unknown Author'
     ];
 
     /////////////////////////////////////////////////////////////
