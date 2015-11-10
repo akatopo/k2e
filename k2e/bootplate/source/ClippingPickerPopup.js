@@ -55,7 +55,7 @@ function showErrorMessage() {
 }
 
 function loadFile() {
-  var pickerNode = this.$.filePicker.hasNode();
+  let pickerNode = this.$.filePicker.hasNode();
 
   if (pickerNode) {
     pickerNode.click();
@@ -63,9 +63,9 @@ function loadFile() {
 }
 
 function handleFiles(inSender, inEvent) {
-  var self = this;
-  var reader = new FileReader();
-  var files = inEvent.target.files;
+  let self = this;
+  let reader = new FileReader();
+  let files = inEvent.target.files;
 
   if (files.length > 0) {
     reader.onload = function (e) {
@@ -77,15 +77,15 @@ function handleFiles(inSender, inEvent) {
 }
 
 function handleShow() {
-  var self = this;
-  var popupNode = this.hasNode();
-  var pickerNode = this.$.filePicker.hasNode();
-  var handleDragleave;
-  var handleDragover;
-  var handleFiles;
-  var handleDrop;
-  var handleFilePick;
-  var sampleClippingsNode = document.querySelector('#sample-clippings');
+  let self = this;
+  let popupNode = this.hasNode();
+  let pickerNode = this.$.filePicker.hasNode();
+  let handleDragleave;
+  let handleDragover;
+  let handleFiles;
+  let handleDrop;
+  let handleFilePick;
+  let sampleClippingsNode = document.querySelector('#sample-clippings');
 
   if (sampleClippingsNode) {
     self.setClippingsText(sampleClippingsNode.innerHTML);

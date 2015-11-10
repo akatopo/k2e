@@ -25,7 +25,7 @@ function create() {
 }
 
 function addClippingToDocument(title, author, clipping) {
-  var key = title + author;
+  let key = title + author;
 
   if (!this.docMap[key]) {
     this.docMap[key] = new k2e.annotations.Document({
@@ -40,17 +40,17 @@ function addClippingToDocument(title, author, clipping) {
 }
 
 function exportObject(options) {
-  var self = this;
-  var ignoredTitleSet = (options && options.ignoredTitleSet) || false;
-  var selectedKeySet = (options && options.selectedKeySet) || false;
-  var documentsExport = { documents: [] };
-  var exportFunc;
+  let self = this;
+  let ignoredTitleSet = (options && options.ignoredTitleSet) || false;
+  let selectedKeySet = (options && options.selectedKeySet) || false;
+  let documentsExport = { documents: [] };
+  let exportFunc;
 
   // selectedKeySet has priority over ignoredTitleSet
   if (selectedKeySet) {
     exportFunc = function (doc) {
       if (selectedKeySet.hasOwnProperty(doc.title + doc.author)) {
-        var docExport = doc.exportObject();
+        let docExport = doc.exportObject();
         documentsExport.documents.push(docExport);
       }
     };
@@ -58,20 +58,20 @@ function exportObject(options) {
   else if (ignoredTitleSet) {
     exportFunc = function (doc) {
       if (!ignoredTitleSet.hasOwnProperty(doc.title)) {
-        var docExport = doc.exportObject();
+        let docExport = doc.exportObject();
         documentsExport.documents.push(docExport);
       }
     };
   }
   else {
     exportFunc = function (doc) {
-      var docExport = doc.exportObject();
+      let docExport = doc.exportObject();
       documentsExport.documents.push(docExport);
     };
   }
 
   this.keyArray.forEach(function (key) {
-    var doc = self.docMap[key];
+    let doc = self.docMap[key];
     exportFunc(doc);
   });
 

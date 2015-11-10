@@ -2,8 +2,8 @@
 
 (function () {
 
-var exportPreparationSem;
-var docsExport;
+let exportPreparationSem;
+let docsExport;
 
 enyo.kind({
   name: 'k2e.App',
@@ -93,7 +93,7 @@ enyo.kind({
 /////////////////////////////////////////////////////////////
 
 function arrayToSet(array) {
-  var set = {};
+  let set = {};
 
   array.forEach(function (elem) {
     set[elem] = true;
@@ -114,7 +114,7 @@ function toggleDistractionFreeMode() {
 }
 
 function toggleFullscreen() {
-  var isFullscreen = this.isFullscreen();
+  let isFullscreen = this.isFullscreen();
 
   this.$.documentControl.set('fullscreen', !isFullscreen);
 
@@ -129,8 +129,8 @@ function showDocumentSelectorList() {
 
 function exportDocuments() {
   this.log('Export processing done');
-  var loc = location.protocol + '//' + location.host + k2e.Constants.EXPORT_PATH;
-  var ajax = new enyo.Ajax({
+  let loc = location.protocol + '//' + location.host + k2e.Constants.EXPORT_PATH;
+  let ajax = new enyo.Ajax({
     url: loc,
     contentType: 'application/json',
     method: 'POST',
@@ -141,7 +141,7 @@ function exportDocuments() {
   console.log(docsExport);
 
   // // comment out to enable exporting
-  // var self = this;
+  // let self = this;
   // window.setTimeout(function () { self.$.exportPopup.done('Export done!'); }, 2000 /* ms */);
   // window.setTimeout(function () { self.$.exportPopup.hide(); }, 4000 /* ms */);
   // return;
@@ -156,11 +156,11 @@ function processExportResponse(inSender, inResponse) {
 }
 
 function processExportError(inSender, inResponse) {
-  var self = this;
-  var response = JSON.parse(inSender.xhrResponse.body);
+  let self = this;
+  let response = JSON.parse(inSender.xhrResponse.body);
   response = response ? response.d : { errors: []};
   if (inResponse === 401) {
-    var cookieModel = self.$.settings.get('cookieModel');
+    let cookieModel = self.$.settings.get('cookieModel');
     cookieModel.fetch();
     cookieModel.set(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
     cookieModel.set(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
@@ -175,11 +175,11 @@ function processExportError(inSender, inResponse) {
 }
 
 function evernoteAuthPopup(cb, err) {
-  var popup = window.open(k2e.Constants.AUTH_PATH, k2e.Constants.AUTH_WINDOW_NAME, k2e.Constants.AUTH_WINDOW_FEATURES);
+  let popup = window.open(k2e.Constants.AUTH_PATH, k2e.Constants.AUTH_WINDOW_NAME, k2e.Constants.AUTH_WINDOW_FEATURES);
   cb = cb || function () {};
   err = err || function () {};
 
-  var pollTimer = window.setInterval(function () {
+  let pollTimer = window.setInterval(function () {
     try {
       if (popup.closed) {
         window.clearInterval(pollTimer);
@@ -223,12 +223,12 @@ function prepareDocumentsAndExport(/*inSender, inEvent*/) {
   function doExport(app) {
     app.handleExportBegin();
 
-    var settings = new k2e.settings.SettingsSingleton();
-    var ignoredTitleSet = {};
-    var ignoredTitleList = settings.getSetting('ignoredTitleList');
-    var docExportArray;
-    var periodicalTitleSet = {};
-    var periodicalTitleList;
+    let settings = new k2e.settings.SettingsSingleton();
+    let ignoredTitleSet = {};
+    let ignoredTitleList = settings.getSetting('ignoredTitleList');
+    let docExportArray;
+    let periodicalTitleSet = {};
+    let periodicalTitleList;
 
     if (ignoredTitleList.length > 0) {
       ignoredTitleSet = arrayToSet(ignoredTitleList.split(','));
@@ -268,19 +268,19 @@ function prepareDocumentsAndExport(/*inSender, inEvent*/) {
 }
 
 function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
-  var self = this;
-  var settings = new k2e.settings.SettingsSingleton();
-  var quoted = (makeQuotedFlag === undefined) ? true : makeQuotedFlag;
-  var retry = (retryFlag === undefined) ? true : retryFlag;
-  var loc = settings.getSetting('googleSearchApiLoc');
-  var key = settings.getSetting('googleSearchApiKey');
-  var cx = settings.getSetting('googleSearchApiCx');
-  var MAX_QUERY_LENGTH = 128;
-  var s = '';
-  var q = '';
-  var index;
-  var ajax;
-  var processQueryResponse;
+  let self = this;
+  let settings = new k2e.settings.SettingsSingleton();
+  let quoted = (makeQuotedFlag === undefined) ? true : makeQuotedFlag;
+  let retry = (retryFlag === undefined) ? true : retryFlag;
+  let loc = settings.getSetting('googleSearchApiLoc');
+  let key = settings.getSetting('googleSearchApiKey');
+  let cx = settings.getSetting('googleSearchApiCx');
+  let MAX_QUERY_LENGTH = 128;
+  let s = '';
+  let q = '';
+  let index;
+  let ajax;
+  let processQueryResponse;
 
   if (clippingExport.content.length > MAX_QUERY_LENGTH) {
     s = clippingExport.content.substring(0, MAX_QUERY_LENGTH);
@@ -312,7 +312,7 @@ function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
   });
 
   processQueryResponse = function (inSender, inResponse) {
-    var cEx = clippingExport;
+    let cEx = clippingExport;
     if (inResponse.items && inResponse.items.length) {
       cEx.suggestedTitle = inResponse.items[0].title;
       cEx.suggestedUrl = inResponse.items[0].link;
@@ -329,9 +329,9 @@ function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
   };
   ajax.response(processQueryResponse);
 
-  // var processQueryErrorTmp = (function (inSender, inResponse) {
+  // let processQueryErrorTmp = (function (inSender, inResponse) {
   //     inResponse = {  };
-  //     var cEx = clippingExport;
+  //     let cEx = clippingExport;
   //     if (inResponse.items && inResponse.items.length) {
   //         cEx.suggestedTitle = inResponse.items[0].title;
   //         cEx.suggestedUrl = inResponse.items[0].link;
@@ -357,8 +357,8 @@ function processQueryError(inSender, inResponse) {
 }
 
 function handleDocumentSelected(inSender, inEvent) {
-  var docSelector;
-  var doc;
+  let docSelector;
+  let doc;
 
   if (enyo.Panels.isScreenNarrow()) {
     this.$.mainPanels.setIndex(1);
@@ -381,7 +381,7 @@ function handleDocumentMultiSelected(inSender, inEvent) {
     return;
   }
 
-  var selectionKeys = this.$.documentSelectorList.getMultiSelectionKeys();
+  let selectionKeys = this.$.documentSelectorList.getMultiSelectionKeys();
   this.$.exportButton.set('disabled', Object.keys(selectionKeys).length === 0);
 }
 
@@ -406,7 +406,7 @@ function handleQueryEnd(inSender, inEvent) {
 }
 
 function handleClippingsTextChanged(inSender, inEvent) {
-  var clipText = this.$.clippingPickerPopup.getClippingsText();
+  let clipText = this.$.clippingPickerPopup.getClippingsText();
   try {
     this.documents = this.parseKindleClippings(clipText);
     this.$.documentSelectorList.set('documentsRef', this.documents);
@@ -420,7 +420,7 @@ function handleClippingsTextChanged(inSender, inEvent) {
 }
 
 function handleKeydown(inSender, inEvent) {
-  var modKeyPressed = inEvent.altKey ||
+  let modKeyPressed = inEvent.altKey ||
     inEvent.ctrlKey ||
     inEvent.shiftKey ||
     inEvent.altGraphKey ||
@@ -446,14 +446,14 @@ function handleKeydown(inSender, inEvent) {
 }
 
 function toggleSettings(inSender, inEvent) {
-  var settingsButton = this.$.settingsButton;
+  let settingsButton = this.$.settingsButton;
   settingsButton.addRemoveClass('active', !settingsButton.hasClass('active'));
   this.$.settings.toggle();
 }
 
 function toggleMultiSelection(inSender, inEvent) {
-  var exportButton = this.$.exportButton;
-  var multiSelectButton = this.$.multiSelectButton;
+  let exportButton = this.$.exportButton;
+  let multiSelectButton = this.$.multiSelectButton;
   this.$.documentSelectorList.set('multiSelected', !this.$.documentSelectorList.multiSelected);
   exportButton.set('disabled', !exportButton.exportSelected);
   exportButton.set('exportSelected', !exportButton.exportSelected);
@@ -486,8 +486,8 @@ function handleTextMarginChanged(inSender, inEvent) {
 }
 
 function parseKindleClippings(kindleClippings) {
-  var docs = new k2e.annotations.DocumentCollection();
-  var delimeterRegExp = /\r?\n==========\r?\n/;
+  let docs = new k2e.annotations.DocumentCollection();
+  let delimeterRegExp = /\r?\n==========\r?\n/;
 
   kindleClippings = kindleClippings.split(delimeterRegExp);
   kindleClippings.forEach(addClippingToDocumentCollection);
@@ -497,16 +497,16 @@ function parseKindleClippings(kindleClippings) {
   /////////////////////////////////////////////////////////////
 
   function addClippingToDocumentCollection(clipping) {
-    var clippingRegExp = /^(.+)\r?\n- (.+)\r?\n?\r?\n?(.*)$/;
-    var res;
-    var title;
-    var author;
-    var titleAndAuthor;
-    var subtitle;
-    var type;
-    var loc;
-    var timeStamp;
-    var content;
+    let clippingRegExp = /^(.+)\r?\n- (.+)\r?\n?\r?\n?(.*)$/;
+    let res;
+    let title;
+    let author;
+    let titleAndAuthor;
+    let subtitle;
+    let type;
+    let loc;
+    let timeStamp;
+    let content;
     clipping = clipping.trim();
 
     if (clipping === '') {
@@ -541,9 +541,9 @@ function parseKindleClippings(kindleClippings) {
   }
 
   function splitTitleAndAuthor(s) {
-    var author = '';
-    var title = '';
-    var splitIndex;
+    let author = '';
+    let title = '';
+    let splitIndex;
 
     splitIndex = getAuthorOpenParenIndex(s);
 
@@ -570,9 +570,9 @@ function parseKindleClippings(kindleClippings) {
         return undefined;
       }
 
-      var rightOpenParens = 1;
+      let rightOpenParens = 1;
 
-      for (var i = s.length - 2; i > -1; --i) {
+      for (let i = s.length - 2; i > -1; --i) {
         if (s[i] === '(') {
           --rightOpenParens;
         }
@@ -589,8 +589,8 @@ function parseKindleClippings(kindleClippings) {
 }
 
 function reflow() {
-  var isScreenNarrow = enyo.Panels.isScreenNarrow();
-  var isFullscreen = this.isFullscreen();
+  let isScreenNarrow = enyo.Panels.isScreenNarrow();
+  let isFullscreen = this.isFullscreen();
 
   this.inherited(arguments);
 
@@ -610,7 +610,7 @@ function rendered() {
 function create() {
   this.inherited(arguments);
 
-  var cookieModel = new k2e.CookieModel();
+  let cookieModel = new k2e.CookieModel();
   cookieModel.fetch();
   this.set('cookieModel', cookieModel);
 

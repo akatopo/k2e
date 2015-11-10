@@ -37,7 +37,7 @@ function create() {
 }
 
 function handleDocumentSelected(inSender, inEvent) {
-  var docSelectorItem = inEvent.originator;
+  let docSelectorItem = inEvent.originator;
 
   if (this.selDocumentSelectorItem === docSelectorItem) {
     inEvent.reSelected = true;
@@ -52,19 +52,19 @@ function handleDocumentSelected(inSender, inEvent) {
 
   // TODO: isInView is protected. Is there a better way to find whether a node/control is in view?
   if (!this.getStrategy().isInView(this.selDocumentSelectorItem.hasNode())) {
-    var curItemIndex = this.selDocumentSelectorItem.index;
-    var prevItem = this.items[Math.max(curItemIndex - 1, 0)];
-    var alignWithTop = !this.getStrategy().isInView(prevItem.hasNode());
+    let curItemIndex = this.selDocumentSelectorItem.index;
+    let prevItem = this.items[Math.max(curItemIndex - 1, 0)];
+    let alignWithTop = !this.getStrategy().isInView(prevItem.hasNode());
 
     this.scrollIntoView(this.selDocumentSelectorItem, alignWithTop);
   }
 }
 
 function handleSetupItem(inSender, inEvent) {
-  var index = inEvent.index;
-  var item = inEvent.item;
-  var docMap = this.documentsRef.getDocMap();
-  var key = this.sortedKeys[index];
+  let index = inEvent.index;
+  let item = inEvent.item;
+  let docMap = this.documentsRef.getDocMap();
+  let key = this.sortedKeys[index];
 
   item.$.documentSelectorItem.set('title', docMap[key].title);
   item.$.documentSelectorItem.set('index', index);
@@ -75,14 +75,14 @@ function handleSetupItem(inSender, inEvent) {
 }
 
 function multiSelectedChanged() {
-  var multiSelected = !!this.multiSelected;
+  let multiSelected = !!this.multiSelected;
   this.items.forEach(function (item) {
     item.set('multiSelected', multiSelected);
   });
 }
 
 function getMultiSelectionKeys() {
-  var multiSelKeys = {};
+  let multiSelKeys = {};
 
   this.items.forEach(function (item) {
     if (item.getMultiSelected() && item.isMarked()) {
@@ -94,8 +94,8 @@ function getMultiSelectionKeys() {
 }
 
 function selectNextDocument() {
-  var curIndex;
-  var selDocument;
+  let curIndex;
+  let selDocument;
 
   if (this.items.length === 0) {
     return;
@@ -117,8 +117,8 @@ function selectNextDocument() {
 }
 
 function selectPrevDocument() {
-  var curIndex;
-  var selDocument;
+  let curIndex;
+  let selDocument;
 
   if (this.items.length === 0) {
     return;
@@ -140,13 +140,13 @@ function selectPrevDocument() {
 }
 
 function documentsRefChanged() {
-  var docMap = this.documentsRef.getDocMap();
-  var keys = this.documentsRef.getKeyArray();
+  let docMap = this.documentsRef.getDocMap();
+  let keys = this.documentsRef.getKeyArray();
 
   // descending (newest to oldest most recent clipping date) key sort
   this.sortedKeys = keys.slice(0).sort(function (a, b) {
-    var aUnixTimestamp = docMap[a].mostRecentDate.valueOf();
-    var bUnixTimestamp = docMap[b].mostRecentDate.valueOf();
+    let aUnixTimestamp = docMap[a].mostRecentDate.valueOf();
+    let bUnixTimestamp = docMap[b].mostRecentDate.valueOf();
 
     return bUnixTimestamp - aUnixTimestamp;
   });

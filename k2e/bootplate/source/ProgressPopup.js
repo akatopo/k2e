@@ -45,16 +45,16 @@ function failed(caption, messages) {
 }
 
 function changeMessage(message, spinnerToggle) {
-  var spinnerFunc = spinnerToggle ? this.$.spinner.show : this.$.spinner.hide;
+  let spinnerFunc = spinnerToggle ? this.$.spinner.show : this.$.spinner.hide;
   spinnerFunc.call(this.$.spinner);
   this.$.message.setContent(message);
   this.rendered();
 }
 
 function calculateTimeout(s) {
-  var MS_REACTION_TIME = 250;
-  var MS_PER_CHARACTER = 60000 / (200 * 5); // 200 WPM -> 1000 CPM,
-  var nonSpaceCharacters = Array.prototype.reduce.call(s, nonSpaceReducer, 0);
+  const MS_REACTION_TIME = 250;
+  const MS_PER_CHARACTER = 60000 / (200 * 5); // 200 WPM -> 1000 CPM,
+  let nonSpaceCharacters = Array.prototype.reduce.call(s, nonSpaceReducer, 0);
 
   return (nonSpaceCharacters * MS_PER_CHARACTER) + 2 * MS_REACTION_TIME;
 }

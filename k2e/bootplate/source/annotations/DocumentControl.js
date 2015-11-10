@@ -2,12 +2,12 @@
 
 (function (Constants) {
 
-var THEME_CLASS_NAME_MAP = Constants.THEME_INFO.reduce(function (map, current) {
+const THEME_CLASS_NAME_MAP = Constants.THEME_INFO.reduce(function (map, current) {
   map[current.name] = current.class;
   return map;
 }, {});
 
-var DEFAULT_THEME_CLASS = Constants.THEME_INFO[0].name;
+const DEFAULT_THEME_CLASS = Constants.THEME_INFO[0].name;
 
 enyo.kind({
   name: 'k2e.annotations.DocumentControl',
@@ -54,8 +54,8 @@ enyo.kind({
 /////////////////////////////////////////////////////////////
 
 function handleScroll(inSender, inEvent) {
-  var scrollBounds = this.$.scroller.getScrollBounds();
-  var isNotAtTop = scrollBounds.top !== 0;
+  let scrollBounds = this.$.scroller.getScrollBounds();
+  let isNotAtTop = scrollBounds.top !== 0;
 
   this.$.toTopButton.addRemoveClass('visible', isNotAtTop);
 }
@@ -85,8 +85,8 @@ function marginChanged(oldMargin) {
 }
 
 function themeChanged(oldTheme) {
-  var oldThemeClass = THEME_CLASS_NAME_MAP[oldTheme] || DEFAULT_THEME_CLASS;
-  var newThemeClass = THEME_CLASS_NAME_MAP[this.theme] || DEFAULT_THEME_CLASS;
+  let oldThemeClass = THEME_CLASS_NAME_MAP[oldTheme] || DEFAULT_THEME_CLASS;
+  let newThemeClass = THEME_CLASS_NAME_MAP[this.theme] || DEFAULT_THEME_CLASS;
   this.$.scroller.removeClass(oldThemeClass);
   this.$.scroller.addClass(newThemeClass);
 }
@@ -100,10 +100,10 @@ function create() {
 function rendered() {
   this.inherited(arguments);
 
-  var settings = new k2e.settings.SettingsSingleton();
-  var sizePercent = settings.getSetting('fontSize');
-  var margin = settings.getSetting('textMargin');
-  var theme = settings.getSetting('themeName');
+  let settings = new k2e.settings.SettingsSingleton();
+  let sizePercent = settings.getSetting('fontSize');
+  let margin = settings.getSetting('textMargin');
+  let theme = settings.getSetting('themeName');
 
   this.set('fontSize', sizePercent);
   this.set('margin', margin);

@@ -30,7 +30,7 @@ function handleActivate(inSender, inEvent) {
     return;
   }
 
-  var themeName = inEvent.originator.getContent();
+  let themeName = inEvent.originator.getContent();
   this.log(inEvent.originator.getContent());
   this.set('value', themeName);
   this.doThemeChanged({ name: themeName });
@@ -39,11 +39,11 @@ function handleActivate(inSender, inEvent) {
 }
 
 function valueChanged() {
-  var self = this;
+  let self = this;
   this.log(this.getComponents());
 
-  var components = this.getComponents().slice(1);
-  var found = components.some(function (component) {
+  let components = this.getComponents().slice(1);
+  let found = components.some(function (component) {
     if (component.getContent() === self.value) {
       component.setActive(true);
       self.doThemeChanged({ name: self.value });
@@ -67,8 +67,8 @@ function valueChanged() {
 }
 
 function disabledChanged() {
-  var self = this;
-  var components = this.getComponents().slice(1);
+  let self = this;
+  let components = this.getComponents().slice(1);
 
   components.forEach(function (component) {
     component.setDisabled(self.disabled);

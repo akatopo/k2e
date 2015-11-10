@@ -9,9 +9,9 @@ function SettingsSingleton() {
     return arguments.callee.singletonInstance;
   }
 
-  var storage = window.localStorage;
-  var self = this;
-  var settingExists = function (settingName) {
+  let storage = window.localStorage;
+  let self = this;
+  let settingExists = function (settingName) {
     return !!self.defaultSettings[settingName];
   };
   arguments.callee.singletonInstance = this;
@@ -36,7 +36,7 @@ function SettingsSingleton() {
       return null;
     }
 
-    var settingValue = storage && storage[settingName] ?
+    let settingValue = storage && storage[settingName] ?
       JSON.parse(storage[settingName]) :
       JSON.parse(this.defaultSettings[settingName]);
     return settingValue;
@@ -44,7 +44,7 @@ function SettingsSingleton() {
 
   function getDefaultSetting(settingName) {
     if (settingExists(settingName)) {
-      var settingValue = JSON.parse(this.defaultSettings[settingName]);
+      let settingValue = JSON.parse(this.defaultSettings[settingName]);
       return settingValue;
     }
     return null;

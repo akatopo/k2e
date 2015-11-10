@@ -19,7 +19,7 @@ function displayDocument(doc) {
     {tag: 'span', content: doc.author }
   ]});
 
-  var sortedClippings = doc.clippings.slice(0).sort(sortDescending);
+  let sortedClippings = doc.clippings.slice(0).sort(sortDescending);
   sortedClippings.forEach(appendClippingToDisplay.bind(undefined, this));
 
   this.render();
@@ -27,17 +27,17 @@ function displayDocument(doc) {
   /////////////////////////////////////////////////////////////
 
   function sortDescending(a, b) {
-    var aUnixTimestamp = a.creationDate.valueOf();
-    var bUnixTimestamp = b.creationDate.valueOf();
+    let aUnixTimestamp = a.creationDate.valueOf();
+    let bUnixTimestamp = b.creationDate.valueOf();
 
     return bUnixTimestamp - aUnixTimestamp;
   }
 
   function appendClippingToDisplay(component, clipping, index, sortedClippings) {
-    var loc = clipping.loc;
-    var type = clipping.type;
-    var timestamp = clipping.timeStamp;
-    var content = clipping.content;
+    let loc = clipping.loc;
+    let type = clipping.type;
+    let timestamp = clipping.timeStamp;
+    let content = clipping.content;
 
     if (index !== 0) {
       component.createComponent({classes: 'k2e-document-view-clip-separator'});

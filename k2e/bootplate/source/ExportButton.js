@@ -1,6 +1,6 @@
 (function () {
 
-var LABELS = {
+const LABELS = {
   exportAll: { short: 'Export', 'long': 'Export Clippings' },
   exportSelected: { short: 'Export Selected', 'long': 'Export Selected Clippings' }
 };
@@ -27,8 +27,8 @@ enyo.kind({
 /////////////////////////////////////////////////////////////
 
 function content() {
-  var form = this.form === 'long' ? 'long' : 'short';
-  var labelType = this.exportSelected ? 'exportSelected' : 'exportAll';
+  let form = this.form === 'long' ? 'long' : 'short';
+  let labelType = this.exportSelected ? 'exportSelected' : 'exportAll';
 
   return LABELS[labelType][form];
 }

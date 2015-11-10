@@ -2,6 +2,8 @@
 
 (function () {
 
+const DATE_FORMAT = 'dddd, MMMM DD, YYYY, hh:mm A';
+
 enyo.kind({
   name: 'k2e.annotations.Clipping',
   kind: 'enyo.Component',
@@ -21,7 +23,6 @@ enyo.kind({
 /////////////////////////////////////////////////////////////
 
 function create() {
-  var DATE_FORMAT = 'dddd, MMMM DD, YYYY, hh:mm A';
   this.inherited(arguments);
   this.creationDate = moment(this.timeStamp, DATE_FORMAT);
 }

@@ -36,7 +36,7 @@ enyo.kind({
       // ]},
       // {content: 'Article Extraction', components: [
       //   {kind: 'onyx.Groupbox', components: [
-      //     {name: 'articleExtraction', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'k2e.settings.SettingsToggleButton',
+      //     {name: 'articleExtraction', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'onyx.ToggleButton',
       //       label: 'Periodical Article Extraction', onSettingChanged: 'handleExtractionSettingChanged'},
       //     {name: 'periodicalTitleList', kind: 'k2e.settings.SettingsValueItem', inputComponent: {kind: 'k2e.settings.SettingsTextInput'},
       //       label: 'Periodical titles', disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
@@ -85,9 +85,9 @@ enyo.kind({
 /////////////////////////////////////////////////////////////
 
 function handleSettingChanged(inSender, inEvent) {
-  var settingsItem = inEvent.originator;
-  var value = JSON.stringify(inEvent.newValue || settingsItem.getValue());
-  var name = settingsItem.getName();
+  let settingsItem = inEvent.originator;
+  let value = JSON.stringify(inEvent.newValue || settingsItem.getValue());
+  let name = settingsItem.getName();
 
   this.log(settingsItem.getValue());
   this.log(settingsItem.getName());
@@ -114,8 +114,8 @@ function handleExtractionSettingChanged(inSender, inEvent) {
 function revokeEvernotePermissions(inSender, inEvent) {
   this.$.settingsPopup.begin('Revoking permissions...');
 
-  var loc = location.protocol + '//' + location.host + k2e.Constants.REVOKE_PATH;
-  var ajax = new enyo.Ajax({
+  let loc = location.protocol + '//' + location.host + k2e.Constants.REVOKE_PATH;
+  let ajax = new enyo.Ajax({
     url: loc,
     contentType: 'application/json',
     method: 'POST'
@@ -125,7 +125,7 @@ function revokeEvernotePermissions(inSender, inEvent) {
   ajax.response(this.$.settingsPopup, processResponse);
   ajax.error(this.$.settingsPopup, processError);
 
-  var cookieModel = this.cookieModel;
+  let cookieModel = this.cookieModel;
   function processResponse(inSender, inEvent) {
     cookieModel.fetch();
     cookieModel.set(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
@@ -140,13 +140,13 @@ function revokeEvernotePermissions(inSender, inEvent) {
 }
 
 function restoreDefaults() {
-  var self = this;
+  let self = this;
   this.log('restore defaults');
 
   localStorage.clear();
 
-  var settings = new k2e.settings.SettingsSingleton();
-  var defaultsMap = settings.defaultSettings;
+  let settings = new k2e.settings.SettingsSingleton();
+  let defaultsMap = settings.defaultSettings;
 
   Object.keys(defaultsMap).filter(function (key) {
     return self.$.hasOwnProperty(key);
