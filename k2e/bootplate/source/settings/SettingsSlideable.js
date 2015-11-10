@@ -18,7 +18,7 @@ enyo.kind({
   bindings: [
     { from: '.cookieModel', to: '.$.panel.cookieModel' }
   ],
-  toggle: toggle
+  toggle
 });
 
 /////////////////////////////////////////////////////////////

@@ -13,9 +13,9 @@ enyo.kind({
     {name: 'spinner', kind: 'onyx.Spinner'},
     {name: 'message', content: ''}
   ],
-  done: done,
-  begin: begin,
-  failed: failed
+  done,
+  begin,
+  failed
 });
 
 /////////////////////////////////////////////////////////////

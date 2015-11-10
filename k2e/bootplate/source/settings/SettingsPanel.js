@@ -72,14 +72,14 @@ enyo.kind({
   bindings: [
     { from: '.cookieModel', to: '.$.revokeEvernotePermissions.cookieModel' }
   ],
-  handleSettingChanged: handleSettingChanged,
-  handleExtractionSettingChanged: handleExtractionSettingChanged,
-  handleToggleFullscreenActivated: function () { this.doFullscreenRequest(); },
-  revokeEvernotePermissions: revokeEvernotePermissions,
-  restoreDefaults: restoreDefaults,
-  importSettings: function () { this.log('Import settings'); },
-  exportSettings: function () { this.log('Export settings'); },
-  clearCache: function () { this.log('clear cache'); }
+  handleSettingChanged,
+  handleExtractionSettingChanged,
+  handleToggleFullscreenActivated() { this.doFullscreenRequest(); },
+  revokeEvernotePermissions,
+  restoreDefaults,
+  importSettings() { this.log('Import settings'); },
+  exportSettings() { this.log('Export settings'); },
+  clearCache() { this.log('clear cache'); }
 });
 
 /////////////////////////////////////////////////////////////

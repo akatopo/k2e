@@ -14,12 +14,12 @@ enyo.kind({
   bindings: [
     { from: '.disabled', to: '.$.button.disabled' },
     { from: '.buttonLabel', to: '.$.button.content' },
-    { from: '.buttonClasses', to: '.$.button.classes', transform: function (classes) {
+    { from: '.buttonClasses', to: '.$.button.classes', transform(classes) {
       return 'k2e-settings-action-item-button onyx-button ' + classes;
     }}
   ],
-  handleTap: function () { this.doActivated(); },
-  create: create
+  handleTap() { this.doActivated(); },
+  create
 });
 
 /////////////////////////////////////////////////////////////

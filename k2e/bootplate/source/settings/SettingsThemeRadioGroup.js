@@ -17,10 +17,10 @@ enyo.kind({
       function (theme) { return { content: theme.name }; }
     )}
   ],
-  handleActivate: handleActivate,
-  valueChanged: valueChanged,
-  disabledChanged: disabledChanged,
-  create: create
+  handleActivate,
+  valueChanged,
+  disabledChanged,
+  create
 });
 
 /////////////////////////////////////////////////////////////

@@ -10,10 +10,10 @@ enyo.kind({
     keyArray: undefined,
     length: 0
   },
-  create: create,
-  addClippingToDocument: addClippingToDocument,
-  getDocumentByKey: function (key) { return this.docMap[key]; },
-  exportObject: exportObject
+  create,
+  addClippingToDocument,
+  getDocumentByKey(key) { return this.docMap[key]; },
+  exportObject
 });
 
 /////////////////////////////////////////////////////////////
@@ -29,8 +29,8 @@ function addClippingToDocument(title, author, clipping) {
 
   if (!this.docMap[key]) {
     this.docMap[key] = new k2e.annotations.Document({
-      title: title,
-      author: author
+      title,
+      author
     });
     this.length += 1;
     this.keyArray.push(key);

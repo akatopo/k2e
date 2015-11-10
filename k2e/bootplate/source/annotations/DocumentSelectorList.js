@@ -19,14 +19,14 @@ enyo.kind({
   handlers: {
     onDocumentSelected: 'handleDocumentSelected'
   },
-  create: create,
-  handleDocumentSelected: handleDocumentSelected,
-  handleSetupItem: handleSetupItem,
-  multiSelectedChanged: multiSelectedChanged,
-  getMultiSelectionKeys: getMultiSelectionKeys,
-  selectNextDocument: selectNextDocument,
-  selectPrevDocument: selectPrevDocument,
-  documentsRefChanged: documentsRefChanged
+  create,
+  handleDocumentSelected,
+  handleSetupItem,
+  multiSelectedChanged,
+  getMultiSelectionKeys,
+  selectNextDocument,
+  selectPrevDocument,
+  documentsRefChanged
 });
 
 /////////////////////////////////////////////////////////////

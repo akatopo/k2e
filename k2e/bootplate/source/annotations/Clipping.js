@@ -16,8 +16,8 @@ enyo.kind({
     suggestedTitle: '',
     suggestedUrl: ''
   },
-  create: create,
-  exportObject: exportObject
+  create,
+  exportObject
 });
 
 /////////////////////////////////////////////////////////////

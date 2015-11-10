@@ -16,9 +16,9 @@ enyo.kind({
     onQueryBegin: '',
     onQueryEnd: ''
   },
-  addClipping: addClipping,
-  create: create,
-  exportObject: exportObject
+  addClipping,
+  create,
+  exportObject
 });
 
 /////////////////////////////////////////////////////////////

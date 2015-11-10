@@ -14,8 +14,8 @@ enyo.kind({
   bindings: [
     { from: '.label', to: '.$.label.content' }
   ],
-  disabledChanged: disabledChanged,
-  create: create
+  disabledChanged,
+  create
 });
 
 /////////////////////////////////////////////////////////////

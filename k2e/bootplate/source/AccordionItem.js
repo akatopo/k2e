@@ -20,10 +20,10 @@ enyo.kind({
   bindings: [
     { from: '.content', to: '.$.headerText.content' }
   ],
-  toggleOpen: toggleOpen,
-  animatorStep: animatorStep,
-  animatorComplete: function () { return true; },
-  initComponents: initComponents
+  toggleOpen,
+  animatorStep,
+  animatorComplete() { return true; },
+  initComponents
 });
 
 /////////////////////////////////////////////////////////////

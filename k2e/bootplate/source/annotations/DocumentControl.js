@@ -39,16 +39,16 @@ enyo.kind({
     ]}
   ],
   strategyKind: 'ScrollStrategy',
-  handleScroll: handleScroll,
-  handleFullscreenButtonTap: function () { this.doFullscreenRequest(); },
-  scrollDocumentToTop: function () { this.$.scroller.scrollTo(0, 0); },
-  fullscreenChanged: fullscreenChanged,
-  documentChanged: documentChanged,
-  fontSizeChanged: fontSizeChanged,
-  marginChanged: marginChanged,
-  themeChanged: themeChanged,
-  create: create,
-  rendered: rendered
+  handleScroll,
+  handleFullscreenButtonTap() { this.doFullscreenRequest(); },
+  scrollDocumentToTop() { this.$.scroller.scrollTo(0, 0); },
+  fullscreenChanged,
+  documentChanged,
+  fontSizeChanged,
+  marginChanged,
+  themeChanged,
+  create,
+  rendered
 });
 
 /////////////////////////////////////////////////////////////

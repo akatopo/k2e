@@ -7,8 +7,8 @@ enyo.kind({
     lock: 0,
     func: undefined
   },
-  v: function () { ++this.lock; },
-  p: p
+  v() { ++this.lock; },
+  p
 });
 
 /////////////////////////////////////////////////////////////

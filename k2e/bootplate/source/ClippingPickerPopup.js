@@ -40,11 +40,11 @@ enyo.kind({
   handlers: {
     onShow: 'handleShow'
   },
-  showErrorMessage: showErrorMessage,
-  loadFile: loadFile,
-  clippingsTextChanged: function clippingsTextChanged() { this.doClippingsTextChanged(); },
-  handleFiles: handleFiles,
-  handleShow: handleShow
+  showErrorMessage,
+  loadFile,
+  clippingsTextChanged() { this.doClippingsTextChanged(); },
+  handleFiles,
+  handleShow
 });
 
 /////////////////////////////////////////////////////////////

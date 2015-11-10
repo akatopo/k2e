@@ -21,7 +21,7 @@ enyo.kind({
   computed: {
     content: ['form', 'exportSelected']
   },
-  content: content
+  content
 });
 
 /////////////////////////////////////////////////////////////

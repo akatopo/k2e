@@ -18,7 +18,7 @@ enyo.kind({
   components: [
     {name: 'slider', kind: 'onyx.Slider', min: 10, max: 40, increment: 10}
   ],
-  valueChanged: function (oldValue) { this.doTextMarginChanged({ previous: oldValue, current: this.value }); }
+  valueChanged(oldValue) { this.doTextMarginChanged({ previous: oldValue, current: this.value }); }
 });
 
 })();

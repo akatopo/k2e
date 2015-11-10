@@ -4,8 +4,8 @@ enyo.kind({
   name: 'k2e.annotations.DocumentView',
   classes: 'k2e-document-view',
   components: [],
-  displayDocument: displayDocument,
-  clearDocument: function () { this.destroyComponents(); }
+  displayDocument,
+  clearDocument() { this.destroyComponents(); }
 });
 
 /////////////////////////////////////////////////////////////

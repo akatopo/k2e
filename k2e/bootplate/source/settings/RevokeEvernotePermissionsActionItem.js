@@ -17,7 +17,7 @@ enyo.kind({
         'modelDep2'
     ]}
   ],
-  disabledComputed: function () {
+  disabledComputed() {
     return !(
         !!this.get('cookieModel.' + k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) &&
         !!this.get('cookieModel.' + k2e.Constants.ACCESS_TOKEN_COOKIE_NAME)

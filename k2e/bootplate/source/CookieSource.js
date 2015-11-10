@@ -4,9 +4,9 @@
 enyo.kind({
   name: 'k2e.CookieSource',
   kind: 'enyo.Source',
-  fetch: function (rec, opts) { opts.success(Cookies.get()); },
-  commit: commit,
-  destroy: destroy
+  fetch(rec, opts) { opts.success(Cookies.get()); },
+  commit,
+  destroy
 });
 
 new k2e.CookieSource({ name: 'cookieSource' });

@@ -61,33 +61,33 @@ enyo.kind({
     { from: '.cookieModel', to: '.$.settings.cookieModel' }
   ],
 
-  toggleDistractionFreeMode: toggleDistractionFreeMode,
-  toggleFullscreen: toggleFullscreen,
-  showDocumentSelectorList: showDocumentSelectorList,
-  exportDocuments: exportDocuments,
-  processExportResponse: processExportResponse,
-  processExportError: processExportError,
-  evernoteAuthPopup: evernoteAuthPopup,
-  prepareDocumentsAndExport: prepareDocumentsAndExport,
-  setSuggestedDataToClipping: setSuggestedDataToClipping,
-  processQueryError: processQueryError,
-  handleDocumentSelected: handleDocumentSelected,
-  handleDocumentMultiSelected: handleDocumentMultiSelected,
-  handleExportBegin: handleExportBegin,
-  handleExportEnd: handleExportEnd,
-  handleQueryBegin: handleQueryBegin,
-  handleQueryEnd: handleQueryEnd,
-  handleClippingsTextChanged: handleClippingsTextChanged,
-  handleKeydown: handleKeydown,
-  toggleSettings: toggleSettings,
-  toggleMultiSelection: toggleMultiSelection,
-  handleThemeChanged: handleThemeChanged,
-  handleFontSizeChanged: handleFontSizeChanged,
-  handleTextMarginChanged: handleTextMarginChanged,
-  parseKindleClippings: parseKindleClippings,
-  reflow: reflow,
-  rendered: rendered,
-  create: create
+  toggleDistractionFreeMode,
+  toggleFullscreen,
+  showDocumentSelectorList,
+  exportDocuments,
+  processExportResponse,
+  processExportError,
+  evernoteAuthPopup,
+  prepareDocumentsAndExport,
+  setSuggestedDataToClipping,
+  processQueryError,
+  handleDocumentSelected,
+  handleDocumentMultiSelected,
+  handleExportBegin,
+  handleExportEnd,
+  handleQueryBegin,
+  handleQueryEnd,
+  handleClippingsTextChanged,
+  handleKeydown,
+  toggleSettings,
+  toggleMultiSelection,
+  handleThemeChanged,
+  handleFontSizeChanged,
+  handleTextMarginChanged,
+  parseKindleClippings,
+  reflow,
+  rendered,
+  create
 });
 
 /////////////////////////////////////////////////////////////
@@ -306,9 +306,9 @@ function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
 
   this.handleQueryBegin();
   ajax.go({
-    key: key,
-    cx: cx,
-    q: q
+    key,
+    cx,
+    q
   });
 
   processQueryResponse = function (inSender, inResponse) {

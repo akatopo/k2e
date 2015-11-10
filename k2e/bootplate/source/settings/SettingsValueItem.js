@@ -17,8 +17,8 @@ enyo.kind({
     { from: '.disabled', to: '.$.input.disabled' },
     { from: '.value', to: '.$.input.value', oneWay: false }
   ],
-  valueChanged: valueChanged,
-  create: create
+  valueChanged,
+  create
 });
 
 /////////////////////////////////////////////////////////////

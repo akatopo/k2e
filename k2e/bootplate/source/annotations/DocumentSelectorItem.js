@@ -33,10 +33,10 @@ enyo.kind({
   bindings: [
     { from: '.title', to: '.$.label.content' }
   ],
-  handleTap: function () { this.doDocumentSelected(); },
-  isMarked: function () { return this.$.checkbox.getChecked(); },
-  multiSelectedChanged: multiSelectedChanged,
-  selectedChanged: selectedChanged
+  handleTap() { this.doDocumentSelected(); },
+  isMarked() { return this.$.checkbox.getChecked(); },
+  multiSelectedChanged,
+  selectedChanged
 });
 
 /////////////////////////////////////////////////////////////
