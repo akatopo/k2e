@@ -10,5 +10,6 @@
   "strict": false, // https://github.com/enyojs/enyo/wiki/Enyo-and-Use-Strict
   "browser": true,
   "devel": true,
-  "latedef": "nofunc"
+  "latedef": "nofunc",
+  "esnext": true
 }

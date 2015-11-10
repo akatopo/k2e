@@ -108,8 +108,8 @@
 
 .onyx-button {
   -webkit-transition: visibility 0s ease-in 0.3s, opacity 0.3s ease-in;
-       -o-transition: visibility 0s ease-in 0.3s, opacity 0.3s ease-in;
-          transition: visibility 0s ease-in 0.3s, opacity 0.3s ease-in; }
+  -o-transition: visibility 0s ease-in 0.3s, opacity 0.3s ease-in;
+  transition: visibility 0s ease-in 0.3s, opacity 0.3s ease-in; }
 
 .onyx-radiobutton {
   color: #292929;
@@ -186,8 +186,8 @@
   position: relative;
   cursor: pointer;
   -webkit-transition: background-color 0.2s ease-in-out;
-       -o-transition: background-color 0.2s ease-in-out;
-          transition: background-color 0.2s ease-in-out; }
+  -o-transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out; }
 
 .k2e-document-selector-item-container {
   padding: 16px 12px;
@@ -199,8 +199,8 @@
   border-top: 1px solid #666;
   position: absolute;
   -webkit-transition: border-color 0.2s ease-in-out;
-       -o-transition: border-color 0.2s ease-in-out;
-          transition: border-color 0.2s ease-in-out; }
+  -o-transition: border-color 0.2s ease-in-out;
+  transition: border-color 0.2s ease-in-out; }
   @media (max-width: 800px) {
     .k2e-document-selector-item-separator {
       left: 2%;
@@ -378,7 +378,7 @@
   -webkit-background-size: cover;
           background-size: cover;
   color: black;
-  text-shadow: -0.07em 0.07em white; }
+  text-shadow: -.07em .07em white; }
   .k2e-document-view-omg-ponies h1 {
     -webkit-text-stroke: 1px black;
     color: pink; }

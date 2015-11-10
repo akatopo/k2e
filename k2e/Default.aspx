@@ -17,8 +17,9 @@
         <!-- enyo (debug) -->
         <script src="bootplate/lib/enyo/enyo.js" charset="utf-8"></script>
         <!-- application (debug) -->
-        <script src="bootplate/source/package.js" charset="utf-8"></script>
-        <link href="bootplate/source/print.css" rel="stylesheet" type="text/css" media="print">
+        <script src="bootplate/source-compiled/polyfill.js" charset="utf-8"></script>        
+        <script src="bootplate/source-compiled/package.js" charset="utf-8"></script>
+        <link href="bootplate/source-compiled/print.css" rel="stylesheet" type="text/css" media="print">
         <script type="text/template" id="sample-clippings">
 Kindle User's Guide (Amazon)
 - Bookmark Loc. 183  | Added on Monday, February 15, 2010, 05:58 PM
