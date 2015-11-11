@@ -76,12 +76,12 @@ function documentChanged() {
 }
 
 function fontSizeChanged() {
-  this.$.scroller.applyStyle('font-size', this.fontSize + '%');
+  this.$.scroller.applyStyle('font-size', `${this.fontSize}%`);
 }
 
 function marginChanged(oldMargin) {
-  this.$.documentView.removeClass('k2e-document-view-padding-' + oldMargin);
-  this.$.documentView.addClass('k2e-document-view-padding-' + this.margin);
+  this.$.documentView.removeClass(`k2e-document-view-padding-${oldMargin}`);
+  this.$.documentView.addClass(`k2e-document-view-padding-${this.margin}`);
 }
 
 function themeChanged(oldTheme) {

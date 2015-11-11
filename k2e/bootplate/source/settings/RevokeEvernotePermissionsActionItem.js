@@ -19,14 +19,14 @@ enyo.kind({
   ],
   disabledComputed() {
     return !(
-        !!this.get('cookieModel.' + k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME) &&
-        !!this.get('cookieModel.' + k2e.Constants.ACCESS_TOKEN_COOKIE_NAME)
+      !!this.get(`cookieModel.${k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME}`) &&
+      !!this.get(`cookieModel.${k2e.Constants.ACCESS_TOKEN_COOKIE_NAME}`)
     );
   },
   bindings: [
     { from: '.disabledComputed', to: '.disabled'},
-    { from: '.cookieModel.' + k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, to: '.modelDep1' },
-    { from: '.cookieModel.' + k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, to: '.modelDep2' }
+    { from: `.cookieModel.${k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME}`, to: '.modelDep1' },
+    { from: `.cookieModel.${k2e.Constants.ACCESS_TOKEN_COOKIE_NAME}`, to: '.modelDep2' }
   ]
 });
 

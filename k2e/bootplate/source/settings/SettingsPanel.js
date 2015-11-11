@@ -114,7 +114,7 @@ function handleExtractionSettingChanged(inSender, inEvent) {
 function revokeEvernotePermissions(inSender, inEvent) {
   this.$.settingsPopup.begin('Revoking permissions...');
 
-  let loc = location.protocol + '//' + location.host + k2e.Constants.REVOKE_PATH;
+  let loc = `${location.protocol}//${location.host}${k2e.Constants.REVOKE_PATH}`;
   let ajax = new enyo.Ajax({
     url: loc,
     contentType: 'application/json',

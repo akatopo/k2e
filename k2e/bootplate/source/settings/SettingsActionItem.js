@@ -15,7 +15,7 @@ enyo.kind({
     { from: '.disabled', to: '.$.button.disabled' },
     { from: '.buttonLabel', to: '.$.button.content' },
     { from: '.buttonClasses', to: '.$.button.classes', transform(classes) {
-      return 'k2e-settings-action-item-button onyx-button ' + classes;
+      return `k2e-settings-action-item-button onyx-button ${classes}`;
     }}
   ],
   handleTap() { this.doActivated(); },

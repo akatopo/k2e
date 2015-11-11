@@ -129,7 +129,7 @@ function showDocumentSelectorList() {
 
 function exportDocuments() {
   this.log('Export processing done');
-  let loc = location.protocol + '//' + location.host + k2e.Constants.EXPORT_PATH;
+  let loc = `${location.protocol}//${location.host}${k2e.Constants.EXPORT_PATH}`;
   let ajax = new enyo.Ajax({
     url: loc,
     contentType: 'application/json',
@@ -291,7 +291,7 @@ function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
     q = s;
   }
 
-  q = quoted ? ('"' + q + '"') : q;
+  q = quoted ? (`"${q}"`) : q;
 
   ajax = new enyo.Ajax({
     url: loc
@@ -309,7 +309,7 @@ function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
     if (inResponse.items && inResponse.items.length) {
       cEx.suggestedTitle = inResponse.items[0].title;
       cEx.suggestedUrl = inResponse.items[0].link;
-      this.log('Got title: ' + inResponse.items[0].title);
+      this.log(`Got title: ${inResponse.items[0].title}`);
       this.handleQueryEnd();
     }
     else {

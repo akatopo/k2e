@@ -44,11 +44,11 @@ function toggleOpen(inSender, inEvent) {
 }
 
 function animatorStep(inSender, inEvent) {
-  this.$.expander.applyStyle('-webkit-transform', 'rotate(' + inSender.value + 'deg)');
-  this.$.expander.applyStyle('-ms-transform', 'rotate(' + inSender.value + 'deg)');
-  this.$.expander.applyStyle('-moz-transform', 'rotate(' + inSender.value + 'deg)');
-  this.$.expander.applyStyle('-o-transform', 'rotate(' + inSender.value + 'deg)');
-  this.$.expander.applyStyle('transform', 'rotate(' + inSender.value + 'deg)');
+  this.$.expander.applyStyle('-webkit-transform', `rotate(${inSender.value}deg)`);
+  this.$.expander.applyStyle('-ms-transform', `rotate(${inSender.value}deg)`);
+  this.$.expander.applyStyle('-moz-transform', `rotate(${inSender.value}deg)`);
+  this.$.expander.applyStyle('-o-transform', `rotate(${inSender.value}deg)`);
+  this.$.expander.applyStyle('transform', `rotate(${inSender.value}deg)`);
 
   return true;
 }
