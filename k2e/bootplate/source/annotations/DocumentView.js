@@ -43,18 +43,19 @@ function displayDocument(doc) {
       component.createComponent({classes: 'k2e-document-view-clip-separator'});
     }
 
-    component.createComponent({classes: 'k2e-document-view-clip-header', components: [
-      {tag: 'i', content: `${type}, ${loc}`},
-      {tag: 'span', content: ' | '},
-      {tag: 'i', content: `Added on ${timestamp}` }
-    ]});
-
     component.createComponent(
       {tag: 'p', components: [
         {tag: 'i', classes: 'icon-quote-left icon-large'},
         {tag: null, allowHtml: true, content: ` ${content}`}
       ]}
     );
+
+    component.createComponent({classes: 'k2e-document-view-clip-footer', components: [
+      {tag: 'i', content: `${type}, ${loc}`},
+      {tag: 'span', content: ' • '},
+      {tag: 'i', content: `Added on ${timestamp}` }
+    ]});
+
   }
 }
 

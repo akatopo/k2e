@@ -54,14 +54,21 @@
         -webkit-font-smoothing: antialiased;
     }
 
-    .k2e-document-view-clip-header,
+    .k2e-document-view-clip-footer,
     .k2e-document-view-subtitle {
         font-size: 0.8em;
         letter-spacing: 0.09em;
-        margin-top: 1.8em;
-        /*overflow: hidden;*/
-        padding-top: 0.9em;
         overflow: visible;
+    }
+
+    .k2e-document-view-subtitle {
+        margin-top: 1.8em;
+        padding-top: 0.9em;
+    }
+
+    .k2e-document-view-clip-footer {
+        padding-bottom: 0.9em;
+        margin-bottom: 1.8em;
     }
 
     .k2e-document-view-subtitle {
@@ -90,7 +97,7 @@
 
     .k2e-document-view-subtitle,
     .k2e-document-view-clip-separator,
-    .k2e-document-view-clip-header {
+    .k2e-document-view-clip-footer {
         border-color: #4E5358;
         color: #A6B5C2;
     }
@@ -133,7 +140,7 @@
 
     .k2e-document-view-subtitle,
     .k2e-document-view-clip-separator,
-    .k2e-document-view-clip-header {
+    .k2e-document-view-clip-footer {
         border-color: #d7d7d4;
         color: #8d8d8d;
     }
@@ -182,7 +189,7 @@
 
     .k2e-document-view-subtitle,
     .k2e-document-view-clip-separator,
-    .k2e-document-view-clip-header {
+    .k2e-document-view-clip-footer {
         border-color: black;
         color: black;
     }
