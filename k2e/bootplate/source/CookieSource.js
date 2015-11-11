@@ -14,7 +14,7 @@ new k2e.CookieSource({ name: 'cookieSource' });
 /////////////////////////////////////////////////////////////
 
 function commit(rec, opts) {
-  Object.keys(rec.attributes).forEach(function (key) {
+  Object.keys(rec.attributes).forEach((key) => {
     if (rec.attributes[key] !== undefined) {
       Cookies.set(key, rec.get(key));
     }
@@ -26,7 +26,7 @@ function commit(rec, opts) {
 }
 
 function destroy(rec, opts) {
-  Object.keys(Cookies.get()).forEach(function (key) {
+  Object.keys(Cookies.get()).forEach((key) => {
     Cookies.remove(key);
   });
   opts.success();

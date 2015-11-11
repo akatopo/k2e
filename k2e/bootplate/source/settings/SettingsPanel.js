@@ -140,7 +140,6 @@ function revokeEvernotePermissions(inSender, inEvent) {
 }
 
 function restoreDefaults() {
-  let self = this;
   this.log('restore defaults');
 
   localStorage.clear();
@@ -148,12 +147,12 @@ function restoreDefaults() {
   let settings = new k2e.settings.SettingsSingleton();
   let defaultsMap = settings.defaultSettings;
 
-  Object.keys(defaultsMap).filter(function (key) {
-    return self.$.hasOwnProperty(key);
+  Object.keys(defaultsMap).filter((key) => {
+    return this.$.hasOwnProperty(key);
   })
-  .forEach(function (key) {
-    self.$[key].setValue(settings.getDefaultSetting(key));
-    self.$[key].valueChanged();
+  .forEach((key) => {
+    this.$[key].setValue(settings.getDefaultSetting(key));
+    this.$[key].valueChanged();
   });
 
 }

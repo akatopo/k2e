@@ -95,7 +95,7 @@ enyo.kind({
 function arrayToSet(array) {
   let set = {};
 
-  array.forEach(function (elem) {
+  array.forEach((elem) => {
     set[elem] = true;
   });
 
@@ -140,11 +140,6 @@ function exportDocuments() {
   console.log(loc);
   console.log(docsExport);
 
-  // // comment out to enable exporting
-  // let self = this;
-  // window.setTimeout(function () { self.$.exportPopup.done('Export done!'); }, 2000 /* ms */);
-  // window.setTimeout(function () { self.$.exportPopup.hide(); }, 4000 /* ms */);
-  // return;
   ajax.go();
 
   ajax.response(this, 'processExportResponse');
@@ -156,11 +151,10 @@ function processExportResponse(inSender, inResponse) {
 }
 
 function processExportError(inSender, inResponse) {
-  let self = this;
   let response = JSON.parse(inSender.xhrResponse.body);
   response = response ? response.d : { errors: []};
   if (inResponse === 401) {
-    let cookieModel = self.$.settings.get('cookieModel');
+    let cookieModel = this.$.settings.get('cookieModel');
     cookieModel.fetch();
     cookieModel.set(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
     cookieModel.set(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
@@ -168,7 +162,7 @@ function processExportError(inSender, inResponse) {
     this.$.exportPopup.failed('Export failed', 'Try exporting again');
   }
   else {
-    this.$.exportPopup.failed('Export failed', response.errors.map(function (error) {
+    this.$.exportPopup.failed('Export failed', response.errors.map((error) => {
       return error.message;
     }));
   }
@@ -176,10 +170,11 @@ function processExportError(inSender, inResponse) {
 
 function evernoteAuthPopup(cb, err) {
   let popup = window.open(k2e.Constants.AUTH_PATH, k2e.Constants.AUTH_WINDOW_NAME, k2e.Constants.AUTH_WINDOW_FEATURES);
-  cb = cb || function () {};
-  err = err || function () {};
+  let noop = () => {};
+  cb = cb || noop;
+  err = err || noop;
 
-  let pollTimer = window.setInterval(function () {
+  let pollTimer = window.setInterval(() => {
     try {
       if (popup.closed) {
         window.clearInterval(pollTimer);
@@ -247,12 +242,12 @@ function prepareDocumentsAndExport(/*inSender, inEvent*/) {
       periodicalTitleSet = arrayToSet(periodicalTitleList.split(','));
     }
 
-    docExportArray.forEach(function (documentExportObject) {
+    docExportArray.forEach((documentExportObject) => {
       if (settings.getSetting('articleExtraction') === true) {
         app.log('Tagging documents as periodicals');
         if (periodicalTitleSet.hasOwnProperty(documentExportObject.title)) {
           documentExportObject.isPeriodical = true;
-          documentExportObject.clippings.forEach(function (clippingExportObject) {
+          documentExportObject.clippings.forEach((clippingExportObject) => {
             app.setSuggestedDataToClipping(clippingExportObject);
           });
         }
@@ -268,7 +263,6 @@ function prepareDocumentsAndExport(/*inSender, inEvent*/) {
 }
 
 function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
-  let self = this;
   let settings = new k2e.settings.SettingsSingleton();
   let quoted = (makeQuotedFlag === undefined) ? true : makeQuotedFlag;
   let retry = (retryFlag === undefined) ? true : retryFlag;
@@ -297,7 +291,6 @@ function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
     q = s;
   }
 
-
   q = quoted ? ('"' + q + '"') : q;
 
   ajax = new enyo.Ajax({
@@ -311,43 +304,23 @@ function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
     q
   });
 
-  processQueryResponse = function (inSender, inResponse) {
+  processQueryResponse = (inSender, inResponse) => {
     let cEx = clippingExport;
     if (inResponse.items && inResponse.items.length) {
       cEx.suggestedTitle = inResponse.items[0].title;
       cEx.suggestedUrl = inResponse.items[0].link;
-      self.log('Got title: ' + inResponse.items[0].title);
-      self.handleQueryEnd();
+      this.log('Got title: ' + inResponse.items[0].title);
+      this.handleQueryEnd();
     }
     else {
       //send one additional query without quotes
-      self.handleQueryEnd();
+      this.handleQueryEnd();
       if (retry) {
-        self.setSuggestedDataToClipping(cEx, false, false);
+        this.setSuggestedDataToClipping(cEx, false, false);
       }
     }
   };
   ajax.response(processQueryResponse);
-
-  // let processQueryErrorTmp = (function (inSender, inResponse) {
-  //     inResponse = {  };
-  //     let cEx = clippingExport;
-  //     if (inResponse.items && inResponse.items.length) {
-  //         cEx.suggestedTitle = inResponse.items[0].title;
-  //         cEx.suggestedUrl = inResponse.items[0].link;
-  //         self.log('Got title: ' + inResponse.items[0].title);
-  //         self.handleQueryEnd();
-  //     }
-  //     else {
-  //         //send one additional query without quotes
-  //         self.handleQueryEnd();
-  //         if (retry) {
-  //             self.setSuggestedDataToClipping(cEx, false, false);
-  //         }
-  //     }
-  // });
-  // ajax.error(processQueryErrorTmp);
-
   ajax.error(this, 'processQueryError');
 }
 

@@ -10,9 +10,8 @@ function SettingsSingleton() {
   }
 
   let storage = window.localStorage;
-  let self = this;
-  let settingExists = function (settingName) {
-    return !!self.defaultSettings[settingName];
+  let settingExists = (settingName) => {
+    return !!this.defaultSettings[settingName];
   };
   arguments.callee.singletonInstance = this;
 

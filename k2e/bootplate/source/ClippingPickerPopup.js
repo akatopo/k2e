@@ -63,13 +63,12 @@ function loadFile() {
 }
 
 function handleFiles(inSender, inEvent) {
-  let self = this;
   let reader = new FileReader();
   let files = inEvent.target.files;
 
   if (files.length > 0) {
-    reader.onload = function (e) {
-      self.setClippingsText(e.target.result);
+    reader.onload = (e) => {
+      this.setClippingsText(e.target.result);
     };
 
     reader.readAsText(files[0]);
@@ -77,7 +76,6 @@ function handleFiles(inSender, inEvent) {
 }
 
 function handleShow() {
-  let self = this;
   let popupNode = this.hasNode();
   let pickerNode = this.$.filePicker.hasNode();
   let handleDragleave;
@@ -88,31 +86,31 @@ function handleShow() {
   let sampleClippingsNode = document.querySelector('#sample-clippings');
 
   if (sampleClippingsNode) {
-    self.setClippingsText(sampleClippingsNode.innerHTML);
+    this.setClippingsText(sampleClippingsNode.innerHTML);
     return;
   }
 
   if (popupNode && pickerNode) {
-    handleDragleave = function (ev) {
-      self.removeClass('onyx-blue'); // TODO: use semantic class name
+    handleDragleave = (ev) => {
+      this.removeClass('onyx-blue'); // TODO: use semantic class name
     };
 
-    handleDragover = function (ev) {
-      self.addClass('onyx-blue');
+    handleDragover = (ev) => {
+      this.addClass('onyx-blue');
       ev.stopPropagation();
       ev.preventDefault();
       ev.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
     };
 
-    handleFiles = function (files) {
-      self.handleFiles(null, {target: {files: files}});
+    handleFiles = (files) => {
+      this.handleFiles(null, {target: {files: files}});
     };
 
-    handleDrop = function (ev) {
+    handleDrop = (ev) => {
       ev.stopPropagation();
       ev.preventDefault();
 
-      self.removeClass('onyx-blue');
+      this.removeClass('onyx-blue');
       handleFiles(ev.dataTransfer.files); // FileList object.
     };
 

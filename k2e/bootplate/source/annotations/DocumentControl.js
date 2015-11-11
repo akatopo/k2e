@@ -2,7 +2,7 @@
 
 (function (Constants) {
 
-const THEME_CLASS_NAME_MAP = Constants.THEME_INFO.reduce(function (map, current) {
+const THEME_CLASS_NAME_MAP = Constants.THEME_INFO.reduce((map, current) => {
   map[current.name] = current.class;
   return map;
 }, {});

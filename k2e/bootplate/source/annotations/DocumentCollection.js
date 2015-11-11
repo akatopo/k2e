@@ -40,7 +40,6 @@ function addClippingToDocument(title, author, clipping) {
 }
 
 function exportObject(options) {
-  let self = this;
   let ignoredTitleSet = (options && options.ignoredTitleSet) || false;
   let selectedKeySet = (options && options.selectedKeySet) || false;
   let documentsExport = { documents: [] };
@@ -48,7 +47,7 @@ function exportObject(options) {
 
   // selectedKeySet has priority over ignoredTitleSet
   if (selectedKeySet) {
-    exportFunc = function (doc) {
+    exportFunc = (doc) => {
       if (selectedKeySet.hasOwnProperty(doc.title + doc.author)) {
         let docExport = doc.exportObject();
         documentsExport.documents.push(docExport);
@@ -56,7 +55,7 @@ function exportObject(options) {
     };
   }
   else if (ignoredTitleSet) {
-    exportFunc = function (doc) {
+    exportFunc = (doc) => {
       if (!ignoredTitleSet.hasOwnProperty(doc.title)) {
         let docExport = doc.exportObject();
         documentsExport.documents.push(docExport);
@@ -64,14 +63,14 @@ function exportObject(options) {
     };
   }
   else {
-    exportFunc = function (doc) {
+    exportFunc = (doc) => {
       let docExport = doc.exportObject();
       documentsExport.documents.push(docExport);
     };
   }
 
-  this.keyArray.forEach(function (key) {
-    let doc = self.docMap[key];
+  this.keyArray.forEach((key) => {
+    let doc = this.docMap[key];
     exportFunc(doc);
   });
 

@@ -40,7 +40,7 @@ function exportObject() {
     title: this.title,
     author: this.author,
     isPeriodical: !!this.isPeriodical,
-    clippings: this.clippings.map(function (clipping) {
+    clippings: this.clippings.map((clipping) => {
       return clipping.exportObject();
     })
   };

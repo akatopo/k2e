@@ -76,7 +76,7 @@ function handleSetupItem(inSender, inEvent) {
 
 function multiSelectedChanged() {
   let multiSelected = !!this.multiSelected;
-  this.items.forEach(function (item) {
+  this.items.forEach((item) => {
     item.set('multiSelected', multiSelected);
   });
 }
@@ -84,7 +84,7 @@ function multiSelectedChanged() {
 function getMultiSelectionKeys() {
   let multiSelKeys = {};
 
-  this.items.forEach(function (item) {
+  this.items.forEach((item) => {
     if (item.getMultiSelected() && item.isMarked()) {
       multiSelKeys[item.getKey()] = true;
     }
@@ -144,7 +144,7 @@ function documentsRefChanged() {
   let keys = this.documentsRef.getKeyArray();
 
   // descending (newest to oldest most recent clipping date) key sort
-  this.sortedKeys = keys.slice(0).sort(function (a, b) {
+  this.sortedKeys = keys.slice(0).sort((a, b) => {
     let aUnixTimestamp = docMap[a].mostRecentDate.valueOf();
     let bUnixTimestamp = docMap[b].mostRecentDate.valueOf();
 

@@ -14,7 +14,7 @@ enyo.kind({
   },
   components: [
     {name: 'group', kind: 'onyx.RadioGroup', onActivate: 'handleActivate', components: Constants.THEME_INFO.map(
-      function (theme) { return { content: theme.name }; }
+      (theme) => { return { content: theme.name }; }
     )}
   ],
   handleActivate,
@@ -39,14 +39,13 @@ function handleActivate(inSender, inEvent) {
 }
 
 function valueChanged() {
-  let self = this;
   this.log(this.getComponents());
 
   let components = this.getComponents().slice(1);
-  let found = components.some(function (component) {
-    if (component.getContent() === self.value) {
+  let found = components.some((component) => {
+    if (component.getContent() === this.value) {
       component.setActive(true);
-      self.doThemeChanged({ name: self.value });
+      this.doThemeChanged({ name: this.value });
 
       return true;
     }
@@ -67,11 +66,10 @@ function valueChanged() {
 }
 
 function disabledChanged() {
-  let self = this;
   let components = this.getComponents().slice(1);
 
-  components.forEach(function (component) {
-    component.setDisabled(self.disabled);
+  components.forEach((component) => {
+    component.setDisabled(this.disabled);
   });
 }
 
