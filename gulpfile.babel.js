@@ -146,6 +146,7 @@ function compileSass() {
     .pipe(sass().on('error', sass.logError))
     .pipe(autoprefixer(AUTOPREFIXER_OPTIONS))
     .pipe(gulp.dest(BASE_SOURCE_PATH))
+    .pipe(gulp.dest(`${BASE_BOOTPLATE_PATH}/source-compiled`))
     .pipe(livereload());
 }
 
