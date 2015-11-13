@@ -20,12 +20,14 @@ enyo.kind({
         {kind: 'onyx.Groupbox', components: [
           {name: 'themeName', kind: 'k2e.settings.SettingsValueItem',
             inputComponent: { kind: 'k2e.settings.SettingsThemeRadioGroup' }, label: 'Theme'},
-          {name: 'fullscreen', kind: 'k2e.settings.SettingsActionItem', label: 'Fullscreen',
-            buttonLabel: 'Toggle', onActivated: 'handleToggleFullscreenActivated' },
+          {name: 'font', kind: 'k2e.settings.SettingsValueItem',
+            inputComponent: {kind: 'k2e.settings.SettingsFontRadioGroup'}, label: 'Font'},
           {name: 'fontSize', kind: 'k2e.settings.SettingsValueItem',
             inputComponent: {kind: 'k2e.settings.SettingsFontSizeSlider'}, label: 'Font Size'},
           {name: 'textMargin', kind: 'k2e.settings.SettingsValueItem',
-            inputComponent: {kind: 'k2e.settings.SettingsTextMarginSlider'}, label: 'Text Margin'}
+            inputComponent: {kind: 'k2e.settings.SettingsTextMarginSlider'}, label: 'Text Margin'},
+          {name: 'fullscreen', kind: 'k2e.settings.SettingsActionItem', label: 'Fullscreen',
+            buttonLabel: 'Toggle', onActivated: 'handleToggleFullscreenActivated' }
         ]}
       ]},
       // {content: 'Export', components: [

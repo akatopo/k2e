@@ -12,71 +12,30 @@ enyo.kind({
   events: {
     onThemeChanged: ''
   },
+  bindings: [
+    { from: '.value', to: '$.group.value', oneWay: false },
+    { from: '.disabled', to: '$.group.disabled' }
+  ],
   components: [
-    {name: 'group', kind: 'onyx.RadioGroup', onActivate: 'handleActivate', components: Constants.THEME_INFO.map(
+    {name: 'group', kind: 'k2e.settings.SettingsRadioGroup', items: Constants.THEME_INFO.map(
       (theme) => { return { content: theme.name }; }
     )}
   ],
-  handleActivate,
   valueChanged,
-  disabledChanged,
-  create
+  rendered
 });
 
 /////////////////////////////////////////////////////////////
 
-function handleActivate(inSender, inEvent) {
-  if (!inEvent.originator.getActive()) {
-    return;
-  }
-
-  let themeName = inEvent.originator.getContent();
-  this.log(inEvent.originator.getContent());
-  this.set('value', themeName);
-  this.doThemeChanged({ name: themeName });
+function valueChanged() {
+  this.doThemeChanged({ name: this.value });
 
   return true;
 }
 
-function valueChanged() {
-  this.log(this.getComponents());
-
-  let components = this.getComponents().slice(1);
-  let found = components.some((component) => {
-    if (component.getContent() === this.value) {
-      component.setActive(true);
-      this.doThemeChanged({ name: this.value });
-
-      return true;
-    }
-  });
-
-  if (found) {
-    return true;
-  }
-  else if (this.$.group.getActive()) {
-    this.value = this.$.group.getActive().getContent();
-  }
-  else {
-    this.value = '';
-    this.warn('no active group element');
-  }
-
-  this.log(this.value);
-}
-
-function disabledChanged() {
-  let components = this.getComponents().slice(1);
-
-  components.forEach((component) => {
-    component.setDisabled(this.disabled);
-  });
-}
-
-function create() {
+function rendered() {
   this.inherited(arguments);
-
-  this.disabledChanged();
+  this.doThemeChanged({ name: this.value });
 }
 
 })(k2e.Constants);

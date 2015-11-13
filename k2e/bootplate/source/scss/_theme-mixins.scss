@@ -24,6 +24,7 @@
     line-height: 1;
 
     a {
+        transition: color 0.2s ease-in;
         word-break: break-all;
         /* Non standard for webkit */
         word-break: break-word;
@@ -106,7 +107,8 @@
         color: #A6B5C2;
     }
 
-    .k2e-to-top-button {
+    .k2e-to-top-button,
+    .k2e-toggle-fullscreen-button {
         color: $color-light;
         background-color: #555656;
         border-color: rgba(15, 15, 15, 0.5);
@@ -116,10 +118,11 @@
         }
     }
 
-    .k2e-toggle-fullscreen-button {
-        color: $color-light;
-        background-color: #555656;
-        border-color: rgba(15, 15, 15, 0.5);
+    &.k2e-fullscreen .k2e-to-top-button,
+    &.k2e-fullscreen .k2e-toggle-fullscreen-button {
+        @media (max-width: $screen-narrow-max) {
+            color: $color-light;
+        }
     }
 }
 
@@ -149,7 +152,8 @@
         color: #8d8d8d;
     }
 
-    .k2e-to-top-button {
+    .k2e-to-top-button,
+    .k2e-toggle-fullscreen-button {
         color: #555656;
         background-color: $color-light;
         border-color: rgba(15, 15, 15, 0.5);
@@ -159,17 +163,16 @@
         }
     }
 
-    .k2e-toggle-fullscreen-button {
-        background-color: $color-light;
-        color: #555656;
-        border-color: rgba(15, 15, 15, 0.5);
+    &.k2e-fullscreen .k2e-to-top-button,
+    &.k2e-fullscreen .k2e-toggle-fullscreen-button {
+        @media (max-width: $screen-narrow-max) {
+            color: #555656;
+        }
     }
 }
 
 @mixin k2e-omg-ponies-theme {
-    background-color: white;
-    background: url('#{$path-assets}/ponies-blurred.png') no-repeat center center fixed; 
-    background-size: cover;
+    background: pink url('#{$path-assets}/ponies-blurred.png') no-repeat center/cover; 
     
     color: black;
     text-shadow: -.07em .07em white;
@@ -194,7 +197,8 @@
         color: black;
     }
 
-    .k2e-to-top-button {
+    .k2e-to-top-button,
+    .k2e-toggle-fullscreen-button {
         color: #555656;
         background-color: $color-light;
         border-color: rgba(15, 15, 15, 0.5);
@@ -204,9 +208,10 @@
         }
     }
 
-    .k2e-toggle-fullscreen-button {
-        background-color: $color-light;
-        color: #555656;
-        border-color: rgba(15, 15, 15, 0.5);
+    &.k2e-fullscreen .k2e-to-top-button
+    &.k2e-fullscreen .k2e-toggle-fullscreen-button {
+        @media (max-width: $screen-narrow-max) {
+            color: #555656;
+        }
     }
 }

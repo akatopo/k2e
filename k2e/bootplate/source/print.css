@@ -129,6 +129,9 @@
   color: #080808;
   background-color: transparent; }
   .k2e-document-view a {
+    -webkit-transition: color 0.2s ease-in;
+    -o-transition: color 0.2s ease-in;
+    transition: color 0.2s ease-in;
     word-break: break-all;
     /* Non standard for webkit */
     word-break: break-word;
@@ -184,22 +187,24 @@
     color: #8d8d8d; }
   .k2e-document-view .icon-quote-left {
     color: #8d8d8d; }
-  .k2e-document-view .k2e-to-top-button {
+  .k2e-document-view .k2e-to-top-button,
+  .k2e-document-view .k2e-toggle-fullscreen-button {
     color: #555656;
     background-color: #F2F2F2;
     border-color: rgba(15, 15, 15, 0.5); }
     @media (max-width: 801px) {
-      .k2e-document-view .k2e-to-top-button {
+      .k2e-document-view .k2e-to-top-button,
+      .k2e-document-view .k2e-toggle-fullscreen-button {
         background-image: none;
         background-color: transparent;
         border-color: transparent;
         -webkit-box-shadow: none;
                 box-shadow: none;
         color: #F2F2F2; } }
-  .k2e-document-view .k2e-toggle-fullscreen-button {
-    background-color: #F2F2F2;
-    color: #555656;
-    border-color: rgba(15, 15, 15, 0.5); }
+  @media (max-width: 801px) {
+    .k2e-document-view.k2e-fullscreen .k2e-to-top-button,
+    .k2e-document-view.k2e-fullscreen .k2e-toggle-fullscreen-button {
+      color: #555656; } }
 
 @page {
   margin: 2cm; }

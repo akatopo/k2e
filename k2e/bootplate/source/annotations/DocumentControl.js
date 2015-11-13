@@ -2,12 +2,28 @@
 
 (function (Constants) {
 
-const THEME_CLASS_NAME_MAP = Constants.THEME_INFO.reduce((map, current) => {
-  map[current.name] = current.class;
+const THEME_CLASS_NAME_MAP = Constants.THEME_INFO.reduce((map, currentTheme) => {
+  map[currentTheme.name] = currentTheme.class;
   return map;
 }, {});
 
-const DEFAULT_THEME_CLASS = Constants.THEME_INFO[0].name;
+const FONT_MAP = Constants.FONT_INFO.reduce((array, font) => {
+  if (Array.isArray(font)) {
+    array.push(...font);
+  }
+  else {
+    array.push(font);
+  }
+
+  return array;
+}, [])
+.reduce((map, currentFont) => {
+  map[currentFont.name] = currentFont;
+  return map;
+}, {});
+
+const DEFAULT_THEME_CLASS = Constants.THEME_INFO[0].class;
+const DEFAULT_FONT_FAMILY = Constants.FONT_INFO[0].family;
 
 enyo.kind({
   name: 'k2e.annotations.DocumentControl',
@@ -26,17 +42,18 @@ enyo.kind({
     onScroll: 'handleScroll'
   },
   components: [
-    {name: 'scroller', kind: 'enyo.Scroller', style: 'height: 100%', classes: 'k2e-document-scroller', components: [
-      {name: 'documentView', kind: 'k2e.annotations.DocumentView'},
-      {name: 'toggleFullscreenButton', classes: 'k2e-toggle-fullscreen-button k2e-icon-button k2e-hidden',
-        ontap: 'handleFullscreenButtonTap', kind: 'onyx.Button', components: [
-          {tag: 'i', classes: 'icon-resize-small icon-large'}
-      ]},
-      {name: 'toTopButton', kind: 'onyx.Button', classes: 'k2e-to-top-button k2e-icon-button k2e-hidden',
-        ontap: 'scrollDocumentToTop', components: [
-          {tag: 'i', classes: 'icon-chevron-up icon-large'}
+    {name: 'scroller', kind: 'enyo.Scroller', strategyKind: 'ScrollStrategy', style: 'height: 100%',
+      classes: 'k2e-document-scroller', components: [
+        {name: 'documentView', kind: 'k2e.annotations.DocumentView'},
+        {name: 'toggleFullscreenButton', classes: 'k2e-toggle-fullscreen-button k2e-icon-button k2e-hidden',
+          ontap: 'handleFullscreenButtonTap', kind: 'onyx.Button', components: [
+            {tag: 'i', classes: 'icon-resize-small icon-large'}
+        ]},
+        {name: 'toTopButton', kind: 'onyx.Button', classes: 'k2e-to-top-button k2e-icon-button k2e-hidden',
+          ontap: 'scrollDocumentToTop', components: [
+            {tag: 'i', classes: 'icon-chevron-up icon-large'}
+        ]}
       ]}
-    ]}
   ],
   strategyKind: 'ScrollStrategy',
   handleScroll,
@@ -47,6 +64,7 @@ enyo.kind({
   fontSizeChanged,
   marginChanged,
   themeChanged,
+  fontChanged,
   create,
   rendered
 });
@@ -61,7 +79,7 @@ function handleScroll(inSender, inEvent) {
 }
 
 function fullscreenChanged() {
-  this.addRemoveClass('k2e-fullscreen', this.fullscreen);
+  this.$.scroller.addRemoveClass('k2e-fullscreen', this.fullscreen);
   this.$.toggleFullscreenButton.addRemoveClass('visible', this.fullscreen);
 }
 
@@ -76,7 +94,7 @@ function documentChanged() {
 }
 
 function fontSizeChanged() {
-  this.$.scroller.applyStyle('font-size', `${this.fontSize}%`);
+  this.$.documentView.applyStyle('font-size', `${this.fontSize}%`);
 }
 
 function marginChanged(oldMargin) {
@@ -89,6 +107,13 @@ function themeChanged(oldTheme) {
   let newThemeClass = THEME_CLASS_NAME_MAP[this.theme] || DEFAULT_THEME_CLASS;
   this.$.scroller.removeClass(oldThemeClass);
   this.$.scroller.addClass(newThemeClass);
+}
+
+function fontChanged(oldFont) {
+  let fontFamily = FONT_MAP[this.font].family || DEFAULT_FONT_FAMILY;
+  let fallback = FONT_MAP[this.font].fallback || 'serif';
+
+  this.$.documentView.applyStyle('font-family', `'${fontFamily}', '${fallback}'`);
 }
 
 function create() {

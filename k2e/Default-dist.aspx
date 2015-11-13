@@ -5,6 +5,7 @@
 <html>
 	<head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="theme-color" content="#4c4c4c">
         <title>k2e</title>
         <link rel="shortcut icon" href="assets/favicon.ico"/>
         <!-- -->
@@ -16,6 +17,9 @@
         <link href="build/app.css" rel="stylesheet" media="screen" />
         <link href="build/print.css" rel="stylesheet" media="print" />
         <!-- js -->
+        <script src="build/polyfill.min.js"></script>
+        <script src="https://use.typekit.net/lop6oji.js"></script>
+        <script>try{Typekit.promise=new Promise(function(a,b){Typekit.load({async:!0,active:a,inactive:b})})}catch(e){}</script>
         <script src="build/enyo.js"></script>
         <script src="build/app.js"></script>
 	</head>

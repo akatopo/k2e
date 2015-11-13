@@ -252,6 +252,11 @@
   top: 10px;
   right: 15px; }
 
+.k2e-document-scroller {
+  -webkit-transition: background-color 0.2s ease-in, color 0.2s ease-in;
+  -o-transition: background-color 0.2s ease-in, color 0.2s ease-in;
+  transition: background-color 0.2s ease-in, color 0.2s ease-in; }
+
 .k2e-document-view {
   font-size: 100%;
   font-family: Georgia, serif;
@@ -265,6 +270,9 @@
   vertical-align: baseline;
   line-height: 1; }
   .k2e-document-view a {
+    -webkit-transition: color 0.2s ease-in;
+    -o-transition: color 0.2s ease-in;
+    transition: color 0.2s ease-in;
     word-break: break-all;
     /* Non standard for webkit */
     word-break: break-word;
@@ -323,22 +331,24 @@
     color: #A6B5C2; }
   .k2e-document-view-dark .icon-quote-left {
     color: #A6B5C2; }
-  .k2e-document-view-dark .k2e-to-top-button {
+  .k2e-document-view-dark .k2e-to-top-button,
+  .k2e-document-view-dark .k2e-toggle-fullscreen-button {
     color: #F2F2F2;
     background-color: #555656;
     border-color: rgba(15, 15, 15, 0.5); }
     @media (max-width: 801px) {
-      .k2e-document-view-dark .k2e-to-top-button {
+      .k2e-document-view-dark .k2e-to-top-button,
+      .k2e-document-view-dark .k2e-toggle-fullscreen-button {
         background-image: none;
         background-color: transparent;
         border-color: transparent;
         -webkit-box-shadow: none;
                 box-shadow: none;
         color: #F2F2F2; } }
-  .k2e-document-view-dark .k2e-toggle-fullscreen-button {
-    color: #F2F2F2;
-    background-color: #555656;
-    border-color: rgba(15, 15, 15, 0.5); }
+  @media (max-width: 801px) {
+    .k2e-document-view-dark.k2e-fullscreen .k2e-to-top-button,
+    .k2e-document-view-dark.k2e-fullscreen .k2e-toggle-fullscreen-button {
+      color: #F2F2F2; } }
 
 /** Light theme **/
 .k2e-document-view-light {
@@ -357,29 +367,28 @@
     color: #8d8d8d; }
   .k2e-document-view-light .icon-quote-left {
     color: #8d8d8d; }
-  .k2e-document-view-light .k2e-to-top-button {
+  .k2e-document-view-light .k2e-to-top-button,
+  .k2e-document-view-light .k2e-toggle-fullscreen-button {
     color: #555656;
     background-color: #F2F2F2;
     border-color: rgba(15, 15, 15, 0.5); }
     @media (max-width: 801px) {
-      .k2e-document-view-light .k2e-to-top-button {
+      .k2e-document-view-light .k2e-to-top-button,
+      .k2e-document-view-light .k2e-toggle-fullscreen-button {
         background-image: none;
         background-color: transparent;
         border-color: transparent;
         -webkit-box-shadow: none;
                 box-shadow: none;
         color: #F2F2F2; } }
-  .k2e-document-view-light .k2e-toggle-fullscreen-button {
-    background-color: #F2F2F2;
-    color: #555656;
-    border-color: rgba(15, 15, 15, 0.5); }
+  @media (max-width: 801px) {
+    .k2e-document-view-light.k2e-fullscreen .k2e-to-top-button,
+    .k2e-document-view-light.k2e-fullscreen .k2e-toggle-fullscreen-button {
+      color: #555656; } }
 
 /** OMG ponies theme **/
 .k2e-document-view-omg-ponies {
-  background-color: white;
-  background: url("../../assets/ponies-blurred.png") no-repeat center center fixed;
-  -webkit-background-size: cover;
-          background-size: cover;
+  background: pink url("../../assets/ponies-blurred.png") no-repeat center/cover;
   color: black;
   text-shadow: -.07em .07em white; }
   .k2e-document-view-omg-ponies h1 {
@@ -395,22 +404,24 @@
   .k2e-document-view-omg-ponies .k2e-document-view-clip-footer {
     border-color: black;
     color: black; }
-  .k2e-document-view-omg-ponies .k2e-to-top-button {
+  .k2e-document-view-omg-ponies .k2e-to-top-button,
+  .k2e-document-view-omg-ponies .k2e-toggle-fullscreen-button {
     color: #555656;
     background-color: #F2F2F2;
     border-color: rgba(15, 15, 15, 0.5); }
     @media (max-width: 801px) {
-      .k2e-document-view-omg-ponies .k2e-to-top-button {
+      .k2e-document-view-omg-ponies .k2e-to-top-button,
+      .k2e-document-view-omg-ponies .k2e-toggle-fullscreen-button {
         background-image: none;
         background-color: transparent;
         border-color: transparent;
         -webkit-box-shadow: none;
                 box-shadow: none;
         color: #F2F2F2; } }
-  .k2e-document-view-omg-ponies .k2e-toggle-fullscreen-button {
-    background-color: #F2F2F2;
-    color: #555656;
-    border-color: rgba(15, 15, 15, 0.5); }
+  @media (max-width: 801px) {
+    .k2e-document-view-omg-ponies.k2e-fullscreen .k2e-to-top-button
+.k2e-document-view-omg-ponies.k2e-fullscreen .k2e-toggle-fullscreen-button {
+      color: #555656; } }
 
 .k2e-document-view-padding-10 {
   padding-left: 10%;

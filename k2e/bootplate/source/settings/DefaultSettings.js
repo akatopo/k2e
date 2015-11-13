@@ -13,7 +13,8 @@ enyo.kind({
       periodicalTitleList: '""',
       googleSearchApiKey: '""',
       googleSearchApiCx: '""',
-      googleSearchApiLoc: '"https://www.googleapis.com/customsearch/v1?"'
+      googleSearchApiLoc: '"https://www.googleapis.com/customsearch/v1?"',
+      font: '"Georgia"'
     }
   }
 });

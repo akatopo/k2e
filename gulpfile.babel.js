@@ -185,7 +185,7 @@ function buildBackend() {
 
 function distScripts() {
   return streamqueue({ objectMode: true },
-    gulp.src(getK2eDeps().scripts.concat('./node_modules/babel-polyfill/dist/polyfill.js'))
+    gulp.src(getK2eDeps().scripts)
       .pipe(sourcemaps.init())
       .pipe(babel({ plugins: BABEL_PLUGINS, ignore: BABEL_IGNORE }))
       .pipe(concat('app.js'))
@@ -193,7 +193,8 @@ function distScripts() {
       .pipe(sourcemaps.write('.')),
     gulp.src(getEnyoDeps().scripts)
       .pipe(concat('enyo.js'))
-      .pipe(uglify({ mangle: true }))
+      .pipe(uglify({ mangle: true })),
+    gulp.src('./node_modules/babel-polyfill/dist/polyfill.min.js')
   )
   .pipe(gulp.dest('./dist/build'));
 }

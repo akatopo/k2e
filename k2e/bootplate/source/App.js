@@ -54,6 +54,7 @@ enyo.kind({
     onClippingsTextChanged: 'handleClippingsTextChanged',
     onThemeChanged: 'handleThemeChanged',
     onFontSizeChanged: 'handleFontSizeChanged',
+    onFontChanged: 'handleFontChanged',
     onTextMarginChanged: 'handleTextMarginChanged',
     onFullscreenRequest: 'toggleFullscreen'
   },
@@ -83,6 +84,7 @@ enyo.kind({
   toggleMultiSelection,
   handleThemeChanged,
   handleFontSizeChanged,
+  handleFontChanged,
   handleTextMarginChanged,
   parseKindleClippings,
   reflow,
@@ -450,6 +452,14 @@ function handleFontSizeChanged(inSender, inEvent) {
   this.$.documentControl.set('fontSize', +inEvent.sizePercent);
 }
 
+function handleFontChanged(inSender, inEvent) {
+  if (!this.$.documentControl) {
+    return;
+  }
+
+  this.$.documentControl.set('font', inEvent.name);
+}
+
 function handleTextMarginChanged(inSender, inEvent) {
   if (!this.$.documentControl) {
     return;
@@ -567,7 +577,7 @@ function reflow() {
 
   this.inherited(arguments);
 
-  this.$.backToolbar.setShowing(isScreenNarrow);
+  this.$.backToolbar.setShowing(isScreenNarrow && !isFullscreen);
   if (!isScreenNarrow && !isFullscreen) {
     this.$.mainPanels.setIndex(0);
   }

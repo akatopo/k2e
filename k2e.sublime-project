@@ -8,6 +8,7 @@
         "packages",
         "build",
         "bootplate/lib",
+        "bootplate/source-compiled",
         "k2e/evernote"
       ],
       "path": "."
