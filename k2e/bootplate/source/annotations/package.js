@@ -5,5 +5,6 @@ enyo.depends(
   'DocumentSelectorList.js',
   'DocumentSelectorItem.js',
   'DocumentView.js',
-  'DocumentControl.js'
+  'DocumentControl.js',
+  'CopyToClipboardIconButton.js'
 );

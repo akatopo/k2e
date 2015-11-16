@@ -4,7 +4,7 @@
 
 enyo.kind({
   name: 'k2e.ClippingPickerPopup',
-  kind: 'onyx.Popup',
+  kind: 'k2e.AnimatedPopup',
   classes: 'k2e-clipping-picker-popup',
   modal: true,
   floating: true,

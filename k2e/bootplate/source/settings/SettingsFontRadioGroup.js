@@ -37,9 +37,13 @@ function rendered() {
   this.inherited(arguments);
   let detector = createFontDetector();
 
-  typekitPromise.then(() => {
-    // potentially change font options here, since typekit loading suceeded
-    this.$.group.items = Constants.FONT_INFO.map((font) => {
+  typekitPromise.then(rebuildFontGroup.bind(undefined, this), rebuildFontGroup.bind(undefined, this));
+  this.doFontChanged({ name: this.value });
+
+  /////////////////////////////////////////////////////////////
+
+  function rebuildFontGroup(component) {
+    component.$.group.items = Constants.FONT_INFO.map((font) => {
       let fonts = Array.isArray(font) ? font : [font];
 
       return fonts.filter((font) => { return detector.detect(font.family); });
@@ -50,12 +54,8 @@ function rendered() {
     .map((font) => {
       return { content: font[0].name };
     });
-    this.log(this.$.group.items);
-    this.$.group.build();
-  }, () => {
-    this.warn('potentially change font options here, since typekit loading failed');
-  });
-  this.doFontChanged({ name: this.value });
+    component.$.group.build();
+  }
 }
 
 /**

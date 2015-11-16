@@ -83,9 +83,23 @@
         border-top-width: 2px;
         border-top-style: dotted;
     }
+
+    .k2e-icon-button {
+        @include k2e-icon-button-reset;
+        transition: color 0.1s ease-in;
+        padding: 0;
+    }
+
+    a.k2e-icon-button:visited {
+      color: inherit;
+    }
+
 }
 
 @mixin k2e-dark-theme {
+    $color-foreground-primary: #D6DBDF;
+    $color-foreground-secondary: #8E9AA5;//#656C72;//darken(#A6B5C2, 0%);
+
     background-color: #333;
     color: #D6DBDF;
 
@@ -100,11 +114,17 @@
     .k2e-document-view-clip-separator,
     .k2e-document-view-clip-footer {
         border-color: #4E5358;
-        color: #A6B5C2;
+        color: $color-foreground-secondary;
     }
 
-    .icon-quote-left {
-        color: #A6B5C2;
+    .icon-quote-left,
+    .k2e-icon-button {
+        color: $color-foreground-secondary;
+    }
+
+    a.k2e-icon-button:hover,
+    .k2e-icon-button:hover {
+        color: lighten($color-foreground-secondary, 40%);
     }
 
     .k2e-to-top-button,
@@ -121,14 +141,17 @@
     &.k2e-fullscreen .k2e-to-top-button,
     &.k2e-fullscreen .k2e-toggle-fullscreen-button {
         @media (max-width: $screen-narrow-max) {
-            color: $color-light;
+            color: $color-foreground-secondary;
         }
     }
 }
 
 @mixin k2e-light-theme() {
+    $color-foreground-primary: #080808;
+    $color-foreground-secondary: #8d8d8d;
+
     background-color: #fdfdfa;
-    color: #080808;
+    color: $color-foreground-primary;
 
     h1 {
         color: #0a0a0a;
@@ -145,11 +168,17 @@
     .k2e-document-view-clip-separator,
     .k2e-document-view-clip-footer {
         border-color: #d7d7d4;
-        color: #8d8d8d;
+        color: $color-foreground-secondary;
     }
 
-    .icon-quote-left {
-        color: #8d8d8d;
+    .icon-quote-left,
+    .k2e-icon-button {
+        color: $color-foreground-secondary;
+    }
+
+    a.k2e-icon-button:hover,
+    .k2e-icon-button:hover {
+        color: darken($color-foreground-secondary, 40%);
     }
 
     .k2e-to-top-button,
@@ -166,17 +195,17 @@
     &.k2e-fullscreen .k2e-to-top-button,
     &.k2e-fullscreen .k2e-toggle-fullscreen-button {
         @media (max-width: $screen-narrow-max) {
-            color: #555656;
+            color: $color-foreground-secondary;
         }
     }
 }
 
 @mixin k2e-omg-ponies-theme {
-    background: pink url('#{$path-assets}/ponies-blurred.png') no-repeat center/cover; 
-    
+    background: pink url('#{$path-assets}/ponies-blurred.png') no-repeat center/cover;
+
     color: black;
     text-shadow: -.07em .07em white;
-    
+
     h1 {
         -webkit-text-stroke: 1px black;
         color: pink;
@@ -195,6 +224,11 @@
     .k2e-document-view-clip-footer {
         border-color: black;
         color: black;
+    }
+
+    .k2e-icon-button {
+        color: black;
+        text-shadow: none;
     }
 
     .k2e-to-top-button,

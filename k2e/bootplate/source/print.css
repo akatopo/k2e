@@ -1,8 +1,8 @@
 @charset "UTF-8";
 @font-face {
   font-family: 'fontello';
-  src: url("../../assets/fontello.eot?24753718");
-  src: url("../../assets/fontello.eot?24753718#iefix") format("embedded-opentype"), url("../../assets/fontello.woff?24753718") format("woff"), url("../../assets/fontello.ttf?24753718") format("truetype"), url("../../assets/fontello.svg?24753718#fontello") format("svg");
+  src: url("../../assets/fontello.eot?47020726");
+  src: url("../../assets/fontello.eot?47020726#iefix") format("embedded-opentype"), url("../../assets/fontello.woff?47020726") format("woff"), url("../../assets/fontello.ttf?47020726") format("truetype"), url("../../assets/fontello.svg?47020726#fontello") format("svg");
   font-weight: normal;
   font-style: normal; }
 
@@ -47,6 +47,10 @@
   content: '\e800'; }
 
 /* '' */
+.icon-twitter:before {
+  content: '\e801'; }
+
+/* '' */
 .icon-check:before {
   content: '\e802'; }
 
@@ -83,6 +87,14 @@
   content: '\e80a'; }
 
 /* '' */
+.icon-mail:before {
+  content: '\e80b'; }
+
+/* '' */
+.icon-docs:before {
+  content: '\e80d'; }
+
+/* '' */
 /* makes the font 33% larger relative to the icon container */
 .icon-large:before {
   vertical-align: -10%;
@@ -92,7 +104,8 @@
 .k2e-settings,
 .k2e-sidebar,
 .k2e-toggle-fullscreen-button,
-.k2e-to-top-button {
+.k2e-to-top-button,
+.k2e-hide-print {
   display: none !important; }
 
 .k2e-document-scroller[style] {
@@ -174,6 +187,19 @@
     width: 20%;
     border-top-width: 2px;
     border-top-style: dotted; }
+  .k2e-document-view .k2e-icon-button {
+    background-image: none;
+    background-color: transparent;
+    border-color: transparent;
+    -webkit-box-shadow: none;
+            box-shadow: none;
+    color: #F2F2F2;
+    -webkit-transition: color 0.1s ease-in;
+    -o-transition: color 0.1s ease-in;
+    transition: color 0.1s ease-in;
+    padding: 0; }
+  .k2e-document-view a.k2e-icon-button:visited {
+    color: inherit; }
   .k2e-document-view h1 {
     color: #0a0a0a; }
   .k2e-document-view a {
@@ -185,8 +211,12 @@
   .k2e-document-view .k2e-document-view-clip-footer {
     border-color: #d7d7d4;
     color: #8d8d8d; }
-  .k2e-document-view .icon-quote-left {
+  .k2e-document-view .icon-quote-left,
+  .k2e-document-view .k2e-icon-button {
     color: #8d8d8d; }
+  .k2e-document-view a.k2e-icon-button:hover,
+  .k2e-document-view .k2e-icon-button:hover {
+    color: #272727; }
   .k2e-document-view .k2e-to-top-button,
   .k2e-document-view .k2e-toggle-fullscreen-button {
     color: #555656;
@@ -204,7 +234,7 @@
   @media (max-width: 801px) {
     .k2e-document-view.k2e-fullscreen .k2e-to-top-button,
     .k2e-document-view.k2e-fullscreen .k2e-toggle-fullscreen-button {
-      color: #555656; } }
+      color: #8d8d8d; } }
 
 @page {
   margin: 2cm; }

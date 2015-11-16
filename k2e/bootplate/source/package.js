@@ -15,5 +15,6 @@ enyo.depends(
   'ClippingPickerPopup.js',
   'ProgressPopup.js',
   'Accordion.js',
-  'AccordionItem.js'
+  'AccordionItem.js',
+  'AnimatedPopup.js'
 );

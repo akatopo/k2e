@@ -13,6 +13,7 @@ enyo.kind({
     timeStamp: '',
     creationDate: undefined,
     content: '',
+    contentText: '',
     suggestedTitle: '',
     suggestedUrl: ''
   },

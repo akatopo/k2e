@@ -490,6 +490,7 @@ function parseKindleClippings(kindleClippings) {
     let loc;
     let timeStamp;
     let content;
+    let contentText;
     clipping = clipping.trim();
 
     if (clipping === '') {
@@ -511,15 +512,21 @@ function parseKindleClippings(kindleClippings) {
     loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
     timeStamp = /^Added on (.*)$/.exec(subtitle[subtitle.length - 1])[1];
     content = k2e.util.linkify(enyo.dom.escape(res[3]), { targetBlank: true });
+    contentText = res[3];
 
     // Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
     if (type !== 'Bookmark' && type !== 'Clipping') {
       docs.addClippingToDocument(
         title,
         author,
-        new k2e.annotations.Clipping({type: type, loc: loc, timeStamp: timeStamp,
-          content: content})
-        );
+        new k2e.annotations.Clipping({
+          type,
+          loc,
+          timeStamp,
+          content,
+          contentText
+        })
+      );
     }
   }
 

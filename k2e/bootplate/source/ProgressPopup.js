@@ -1,9 +1,11 @@
+/* global k2e */
+
 (function () {
 
 enyo.kind({
   name: 'k2e.ProgressPopup',
   classes: 'k2e-progress-popup',
-  kind: 'onyx.Popup',
+  kind: 'k2e.AnimatedPopup',
   modal: true,
   floating: true,
   autoDismiss: false,
@@ -22,7 +24,7 @@ enyo.kind({
 
 function done(message) {
   changeMessage.call(this, message);
-  window.setTimeout(this.hide.bind(this), calculateTimeout(this.$.message.content));
+  this.startJob('hideAfterDone', 'hide', k2e.AnimatedPopup.calculateTimeout(this.$.message.content));
 }
 
 function begin(message) {
@@ -41,7 +43,7 @@ function failed(caption, messages) {
     (messages.length !== 0 ? ': ' : '') +
     messages.join('\n')
   );
-  window.setTimeout(this.hide.bind(this), calculateTimeout(this.$.message.content));
+  this.startJob('hideAfterFailure', 'hide', k2e.AnimatedPopup.calculateTimeout(this.$.message.content));
 }
 
 function changeMessage(message, spinnerToggle) {
@@ -49,21 +51,6 @@ function changeMessage(message, spinnerToggle) {
   spinnerFunc.call(this.$.spinner);
   this.$.message.setContent(message);
   this.rendered();
-}
-
-function calculateTimeout(s) {
-  const MS_REACTION_TIME = 250;
-  const MS_PER_CHARACTER = 60000 / (200 * 5); // 200 WPM -> 1000 CPM,
-  let nonSpaceCharacters = Array.prototype.reduce.call(s, nonSpaceReducer, 0);
-
-  return (nonSpaceCharacters * MS_PER_CHARACTER) + 2 * MS_REACTION_TIME;
-}
-
-function nonSpaceReducer(charCount, character) {
-  if (/[^\s]/.test(character)) {
-    ++charCount;
-  }
-  return charCount;
 }
 
 })();

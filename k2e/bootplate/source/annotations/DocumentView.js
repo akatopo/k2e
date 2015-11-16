@@ -1,9 +1,12 @@
 (function () {
 
+const TWITTER_BASE_URL = 'https://twitter.com/intent/tweet';
+const HASHTAGS = ['k2e'];
+const CLIPBOARD_SUPPORTED = detectClipboardSupport();
+
 enyo.kind({
   name: 'k2e.annotations.DocumentView',
   classes: 'k2e-document-view',
-  components: [],
   displayDocument,
   clearDocument() { this.destroyComponents(); }
 });
@@ -20,7 +23,7 @@ function displayDocument(doc) {
   ]});
 
   let sortedClippings = doc.clippings.slice(0).sort(sortDescending);
-  sortedClippings.forEach(appendClippingToDisplay.bind(undefined, this));
+  sortedClippings.forEach(appendClippingToDisplay.bind(undefined, this, doc));
 
   this.render();
 
@@ -32,31 +35,69 @@ function displayDocument(doc) {
 
     return bUnixTimestamp - aUnixTimestamp;
   }
+}
 
-  function appendClippingToDisplay(component, clipping, index, sortedClippings) {
-    let loc = clipping.loc;
-    let type = clipping.type;
-    let timestamp = clipping.timeStamp;
-    let content = clipping.content;
+function appendClippingToDisplay(component, doc, clipping, index, sortedClippings) {
+  let loc = clipping.loc;
+  let type = clipping.type;
+  let timestamp = clipping.timeStamp;
+  let content = clipping.content;
+  let createTwitterUrlFromContent = createTwitterUrl.bind(undefined, HASHTAGS, window.location.href);
+  let createMailUrlFromContent = createMailUrl.bind(undefined, doc.title, doc.author);
 
-    if (index !== 0) {
-      component.createComponent({classes: 'k2e-document-view-clip-separator'});
-    }
-
-    component.createComponent(
-      {tag: 'p', components: [
-        {tag: 'i', classes: 'icon-quote-left icon-large'},
-        {tag: null, allowHtml: true, content: ` ${content}`}
-      ]}
-    );
-
-    component.createComponent({classes: 'k2e-document-view-clip-footer', components: [
-      {tag: 'i', content: `${type}, ${loc}`},
-      {tag: 'span', content: ' • '},
-      {tag: 'i', content: `Added on ${timestamp}` }
-    ]});
-
+  if (index !== 0) {
+    component.createComponent({classes: 'k2e-document-view-clip-separator'});
   }
+
+  component.createComponent(
+    {tag: 'p', components: [
+      {tag: 'i', classes: 'icon-quote-left icon-large'},
+      {tag: null, allowHtml: true, content: ` ${content}`}
+    ]}
+  );
+
+  let footerComponents = [
+    {tag: 'i', content: `${type}, ${loc}`},
+    {tag: null, content: ' • '},
+    {tag: 'i', content: `Added on ${timestamp}` },
+    {tag: 'span', classes: 'k2e-hide-print', content: ' • '},
+    {tag: 'a', classes: 'onyx-button k2e-icon-button k2e-hide-print',
+      attributes: { href: createTwitterUrlFromContent(clipping.content), target: '_blank' }, components: [
+        {tag: 'i', classes: 'icon-twitter'}
+      ]},
+    {tag: 'a', classes: 'onyx-button k2e-icon-button k2e-hide-print',
+      attributes: { href: createMailUrlFromContent(clipping.content), target: '_blank' }, components: [
+        {tag: 'i', classes: 'icon-mail'}
+      ]}
+  ];
+  if (CLIPBOARD_SUPPORTED) {
+    footerComponents.push({kind: 'k2e.annotations.CopyToClipboardIconButton', clipping: clipping});
+  }
+
+  component.createComponent({classes: 'k2e-document-view-clip-footer', components: footerComponents});
+}
+
+function createTwitterUrl(hashtags, url, text) {
+  return `${TWITTER_BASE_URL}?text=${text}&hashtags=${hashtags.join(',')}&url=${url}`;
+}
+
+function createMailUrl(title, author, text) {
+  return `mailto:?subject=${title} by ${author}&body=${text}`;
+}
+
+function detectClipboardSupport() {
+  // document.queryCommandSupported return value fixed in Chrome 48
+  let supported = document.queryCommandSupported('copy');
+  if (supported) {
+    // Check that the browser isn't Firefox pre-41
+    try {
+      document.execCommand('copy');
+    } catch (e) {
+      supported = false;
+    }
+  }
+
+  return supported;
 }
 
 })();

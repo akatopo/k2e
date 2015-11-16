@@ -29,8 +29,6 @@ enyo.kind({
 
 function valueChanged() {
   this.doThemeChanged({ name: this.value });
-
-  return true;
 }
 
 function rendered() {

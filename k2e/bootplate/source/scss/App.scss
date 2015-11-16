@@ -13,6 +13,11 @@ $overlay-button-top: 10px;
 
 /***********************************************************************************************/
 
+body,
+.onyx {
+  font-family: 'droid sans', Helvetica, sans;
+}
+
 #app {
   background-color: #333;
 }
@@ -29,9 +34,14 @@ $overlay-button-top: 10px;
   background-color: $color-evernote-green;
 }
 
-.onyx-button {
+.onyx-button,
+.k2e-animated-popup {
   transition: visibility 0s ease-in 0.3s,
     opacity 0.3s ease-in;
+}
+
+.k2e-animated-popup.k2e-hidden {
+  display: block!important;
 }
 
 .onyx-radiobutton {
