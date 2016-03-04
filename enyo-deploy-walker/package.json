@@ -5,7 +5,8 @@
     "test": "BABEL_ENV=noconflict jasmine"
   },
   "dependencies": {
-    "chalk": "^1.1.1"
+    "chalk": "^1.1.1",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "babel-core": "^6.1.2",

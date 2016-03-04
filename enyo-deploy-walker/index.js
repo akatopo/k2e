@@ -3,7 +3,6 @@
 import fs from 'fs';
 import path from 'path';
 import vm from 'vm';
-import util from 'util';
 import _ from 'underscore';
 import chalk from 'chalk';
 
