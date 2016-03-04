@@ -8,15 +8,14 @@ import chalk from 'chalk';
 
 let sandbox = {
   enyo: {
-    depends: (...args) => { return args; }
+    depends(...args) { return args; }
   }
 };
 
 let log = _.noop;
 
 module.exports = {
-  getDependencies: (base, opts) => {
-    opts = opts || { verbose: false };
+  getDependencies(base, opts = { verbose: false }) {
     log = opts.verbose ? console.log.bind(console) : _.noop;
 
     return parseDir(base);
