@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net;
 using System.Web;
 using System.Security.Cryptography;
@@ -67,13 +68,17 @@ namespace EvernoteWebQuickstart
         private const string RESPONSE_KEY_EDAM_NOTESTORE_URL = "edam_noteStoreUrl";
 
         // TODO: replace this url with the production one when ready
-		private const string EvernoteHost = "sandbox.evernote.com";
-		private const string EDAMBaseUrl = "https://" + EvernoteHost;
+		private static readonly string EvernoteHost = 
+			string.IsNullOrEmpty(ConfigurationManager.AppSettings["Production"]) ?
+				"sandbox.evernote.com" :
+				"www.evernote.com";
+		
+		private static readonly string EDAMBaseUrl = "https://" + EvernoteHost;
 
-		private readonly Uri OAuthBaseUri = new Uri(EDAMBaseUrl + "/oauth");
+		private static readonly Uri OAuthBaseUri = new Uri(EDAMBaseUrl + "/oauth");
 
 		// UserStore service endpoint
-		private const string UserStoreUrl = EDAMBaseUrl + "/edam/user";
+		private static readonly string UserStoreUrl = EDAMBaseUrl + "/edam/user";
 
         private EvernoteCredentials evernoteCredentials;
 

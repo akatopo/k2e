@@ -49,7 +49,11 @@ namespace EvernoteWebQuickstart
     {
         public EvernoteAuthHelper evernoteAuthHelper;
         // TODO - change this url to the production one when ready
-        const string BASE_URL = "https://sandbox.evernote.com/";
+		private static readonly string BASE_URL = 
+			string.IsNullOrEmpty(ConfigurationManager.AppSettings["Production"]) ?
+				"https://sandbox.evernote.com/" :
+				"https://www.evernote.com/";
+		
 		const string FILE_PATH = "/Auth.aspx?authDone=1";
 		    
 		delegate string stringTransform(string s);
