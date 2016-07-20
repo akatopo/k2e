@@ -155,7 +155,7 @@ function compileBabel() {
     gulp.src(`${BASE_SOURCE_PATH}/**/*.js`, { base: BASE_SOURCE_PATH })
       .pipe(cached('compileBabel-scripts'))
       .pipe(sourcemaps.init())
-      .pipe(babel({ plugins: BABEL_PLUGINS, ignore: BABEL_IGNORE }))
+      .pipe(babel({ babelrc: false, plugins: BABEL_PLUGINS, ignore: BABEL_IGNORE }))
       .pipe(sourcemaps.write('.')),
     gulp.src('./node_modules/babel-polyfill/dist/polyfill.js')
       .pipe(cached('compileBabel-polyfill')),
@@ -187,7 +187,7 @@ function distScripts() {
   return streamqueue({ objectMode: true },
     gulp.src(getK2eDeps().scripts)
       .pipe(sourcemaps.init())
-      .pipe(babel({ plugins: BABEL_PLUGINS, ignore: BABEL_IGNORE }))
+      .pipe(babel({ babelrc: false, plugins: BABEL_PLUGINS, ignore: BABEL_IGNORE }))
       .pipe(concat('app.js'))
       .pipe(uglify({ mangle: true }))
       .pipe(sourcemaps.write('.')),
