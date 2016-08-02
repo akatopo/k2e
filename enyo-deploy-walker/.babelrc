@@ -1,7 +1,0 @@
-{
-  "env": {
-    "noconflict": {
-      "presets": ["es2015"] 
-    }
-  }
-}

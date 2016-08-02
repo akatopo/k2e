@@ -5,7 +5,7 @@ import del from 'del';
 import { exec } from 'child_process';
 import streamqueue from 'streamqueue';
 import jshintStylish from 'jshint-stylish';
-import enyoWalker from './enyo-deploy-walker';
+import enyoWalker from 'enyo-deploy-walker';
 
 import gulp from 'gulp';
 import livereload from 'gulp-livereload';
