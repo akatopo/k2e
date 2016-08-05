@@ -100,6 +100,8 @@ gulp.task('watch', ['compile-babel', 'compile-sass'], watch);
 
 gulp.task('build-backend', buildBackend);
 
+gulp.task('build-backend-debug', buildBackendDebug);
+
 gulp.task('dist-bin', ['build-backend'], distBin);
 
 gulp.task('dist-aspx', distAspx);
@@ -118,6 +120,14 @@ gulp.task('dist', (cb) => {
   runSequence(
     ['lint', 'dist-clean'],
     ['dist-scripts', 'dist-css', 'dist-assets', 'dist-aspx', 'dist-config', 'dist-bin'],
+    cb
+  );
+});
+
+gulp.task('build', (cb) => {
+  runSequence(
+    ['lint'],
+    ['compile-babel', 'compile-sass', 'build-backend-debug'],
     cb
   );
 });
@@ -180,6 +190,13 @@ function buildBackend() {
   return gulp.src('./k2e.sln')
     .pipe(msbuild({
       configuration: 'Release'
+    }));
+}
+
+function buildBackendDebug() {
+  return gulp.src('./k2e.sln')
+    .pipe(msbuild({
+      configuration: 'Debug'
     }));
 }
 
