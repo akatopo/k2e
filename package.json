@@ -1,20 +1,24 @@
 {
   "name": "k2e",
-  "version": "0.0.1",
-  "description": "Kindle clipping viewer and evernote exporter",
+  "author": "Alex Katopodis <akatopo@users.noreply.github.com>",
+  "version": "1.0.0",
+  "description": "Browse your kindle clippings and export them to evernote",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd k2e && xsp4"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/akatopo/k2e.git"
+    "url": "https://github.com/akatopo/k2e"
+  },
+  "bugs": {
+    "url": "https://github.com/akatopo/k2e/issues"
   },
   "keywords": [
     "kindle",
     "evernote",
     "enyojs"
   ],
-  "author": "Alex Katopodis",
   "license": "ISC",
   "homepage": "https://bitbucket.org/akatopo/k2e#readme",
   "devDependencies": {
@@ -63,5 +67,6 @@
     "run-sequence": "^1.1.2",
     "streamqueue": "^1.1.0",
     "underscore": "^1.8.3"
-  }
+  },
+  "private": true
 }
