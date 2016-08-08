@@ -3,6 +3,7 @@
   "author": "Alex Katopodis <akatopo@users.noreply.github.com>",
   "version": "1.0.0",
   "description": "Browse your kindle clippings and export them to evernote",
+  "license": "ISC",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd k2e && xsp4"
@@ -19,8 +20,6 @@
     "evernote",
     "enyojs"
   ],
-  "license": "ISC",
-  "homepage": "https://bitbucket.org/akatopo/k2e#readme",
   "devDependencies": {
     "babel-core": "^6.6.4",
     "babel-plugin-transform-es2015-arrow-functions": "^6.0.14",
