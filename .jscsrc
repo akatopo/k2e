@@ -1,7 +1,6 @@
 {
   "preset": "crockford", // https://github.com/jscs-dev/node-jscs/blob/master/presets/crockford.json
 
-  "esnext": true,
   "requireSpacesInAnonymousFunctionExpression": {
     "beforeOpeningRoundBrace": true,
     "beforeOpeningCurlyBrace": true,
@@ -17,5 +16,6 @@
   "requireKeywordsOnNewLine": ["else"],
   "requireBlocksOnNewline": 1,
   "disallowDanglingUnderscores": null,
-  "disallowSpacesInCallExpression": true
+  "disallowSpacesInCallExpression": true,
+  "disallowTrailingComma": false,
 }
