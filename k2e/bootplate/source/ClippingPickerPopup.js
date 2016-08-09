@@ -41,7 +41,7 @@ enyo.kind({
   showErrorMessage,
   loadFile,
   clippingsTextChanged() { this.doClippingsTextChanged(); },
-  onHandleFiles,
+  handleFiles,
   handleShow,
 });
 
@@ -60,7 +60,7 @@ function loadFile() {
   }
 }
 
-function onHandleFiles(inSender, inEvent) {
+function handleFiles(inSender, inEvent) {
   const reader = new FileReader();
   const files = inEvent.target.files;
 
@@ -78,7 +78,7 @@ function handleShow() {
   const pickerNode = this.$.filePicker.hasNode();
   const sampleClippingsNode = document.querySelector('#sample-clippings');
 
-  if (sampleClippingsNode) {
+  if (!sampleClippingsNode) {
     this.setClippingsText(sampleClippingsNode.innerHTML);
     return;
   }
@@ -95,8 +95,8 @@ function handleShow() {
       ev.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
     };
 
-    const handleFiles = (files) => {
-      this.onHandleFiles(null, { target: { files } });
+    const callFileHandler = (files) => {
+      this.handleFiles(null, { target: { files } });
     };
 
     const handleDrop = (ev) => {
@@ -104,7 +104,7 @@ function handleShow() {
       ev.preventDefault();
 
       this.removeClass('onyx-blue');
-      handleFiles(ev.dataTransfer.files); // FileList object.
+      callFileHandler(ev.dataTransfer.files); // FileList object.
     };
 
     popupNode.addEventListener('dragleave', handleDragleave, false);
