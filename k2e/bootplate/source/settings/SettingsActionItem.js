@@ -6,20 +6,20 @@ enyo.kind({
   published: {
     buttonLabel: '',
     buttonClasses: '',
-    disabled: false
+    disabled: false,
   },
   events: {
-    'onActivated': ''
+    onActivated: '',
   },
   bindings: [
     { from: '.disabled', to: '.$.button.disabled' },
     { from: '.buttonLabel', to: '.$.button.content' },
     { from: '.buttonClasses', to: '.$.button.classes', transform(classes) {
       return `k2e-settings-action-item-button onyx-button ${classes}`;
-    }}
+    } },
   ],
   handleTap() { this.doActivated(); },
-  create
+  create,
 });
 
 /////////////////////////////////////////////////////////////
@@ -27,8 +27,8 @@ enyo.kind({
 function create() {
   this.inherited(arguments);
 
-  this.createComponent({fit: true});
-  this.createComponent({name: 'button', kind: 'onyx.Button', ontap: 'handleTap'});
+  this.createComponent({ fit: true });
+  this.createComponent({ name: 'button', kind: 'onyx.Button', ontap: 'handleTap' });
 }
 
 })();

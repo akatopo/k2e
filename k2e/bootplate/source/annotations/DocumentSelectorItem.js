@@ -8,35 +8,35 @@ enyo.kind({
     index: -1,
     multiSelected: false,
     selected: false,
-    key: undefined
+    key: undefined,
   },
   components: [
-    {classes: 'k2e-document-selector-item-separator'},
-    {classes: 'k2e-document-selector-item-container', components: [
-      {name: 'checkbox', kind: 'onyx.Checkbox', showing: false,
+    { classes: 'k2e-document-selector-item-separator' },
+    { classes: 'k2e-document-selector-item-container', components: [
+      { name: 'checkbox', kind: 'onyx.Checkbox', showing: false,
         events: {
-          onDocumentMultiSelected: ''
+          onDocumentMultiSelected: '',
         },
         handlers: {
-          onActivate: 'doDocumentMultiSelected'
-        }
+          onActivate: 'doDocumentMultiSelected',
+        },
       },
-      {name: 'label', classes: 'enyo-inline k2e-document-selector-item-label'}
-    ]}
+      { name: 'label', classes: 'enyo-inline k2e-document-selector-item-label' },
+    ] },
   ],
   events: {
-    onDocumentSelected: ''
+    onDocumentSelected: '',
   },
   handlers: {
-    ontap: 'handleTap'
+    ontap: 'handleTap',
   },
   bindings: [
-    { from: '.title', to: '.$.label.content' }
+    { from: '.title', to: '.$.label.content' },
   ],
   handleTap() { this.doDocumentSelected(); },
   isMarked() { return this.$.checkbox.getChecked(); },
   multiSelectedChanged,
-  selectedChanged
+  selectedChanged,
 });
 
 /////////////////////////////////////////////////////////////

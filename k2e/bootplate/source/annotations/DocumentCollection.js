@@ -1,4 +1,4 @@
-/* global k2e */
+/* global k2e:false */
 
 (function () {
 
@@ -8,12 +8,12 @@ enyo.kind({
   published: {
     docMap: undefined,
     keyArray: undefined,
-    length: 0
+    length: 0,
   },
   create,
   addClippingToDocument,
   getDocumentByKey(key) { return this.docMap[key]; },
-  exportObject
+  exportObject,
 });
 
 /////////////////////////////////////////////////////////////
@@ -25,12 +25,12 @@ function create() {
 }
 
 function addClippingToDocument(title, author, clipping) {
-  let key = title + author;
+  const key = title + author;
 
   if (!this.docMap[key]) {
     this.docMap[key] = new k2e.annotations.Document({
       title,
-      author
+      author,
     });
     this.length += 1;
     this.keyArray.push(key);
@@ -40,37 +40,37 @@ function addClippingToDocument(title, author, clipping) {
 }
 
 function exportObject(options) {
-  let ignoredTitleSet = (options && options.ignoredTitleSet) || false;
-  let selectedKeySet = (options && options.selectedKeySet) || false;
-  let documentsExport = { documents: [] };
+  const ignoredTitleSet = (options && options.ignoredTitleSet) || false;
+  const selectedKeySet = (options && options.selectedKeySet) || false;
+  const documentsExport = { documents: [] };
   let exportFunc;
 
   // selectedKeySet has priority over ignoredTitleSet
   if (selectedKeySet) {
     exportFunc = (doc) => {
-      if (selectedKeySet.hasOwnProperty(doc.title + doc.author)) {
-        let docExport = doc.exportObject();
+      if ({}.hasOwnProperty.call(selectedKeySet, `${doc.title}${doc.author}`)) {
+        const docExport = doc.exportObject();
         documentsExport.documents.push(docExport);
       }
     };
   }
   else if (ignoredTitleSet) {
     exportFunc = (doc) => {
-      if (!ignoredTitleSet.hasOwnProperty(doc.title)) {
-        let docExport = doc.exportObject();
+      if (!{}.hasOwnProperty.call(ignoredTitleSet, doc.title)) {
+        const docExport = doc.exportObject();
         documentsExport.documents.push(docExport);
       }
     };
   }
   else {
     exportFunc = (doc) => {
-      let docExport = doc.exportObject();
+      const docExport = doc.exportObject();
       documentsExport.documents.push(docExport);
     };
   }
 
   this.keyArray.forEach((key) => {
-    let doc = this.docMap[key];
+    const doc = this.docMap[key];
     exportFunc(doc);
   });
 

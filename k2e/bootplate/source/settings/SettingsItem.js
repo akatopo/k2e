@@ -6,16 +6,16 @@ enyo.kind({
   classes: 'onyx-toolbar-inline k2e-settings-item',
   published: {
     label: '',
-    disabled: false
+    disabled: false,
   },
   components: [
-    {name: 'label', kind: 'Control'}
+    { name: 'label', kind: 'Control' },
   ],
   bindings: [
-    { from: '.label', to: '.$.label.content' }
+    { from: '.label', to: '.$.label.content' },
   ],
   disabledChanged,
-  create
+  create,
 });
 
 /////////////////////////////////////////////////////////////

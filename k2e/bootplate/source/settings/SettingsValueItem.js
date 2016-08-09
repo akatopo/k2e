@@ -1,4 +1,4 @@
-/* global k2e */
+/* global k2e:false */
 
 (function () {
 
@@ -8,17 +8,17 @@ enyo.kind({
   published: {
     value: '',
     defaultInputKind: 'onyx.Checkbox',
-    inputComponent: null
+    inputComponent: null,
   },
   events: {
-    onSettingChanged: ''
+    onSettingChanged: '',
   },
   bindings: [
     { from: '.disabled', to: '.$.input.disabled' },
-    { from: '.value', to: '.$.input.value', oneWay: false }
+    { from: '.value', to: '.$.input.value', oneWay: false },
   ],
   valueChanged,
-  create
+  create,
 });
 
 /////////////////////////////////////////////////////////////
@@ -30,16 +30,16 @@ function valueChanged() {
 }
 
 function create() {
-  let settings = new k2e.settings.SettingsSingleton();
+  const settings = new k2e.settings.SettingsSingleton();
   this.inherited(arguments);
 
-  this.createComponent({fit: true});
+  this.createComponent({ fit: true });
   if (this.inputComponent) {
     this.inputComponent.name = 'input';
     this.createComponent(this.inputComponent);
   }
   else {
-    this.createComponent({name: 'input', kind: this.defaultInputKind});
+    this.createComponent({ name: 'input', kind: this.defaultInputKind });
   }
 
   this.set('value', settings.getSetting(this.name));

@@ -11,11 +11,11 @@ enyo.kind({
   buttonClasses: 'k2e-caution-button',
   cookieModel: undefined,
   computed: [
-    {method: 'disabledComputed', path: [
+    { method: 'disabledComputed', path: [
         'cookieModel',
         'modelDep1',
-        'modelDep2'
-    ]}
+        'modelDep2',
+    ] },
   ],
   disabledComputed() {
     return !(
@@ -24,10 +24,10 @@ enyo.kind({
     );
   },
   bindings: [
-    { from: '.disabledComputed', to: '.disabled'},
+    { from: '.disabledComputed', to: '.disabled' },
     { from: `.cookieModel.${k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME}`, to: '.modelDep1' },
-    { from: `.cookieModel.${k2e.Constants.ACCESS_TOKEN_COOKIE_NAME}`, to: '.modelDep2' }
-  ]
+    { from: `.cookieModel.${k2e.Constants.ACCESS_TOKEN_COOKIE_NAME}`, to: '.modelDep2' },
+  ],
 });
 
 })();

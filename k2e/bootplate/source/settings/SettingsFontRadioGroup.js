@@ -1,4 +1,4 @@
-/* global k2e, Typekit */
+/* global k2e:false, Typekit:false */
 
 (function (Constants, typekitPromise) {
 
@@ -7,24 +7,23 @@ enyo.kind({
   kind: 'Control',
   published: {
     value: '',
-    disabled: false
+    disabled: false,
   },
   events: {
-    onFontChanged: ''
+    onFontChanged: '',
   },
   bindings: [
     { from: 'value', to: '.$.group.value', oneWay: false },
-    { from: '.disabled', to: '.$.group.disabled' }
+    { from: '.disabled', to: '.$.group.disabled' },
   ],
   components: [
-    {name: 'group', kind: 'k2e.settings.SettingsRadioGroup', items: Constants.FONT_INFO.map((font) => {
-      return Array.isArray(font) ? font[0] : font;
-    }).map(
-      (font) => { return { content: font.name }; }
-    )}
+    { name: 'group', kind: 'k2e.settings.SettingsRadioGroup',
+      items: Constants.FONT_INFO
+        .map((font) => (Array.isArray(font) ? font[0] : font))
+        .map((font) => ({ content: font.name })) },
   ],
   valueChanged,
-  rendered
+  rendered,
 });
 
 /////////////////////////////////////////////////////////////
@@ -35,25 +34,26 @@ function valueChanged() {
 
 function rendered() {
   this.inherited(arguments);
-  let detector = createFontDetector();
+  const detector = createFontDetector();
 
-  typekitPromise.then(rebuildFontGroup.bind(undefined, this), rebuildFontGroup.bind(undefined, this));
+  typekitPromise
+    .then(
+      rebuildFontGroup.bind(undefined, this),
+      rebuildFontGroup.bind(undefined, this)
+    );
   this.doFontChanged({ name: this.value });
 
   /////////////////////////////////////////////////////////////
 
   function rebuildFontGroup(component) {
-    component.$.group.items = Constants.FONT_INFO.map((font) => {
-      let fonts = Array.isArray(font) ? font : [font];
+    component.$.group.items = Constants.FONT_INFO
+      .map((font) => {
+        const fonts = Array.isArray(font) ? font : [font];
 
-      return fonts.filter((font) => { return detector.detect(font.family); });
-    })
-    .filter((fonts) => {
-      return fonts.length;
-    })
-    .map((font) => {
-      return { content: font[0].name };
-    });
+        return fonts.filter((f) => detector.detect(f.family));
+      })
+      .filter((fonts) => fonts.length)
+      .map((font) => ({ content: font[0].name }));
     component.$.group.build();
   }
 }
@@ -68,28 +68,23 @@ function rendered() {
  * @author Sam Clarke <sam@samclarke.com>
  */
 function createFontDetector() {
-  let calculateWidth;
-  let monoWidth;
-  let serifWidth;
-  let sansWidth;
   let width;
-  let body          = document.body;
-  let container     = document.createElement('div');
-  let containerCss  = [
-      'position:absolute',
-      'width:auto',
-      'font-size:128px',
-      'left:-99999px'
+  const body = document.body;
+  let container = document.createElement('div');
+  const containerCss = [
+    'position:absolute',
+    'width:auto',
+    'font-size:128px',
+    'left:-99999px',
   ];
 
   // Create a span element to contain the test text.
   // Use innerHTML instead of createElement as it's smaller
-  container.innerHTML = '<span style="' + containerCss.join(' !important;') + '">' +
-      Array(100).join('wi') +
-  '</span>';
+  container.innerHTML =
+    `<span style="${containerCss.join(' !important;')}">${Array(100).join('wi')}</span>`;
   container = container.firstChild;
 
-  calculateWidth = function (fontFamily) {
+  const calculateWidth = (fontFamily) => {
     container.style.fontFamily = fontFamily;
 
     body.appendChild(container);
@@ -101,16 +96,16 @@ function createFontDetector() {
 
   // Pre calculate the widths of monospace, serif & sans-serif
   // to improve performance.
-  monoWidth  = calculateWidth('monospace');
-  serifWidth = calculateWidth('serif');
-  sansWidth  = calculateWidth('sans-serif');
+  const monoWidth = calculateWidth('monospace');
+  const serifWidth = calculateWidth('serif');
+  const sansWidth = calculateWidth('sans-serif');
 
   return {
     detect(fontName) {
-      return monoWidth !== calculateWidth(fontName + ',monospace') ||
-        sansWidth !== calculateWidth(fontName + ',sans-serif') ||
-        serifWidth !== calculateWidth(fontName + ',serif');
-    }
+      return monoWidth !== calculateWidth(`${fontName},monospace`) ||
+        sansWidth !== calculateWidth(`${fontName},sans-serif`) ||
+        serifWidth !== calculateWidth(`${fontName},serif`);
+    },
   };
 }
 

@@ -1,4 +1,4 @@
-/* global moment */
+/* global moment:false */
 
 (function () {
 
@@ -15,10 +15,10 @@ enyo.kind({
     content: '',
     contentText: '',
     suggestedTitle: '',
-    suggestedUrl: ''
+    suggestedUrl: '',
   },
   create,
-  exportObject
+  exportObject,
 });
 
 /////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@ function exportObject() {
     timeStamp: this.timeStamp,
     content: this.content,
     suggestedTitle: this.suggestedTitle,
-    suggestedUrl: this.suggestedUrl
+    suggestedUrl: this.suggestedUrl,
   };
 }
 

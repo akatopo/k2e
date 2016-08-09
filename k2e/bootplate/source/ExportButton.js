@@ -1,8 +1,8 @@
 (function () {
 
 const LABELS = {
-  exportAll: { short: 'Export', 'long': 'Export Clippings' },
-  exportSelected: { short: 'Export Selected', 'long': 'Export Selected Clippings' }
+  exportAll: { short: 'Export', long: 'Export Clippings' },
+  exportSelected: { short: 'Export Selected', long: 'Export Selected Clippings' },
 };
 
 enyo.kind({
@@ -12,23 +12,23 @@ enyo.kind({
   form: 'long',
   exportSelected: false,
   components: [
-      {tag: 'i', classes: 'icon-evernote icon-large'},
-      {name: 'label', tag: 'span' }
+    { tag: 'i', classes: 'icon-evernote icon-large' },
+    { name: 'label', tag: 'span' },
   ],
   bindings: [
-      { from: '.content', to: '$.label.content' }
+    { from: '.content', to: '$.label.content' },
   ],
   computed: {
-    content: ['form', 'exportSelected']
+    content: ['form', 'exportSelected'],
   },
-  content
+  content,
 });
 
 /////////////////////////////////////////////////////////////
 
 function content() {
-  let form = this.form === 'long' ? 'long' : 'short';
-  let labelType = this.exportSelected ? 'exportSelected' : 'exportAll';
+  const form = this.form === 'long' ? 'long' : 'short';
+  const labelType = this.exportSelected ? 'exportSelected' : 'exportAll';
 
   return LABELS[labelType][form];
 }

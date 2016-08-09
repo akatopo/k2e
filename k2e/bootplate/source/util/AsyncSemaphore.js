@@ -5,10 +5,10 @@ enyo.kind({
   kind: 'enyo.Component',
   published: {
     lock: 0,
-    func: undefined
+    func: undefined,
   },
   v() { ++this.lock; },
-  p
+  p,
 });
 
 /////////////////////////////////////////////////////////////

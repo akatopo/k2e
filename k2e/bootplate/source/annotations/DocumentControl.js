@@ -2,25 +2,27 @@
 
 (function (Constants) {
 
-const THEME_CLASS_NAME_MAP = Constants.THEME_INFO.reduce((map, currentTheme) => {
-  map[currentTheme.name] = currentTheme.class;
-  return map;
-}, {});
+const THEME_CLASS_NAME_MAP = Constants.THEME_INFO
+  .reduce((map, currentTheme) => {
+    map[currentTheme.name] = currentTheme.class;
+    return map;
+  }, {});
 
-const FONT_MAP = Constants.FONT_INFO.reduce((array, font) => {
-  if (Array.isArray(font)) {
-    array.push(...font);
-  }
-  else {
-    array.push(font);
-  }
+const FONT_MAP = Constants.FONT_INFO
+  .reduce((array, font) => {
+    if (Array.isArray(font)) {
+      array.push(...font);
+    }
+    else {
+      array.push(font);
+    }
 
-  return array;
-}, [])
-.reduce((map, currentFont) => {
-  map[currentFont.name] = currentFont;
-  return map;
-}, {});
+    return array;
+  }, [])
+  .reduce((map, currentFont) => {
+    map[currentFont.name] = currentFont;
+    return map;
+  }, {});
 
 const DEFAULT_THEME_CLASS = Constants.THEME_INFO[0].class;
 const DEFAULT_FONT_FAMILY = Constants.FONT_INFO[0].family;
@@ -33,27 +35,30 @@ enyo.kind({
     document: undefined,
     fontSize: undefined,
     margin: undefined,
-    theme: undefined
+    theme: undefined,
   },
   events: {
-    onFullscreenRequest: ''
+    onFullscreenRequest: '',
   },
   handlers: {
-    onScroll: 'handleScroll'
+    onScroll: 'handleScroll',
   },
   components: [
-    {name: 'scroller', kind: 'enyo.Scroller', strategyKind: 'ScrollStrategy', style: 'height: 100%',
+    { name: 'scroller', kind: 'enyo.Scroller',
+      strategyKind: 'ScrollStrategy', style: 'height: 100%',
       classes: 'k2e-document-scroller', components: [
-        {name: 'documentView', kind: 'k2e.annotations.DocumentView'},
-        {name: 'toggleFullscreenButton', classes: 'k2e-toggle-fullscreen-button k2e-icon-button k2e-hidden',
+        { name: 'documentView', kind: 'k2e.annotations.DocumentView' },
+        { name: 'toggleFullscreenButton',
+          classes: 'k2e-toggle-fullscreen-button k2e-icon-button k2e-hidden',
           ontap: 'handleFullscreenButtonTap', kind: 'onyx.Button', components: [
-            {tag: 'i', classes: 'icon-resize-small icon-large'}
-        ]},
-        {name: 'toTopButton', kind: 'onyx.Button', classes: 'k2e-to-top-button k2e-icon-button k2e-hidden',
+            { tag: 'i', classes: 'icon-resize-small icon-large' },
+        ] },
+        { name: 'toTopButton', kind: 'onyx.Button',
+          classes: 'k2e-to-top-button k2e-icon-button k2e-hidden',
           ontap: 'scrollDocumentToTop', components: [
-            {tag: 'i', classes: 'icon-chevron-up icon-large'}
-        ]}
-      ]}
+            { tag: 'i', classes: 'icon-chevron-up icon-large' },
+        ] },
+      ] },
   ],
   strategyKind: 'ScrollStrategy',
   handleScroll,
@@ -66,14 +71,14 @@ enyo.kind({
   themeChanged,
   fontChanged,
   create,
-  rendered
+  rendered,
 });
 
 /////////////////////////////////////////////////////////////
 
-function handleScroll(inSender, inEvent) {
-  let scrollBounds = this.$.scroller.getScrollBounds();
-  let isNotAtTop = scrollBounds.top !== 0;
+function handleScroll(/*inSender, inEvent*/) {
+  const scrollBounds = this.$.scroller.getScrollBounds();
+  const isNotAtTop = scrollBounds.top !== 0;
 
   this.$.toTopButton.addRemoveClass('visible', isNotAtTop);
 }
@@ -103,15 +108,15 @@ function marginChanged(oldMargin) {
 }
 
 function themeChanged(oldTheme) {
-  let oldThemeClass = THEME_CLASS_NAME_MAP[oldTheme] || DEFAULT_THEME_CLASS;
-  let newThemeClass = THEME_CLASS_NAME_MAP[this.theme] || DEFAULT_THEME_CLASS;
+  const oldThemeClass = THEME_CLASS_NAME_MAP[oldTheme] || DEFAULT_THEME_CLASS;
+  const newThemeClass = THEME_CLASS_NAME_MAP[this.theme] || DEFAULT_THEME_CLASS;
   this.$.scroller.removeClass(oldThemeClass);
   this.$.scroller.addClass(newThemeClass);
 }
 
-function fontChanged(oldFont) {
-  let fontFamily = FONT_MAP[this.font].family || DEFAULT_FONT_FAMILY;
-  let fallback = FONT_MAP[this.font].fallback || 'serif';
+function fontChanged(/*oldFont*/) {
+  const fontFamily = FONT_MAP[this.font].family || DEFAULT_FONT_FAMILY;
+  const fallback = FONT_MAP[this.font].fallback || 'serif';
 
   this.$.documentView.applyStyle('font-family', `'${fontFamily}', '${fallback}'`);
 }
@@ -125,10 +130,10 @@ function create() {
 function rendered() {
   this.inherited(arguments);
 
-  let settings = new k2e.settings.SettingsSingleton();
-  let sizePercent = settings.getSetting('fontSize');
-  let margin = settings.getSetting('textMargin');
-  let theme = settings.getSetting('themeName');
+  const settings = new k2e.settings.SettingsSingleton();
+  const sizePercent = settings.getSetting('fontSize');
+  const margin = settings.getSetting('textMargin');
+  const theme = settings.getSetting('themeName');
 
   this.set('fontSize', sizePercent);
   this.set('margin', margin);

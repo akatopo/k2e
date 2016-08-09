@@ -6,19 +6,19 @@ enyo.kind({
   classes: 'k2e-settings-item-slider',
   published: {
     value: 20,
-    disabled: false
+    disabled: false,
   },
   events: {
     onInputValueChanged: '',
-    onTextMarginChanged: ''
+    onTextMarginChanged: '',
   },
   bindings: [
-    { from: '.value', to: '$.slider.value', oneWay: false }
+    { from: '.value', to: '$.slider.value', oneWay: false },
   ],
   components: [
-    {name: 'slider', kind: 'onyx.Slider', min: 10, max: 40, increment: 10}
+    { name: 'slider', kind: 'onyx.Slider', min: 10, max: 40, increment: 10 },
   ],
-  valueChanged(oldValue) { this.doTextMarginChanged({ previous: oldValue, current: this.value }); }
+  valueChanged(oldValue) { this.doTextMarginChanged({ previous: oldValue, current: this.value }); },
 });
 
 })();

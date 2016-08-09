@@ -5,14 +5,14 @@ enyo.kind({
   kind: 'enyo.Control',
   published: {
     value: undefined,
-    disabled: false
+    disabled: false,
   },
   handleActivate,
   valueChanged,
   disabledChanged,
   build,
   create,
-  rendered
+  rendered,
 });
 
 /////////////////////////////////////////////////////////////
@@ -27,15 +27,17 @@ function handleActivate(inSender, inEvent) {
 }
 
 function valueChanged() {
-  let found = this.getComponents().filter((c) => {
-    return c.kind === 'onyx.RadioButton';
-  })
-  .some((component) => {
-    if (component.getContent() === this.value) {
-      component.setActive(true);
-      return true;
-    }
-  });
+  const found = this.getComponents()
+    .filter((c) =>
+      c.kind === 'onyx.RadioButton'
+    )
+    .some((component) => {
+      if (component.getContent() === this.value) {
+        component.setActive(true);
+        return true;
+      }
+      return false;
+    });
 
   if (found) {
     return true;
@@ -49,29 +51,31 @@ function valueChanged() {
   }
 
   this.log(this.value);
+  return undefined;
 }
 
 function disabledChanged() {
-  this.getComponents().filter((c) => {
-    return c.kind === 'onyx.RadioButton';
-  })
-  .forEach((component) => {
-    component.setDisabled(this.disabled);
-  });
+  this.getComponents()
+    .filter((c) =>
+      c.kind === 'onyx.RadioButton'
+    )
+    .forEach((component) => {
+      component.setDisabled(this.disabled);
+    });
 }
 
 function build() {
   this.destroyComponents();
-  this.createComponent({name: 'group', kind: 'onyx.RadioGroup',
-    onActivate: 'handleActivate', components: this.items});
+  this.createComponent({ name: 'group', kind: 'onyx.RadioGroup',
+    onActivate: 'handleActivate', components: this.items });
   this.render();
   this.valueChanged();
 }
 
 function create() {
   this.inherited(arguments);
-  this.createComponent({name: 'group', kind: 'onyx.RadioGroup',
-    onActivate: 'handleActivate', components: this.items});
+  this.createComponent({ name: 'group', kind: 'onyx.RadioGroup',
+    onActivate: 'handleActivate', components: this.items });
 }
 
 function rendered() {

@@ -1,4 +1,4 @@
-/* global k2e */
+/* global k2e:false */
 
 (function () {
 
@@ -10,16 +10,18 @@ enyo.kind({
   style: 'display:inline-block',
   classes: 'k2e-hide-print',
   published: {
-    'clipping':  undefined
+    clipping: undefined,
   },
   components: [
-    {kind: 'onyx.Button', ontap: 'handleClipboardTap', classes: 'onyx-button k2e-icon-button', components: [
-      {tag: 'i', classes: 'icon-docs'}
-    ]},
-    {name: 'popup', kind: 'k2e.AnimatedPopup', modal: false, floating: true, content: 'Clipping copied to clipboard'}
+    { kind: 'onyx.Button', ontap: 'handleClipboardTap', classes: 'onyx-button k2e-icon-button',
+      components: [
+        { tag: 'i', classes: 'icon-docs' },
+      ] },
+    { name: 'popup', kind: 'k2e.AnimatedPopup', modal: false, floating: true,
+      content: 'Clipping copied to clipboard' },
   ],
   handleClipboardTap,
-  rendered
+  rendered,
 });
 
 function handleClipboardTap(inSender, inEvent) {
@@ -42,7 +44,7 @@ function rendered() {
 
 function copyText(text) {
   // Create a textarea for the text to reside
-  var ta = document.createElement('textarea');
+  const ta = document.createElement('textarea');
   // Hide it from display
   ta.style.position = 'fixed';
   ta.style.top = ta.style.left = 0;

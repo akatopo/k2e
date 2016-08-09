@@ -11,14 +11,15 @@ enyo.kind({
   draggable: false,
   cookieModel: undefined,
   components: [
-    {name: 'scroller', kind: 'enyo.Scroller', strategyKind: 'ScrollStrategy', style: 'height: 100%', components: [
-      {name: 'panel', kind: 'k2e.settings.SettingsPanel'}
-    ]}
+    { name: 'scroller', kind: 'enyo.Scroller', strategyKind: 'ScrollStrategy',
+      style: 'height: 100%', components: [
+        { name: 'panel', kind: 'k2e.settings.SettingsPanel' },
+      ] },
   ],
   bindings: [
-    { from: '.cookieModel', to: '.$.panel.cookieModel' }
+    { from: '.cookieModel', to: '.$.panel.cookieModel' },
   ],
-  toggle
+  toggle,
 });
 
 /////////////////////////////////////////////////////////////

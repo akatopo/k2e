@@ -1,4 +1,4 @@
-/* global k2e */
+/* global k2e:false */
 
 (function () {
 
@@ -7,29 +7,30 @@ enyo.kind({
   kind: 'enyo.Control',
   classes: 'k2e-settings-panel',
   handlers: {
-    onSettingChanged: 'handleSettingChanged'
+    onSettingChanged: 'handleSettingChanged',
   },
   events: {
-    onFullscreenRequest: ''
+    onFullscreenRequest: '',
   },
   cookieModel: undefined,
   components: [
-    {name: 'settingsPopup', kind: 'k2e.ProgressPopup'},
-    {kind: 'k2e.Accordion', components: [
-      {content: 'Appearance', components: [
-        {kind: 'onyx.Groupbox', components: [
-          {name: 'themeName', kind: 'k2e.settings.SettingsValueItem',
-            inputComponent: { kind: 'k2e.settings.SettingsThemeRadioGroup' }, label: 'Theme'},
-          {name: 'font', kind: 'k2e.settings.SettingsValueItem',
-            inputComponent: {kind: 'k2e.settings.SettingsFontRadioGroup'}, label: 'Font'},
-          {name: 'fontSize', kind: 'k2e.settings.SettingsValueItem',
-            inputComponent: {kind: 'k2e.settings.SettingsFontSizeSlider'}, label: 'Font Size'},
-          {name: 'textMargin', kind: 'k2e.settings.SettingsValueItem',
-            inputComponent: {kind: 'k2e.settings.SettingsTextMarginSlider'}, label: 'Text Margin'},
-          {name: 'fullscreen', kind: 'k2e.settings.SettingsActionItem', label: 'Fullscreen',
-            buttonLabel: 'Toggle', onActivated: 'handleToggleFullscreenActivated' }
-        ]}
-      ]},
+    { name: 'settingsPopup', kind: 'k2e.ProgressPopup' },
+    { kind: 'k2e.Accordion', components: [
+      { content: 'Appearance', components: [
+        { kind: 'onyx.Groupbox', components: [
+          { name: 'themeName', kind: 'k2e.settings.SettingsValueItem',
+            inputComponent: { kind: 'k2e.settings.SettingsThemeRadioGroup' }, label: 'Theme' },
+          { name: 'font', kind: 'k2e.settings.SettingsValueItem',
+            inputComponent: { kind: 'k2e.settings.SettingsFontRadioGroup' }, label: 'Font' },
+          { name: 'fontSize', kind: 'k2e.settings.SettingsValueItem',
+            inputComponent: { kind: 'k2e.settings.SettingsFontSizeSlider' }, label: 'Font Size' },
+          { name: 'textMargin', kind: 'k2e.settings.SettingsValueItem',
+            inputComponent: { kind: 'k2e.settings.SettingsTextMarginSlider' },
+            label: 'Text Margin' },
+          { name: 'fullscreen', kind: 'k2e.settings.SettingsActionItem', label: 'Fullscreen',
+            buttonLabel: 'Toggle', onActivated: 'handleToggleFullscreenActivated' },
+        ] },
+      ] },
       // {content: 'Export', components: [
       //   {kind: 'onyx.Groupbox', components: [
       //     {name: 'ignoredTitleList', kind: 'k2e.settings.SettingsValueItem',
@@ -51,28 +52,30 @@ enyo.kind({
       //       label: 'Google Search Api Url', disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')}
       //   ]}
       // ]},
-      {content: 'Local Storage', components: [
-        {kind: 'onyx.Groupbox', components: [
-          {name: 'clearSettings', kind: 'k2e.settings.SettingsActionItem',
-            label: 'Restore Default Settings', buttonLabel: 'Restore', onActivated: 'restoreDefaults'}//,
+      { content: 'Local Storage', components: [
+        { kind: 'onyx.Groupbox', components: [
+          { name: 'clearSettings', kind: 'k2e.settings.SettingsActionItem',
+            label: 'Restore Default Settings', buttonLabel: 'Restore',
+            onActivated: 'restoreDefaults' }, //,
           // {name: 'clearCache', kind: 'k2e.settings.SettingsActionItem', label: 'Clear Cache',
           //   buttonLabel: 'Clear', onActivated: 'clearCache' },
           // {name: 'exportSettings', kind: 'k2e.settings.SettingsActionItem', label: 'Export Settings',
           //   buttonLabel: 'Export', onActivated: 'exportSettings'},
           // {name: 'importSettings', kind: 'k2e.settings.SettingsActionItem', label: 'Import Settings',
           //   buttonLabel: 'Import', onActivated: 'importSettings'}
-        ]}
-      ]},
-      {content: 'Permissions', components: [
-        {kind: 'onyx.Groupbox', components: [
-          {name: 'revokeEvernotePermissions', kind: 'k2e.settings.RevokeEvernotePermissionsActionItem',
-            onActivated: 'revokeEvernotePermissions'}
-        ]}
-      ]}
-    ]}
+        ] },
+      ] },
+      { content: 'Permissions', components: [
+        { kind: 'onyx.Groupbox', components: [
+          { name: 'revokeEvernotePermissions',
+            kind: 'k2e.settings.RevokeEvernotePermissionsActionItem',
+            onActivated: 'revokeEvernotePermissions' },
+        ] },
+      ] },
+    ] },
   ],
   bindings: [
-    { from: '.cookieModel', to: '.$.revokeEvernotePermissions.cookieModel' }
+    { from: '.cookieModel', to: '.$.revokeEvernotePermissions.cookieModel' },
   ],
   handleSettingChanged,
   handleExtractionSettingChanged,
@@ -81,15 +84,15 @@ enyo.kind({
   restoreDefaults,
   importSettings() { this.log('Import settings'); },
   exportSettings() { this.log('Export settings'); },
-  clearCache() { this.log('clear cache'); }
+  clearCache() { this.log('clear cache'); },
 });
 
 /////////////////////////////////////////////////////////////
 
 function handleSettingChanged(inSender, inEvent) {
-  let settingsItem = inEvent.originator;
-  let value = JSON.stringify(inEvent.newValue || settingsItem.getValue());
-  let name = settingsItem.getName();
+  const settingsItem = inEvent.originator;
+  const value = JSON.stringify(inEvent.newValue || settingsItem.getValue());
+  const name = settingsItem.getName();
 
   this.log(settingsItem.getValue());
   this.log(settingsItem.getName());
@@ -113,22 +116,22 @@ function handleExtractionSettingChanged(inSender, inEvent) {
   }
 }
 
-function revokeEvernotePermissions(inSender, inEvent) {
+function revokeEvernotePermissions(/*inSender, inEvent*/) {
   this.$.settingsPopup.begin('Revoking permissions...');
 
-  let loc = `${location.protocol}//${location.host}${k2e.Constants.REVOKE_PATH}`;
-  let ajax = new enyo.Ajax({
+  const loc = `${location.protocol}//${location.host}${k2e.Constants.REVOKE_PATH}`;
+  const ajax = new enyo.Ajax({
     url: loc,
     contentType: 'application/json',
-    method: 'POST'
+    method: 'POST',
   });
   ajax.go();
 
   ajax.response(this.$.settingsPopup, processResponse);
   ajax.error(this.$.settingsPopup, processError);
 
-  let cookieModel = this.cookieModel;
-  function processResponse(inSender, inEvent) {
+  const cookieModel = this.cookieModel;
+  function processResponse(/*inSender, inEvent*/) {
     cookieModel.fetch();
     cookieModel.set(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
     cookieModel.set(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
@@ -136,7 +139,7 @@ function revokeEvernotePermissions(inSender, inEvent) {
     this.done('Permissions revoked successfully');
   }
 
-  function processError(inSender, inEvent) {
+  function processError(/*inSender, inEvent*/) {
     this.failed('Revocation failed');
   }
 }
@@ -146,16 +149,15 @@ function restoreDefaults() {
 
   localStorage.clear();
 
-  let settings = new k2e.settings.SettingsSingleton();
-  let defaultsMap = settings.defaultSettings;
+  const settings = new k2e.settings.SettingsSingleton();
+  const defaultsMap = settings.defaultSettings;
 
-  Object.keys(defaultsMap).filter((key) => {
-    return this.$.hasOwnProperty(key);
-  })
-  .forEach((key) => {
-    this.$[key].setValue(settings.getDefaultSetting(key));
-    this.$[key].valueChanged();
-  });
+  Object.keys(defaultsMap)
+    .filter((key) => ({}.hasOwnProperty.call(this.$, key)))
+    .forEach((key) => {
+      this.$[key].setValue(settings.getDefaultSetting(key));
+      this.$[key].valueChanged();
+    });
 
 }
 

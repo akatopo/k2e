@@ -1,4 +1,4 @@
-/* global k2e */
+/* global k2e:false */
 
 (function (Constants) {
 
@@ -7,22 +7,22 @@ enyo.kind({
   kind: 'Control',
   published: {
     value: '',
-    disabled: false
+    disabled: false,
   },
   events: {
-    onThemeChanged: ''
+    onThemeChanged: '',
   },
   bindings: [
     { from: '.value', to: '$.group.value', oneWay: false },
-    { from: '.disabled', to: '$.group.disabled' }
+    { from: '.disabled', to: '$.group.disabled' },
   ],
   components: [
-    {name: 'group', kind: 'k2e.settings.SettingsRadioGroup', items: Constants.THEME_INFO.map(
-      (theme) => { return { content: theme.name }; }
-    )}
+    { name: 'group', kind: 'k2e.settings.SettingsRadioGroup', items: Constants.THEME_INFO.map(
+      (theme) => ({ content: theme.name })
+    ) },
   ],
   valueChanged,
-  rendered
+  rendered,
 });
 
 /////////////////////////////////////////////////////////////

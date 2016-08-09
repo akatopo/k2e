@@ -1,4 +1,4 @@
-/* global k2e */
+/* global k2e:false */
 
 (function () {
 
@@ -12,19 +12,23 @@ enyo.kind({
   centered: true,
   scrim: true,
   components: [
-    {name: 'spinner', kind: 'onyx.Spinner'},
-    {name: 'message', content: ''}
+    { name: 'spinner', kind: 'onyx.Spinner' },
+    { name: 'message', content: '' },
   ],
   done,
   begin,
-  failed
+  failed,
 });
 
 /////////////////////////////////////////////////////////////
 
 function done(message) {
   changeMessage.call(this, message);
-  this.startJob('hideAfterDone', 'hide', k2e.AnimatedPopup.calculateTimeout(this.$.message.content));
+  this.startJob(
+    'hideAfterDone',
+    'hide',
+    k2e.AnimatedPopup.calculateTimeout(this.$.message.content)
+  );
 }
 
 function begin(message) {
@@ -43,11 +47,15 @@ function failed(caption, messages) {
     (messages.length !== 0 ? ': ' : '') +
     messages.join('\n')
   );
-  this.startJob('hideAfterFailure', 'hide', k2e.AnimatedPopup.calculateTimeout(this.$.message.content));
+  this.startJob(
+    'hideAfterFailure',
+    'hide',
+    k2e.AnimatedPopup.calculateTimeout(this.$.message.content)
+  );
 }
 
 function changeMessage(message, spinnerToggle) {
-  let spinnerFunc = spinnerToggle ? this.$.spinner.show : this.$.spinner.hide;
+  const spinnerFunc = spinnerToggle ? this.$.spinner.show : this.$.spinner.hide;
   spinnerFunc.call(this.$.spinner);
   this.$.message.setContent(message);
   this.rendered();

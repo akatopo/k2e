@@ -6,19 +6,19 @@ enyo.kind({
   classes: 'k2e-settings-item-slider',
   published: {
     value: 100,
-    disabled: false
+    disabled: false,
   },
   events: {
     onInputValueChanged: '',
-    onFontSizeChanged: ''
+    onFontSizeChanged: '',
   },
   bindings: [
-    { from: '.value', to: '$.slider.value', oneWay: false }
+    { from: '.value', to: '$.slider.value', oneWay: false },
   ],
   components: [
-    {name: 'slider', kind: 'onyx.Slider', min: 40, max: 160, increment: 20}
+    { name: 'slider', kind: 'onyx.Slider', min: 40, max: 160, increment: 20 },
   ],
-  valueChanged() { this.doFontSizeChanged({ sizePercent: this.value }); }
+  valueChanged() { this.doFontSizeChanged({ sizePercent: this.value }); },
 });
 
 })();

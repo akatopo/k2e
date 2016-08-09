@@ -5,19 +5,19 @@ enyo.kind({
   kind: 'enyo.Scroller',
   strategyKind: 'ScrollStrategy',
   components: [
-    {name: 'documentSelectorRepeater', kind: 'enyo.Repeater', onSetupItem: 'handleSetupItem',
+    { name: 'documentSelectorRepeater', kind: 'enyo.Repeater', onSetupItem: 'handleSetupItem',
       count: 0, components: [
-        {kind: 'k2e.annotations.DocumentSelectorItem'}
-    ]}
+        { kind: 'k2e.annotations.DocumentSelectorItem' },
+      ] },
   ],
   published: {
     documentsRef: undefined,
     selDocumentSelectorItem: null,
-    multiSelected: false
+    multiSelected: false,
   },
   items: undefined,
   handlers: {
-    onDocumentSelected: 'handleDocumentSelected'
+    onDocumentSelected: 'handleDocumentSelected',
   },
   create,
   handleDocumentSelected,
@@ -26,7 +26,7 @@ enyo.kind({
   getMultiSelectionKeys,
   selectNextDocument,
   selectPrevDocument,
-  documentsRefChanged
+  documentsRefChanged,
 });
 
 /////////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@ function create() {
 }
 
 function handleDocumentSelected(inSender, inEvent) {
-  let docSelectorItem = inEvent.originator;
+  const docSelectorItem = inEvent.originator;
 
   if (this.selDocumentSelectorItem === docSelectorItem) {
     inEvent.reSelected = true;
@@ -52,19 +52,19 @@ function handleDocumentSelected(inSender, inEvent) {
 
   // TODO: isInView is protected. Is there a better way to find whether a node/control is in view?
   if (!this.getStrategy().isInView(this.selDocumentSelectorItem.hasNode())) {
-    let curItemIndex = this.selDocumentSelectorItem.index;
-    let prevItem = this.items[Math.max(curItemIndex - 1, 0)];
-    let alignWithTop = !this.getStrategy().isInView(prevItem.hasNode());
+    const curItemIndex = this.selDocumentSelectorItem.index;
+    const prevItem = this.items[Math.max(curItemIndex - 1, 0)];
+    const alignWithTop = !this.getStrategy().isInView(prevItem.hasNode());
 
     this.scrollIntoView(this.selDocumentSelectorItem, alignWithTop);
   }
 }
 
 function handleSetupItem(inSender, inEvent) {
-  let index = inEvent.index;
-  let item = inEvent.item;
-  let docMap = this.documentsRef.getDocMap();
-  let key = this.sortedKeys[index];
+  const index = inEvent.index;
+  const item = inEvent.item;
+  const docMap = this.documentsRef.getDocMap();
+  const key = this.sortedKeys[index];
 
   item.$.documentSelectorItem.set('title', docMap[key].title);
   item.$.documentSelectorItem.set('index', index);
@@ -75,14 +75,14 @@ function handleSetupItem(inSender, inEvent) {
 }
 
 function multiSelectedChanged() {
-  let multiSelected = !!this.multiSelected;
+  const multiSelected = !!this.multiSelected;
   this.items.forEach((item) => {
     item.set('multiSelected', multiSelected);
   });
 }
 
 function getMultiSelectionKeys() {
-  let multiSelKeys = {};
+  const multiSelKeys = {};
 
   this.items.forEach((item) => {
     if (item.getMultiSelected() && item.isMarked()) {
@@ -140,13 +140,13 @@ function selectPrevDocument() {
 }
 
 function documentsRefChanged() {
-  let docMap = this.documentsRef.getDocMap();
-  let keys = this.documentsRef.getKeyArray();
+  const docMap = this.documentsRef.getDocMap();
+  const keys = this.documentsRef.getKeyArray();
 
   // descending (newest to oldest most recent clipping date) key sort
   this.sortedKeys = keys.slice(0).sort((a, b) => {
-    let aUnixTimestamp = docMap[a].mostRecentDate.valueOf();
-    let bUnixTimestamp = docMap[b].mostRecentDate.valueOf();
+    const aUnixTimestamp = docMap[a].mostRecentDate.valueOf();
+    const bUnixTimestamp = docMap[b].mostRecentDate.valueOf();
 
     return bUnixTimestamp - aUnixTimestamp;
   });

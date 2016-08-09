@@ -1,4 +1,4 @@
-/* global k2e */
+/* global k2e:false */
 
 (function () {
 
@@ -9,43 +9,50 @@ enyo.kind({
   name: 'k2e.App',
   kind: 'FittableRows',
   components: [
-    {kind: 'enyo.Signals', onkeydown: 'handleKeydown', onFullscreenChange: 'toggleDistractionFreeMode'},
-    {name: 'clippingPickerPopup', kind: 'k2e.ClippingPickerPopup'},
-    {name: 'exportPopup', kind: 'k2e.ProgressPopup' },
-    {name: 'appToolbar', kind: 'onyx.Toolbar', layoutKind: 'FittableColumnsLayout', components: [
-      {name: 'settingsButton', kind: 'onyx.Button', classes: 'k2e-icon-button', ontap: 'toggleSettings', components: [
-        {tag: 'i', classes: 'icon-menu icon-large'}
-      ]},
-      {content: 'k2e', fit: true},
-      {name: 'exportButton', kind: 'k2e.ExportButton', ontap: 'prepareDocumentsAndExport'}
-    ]},
-    {name: 'settings', kind: 'k2e.settings.SettingsSlideable'},
-    {kind: 'FittableColumns', fit: true, components: [
-      {name: 'mainPanels', kind: 'Panels', fit: true, arrangerKind: 'CollapsingArranger', realtimeFit: true, wrap: false, components: [
-        {name: 'sidebar', classes: 'k2e-sidebar', layoutKind: 'FittableRowsLayout', components: [
-          {name: 'documentSelectorList', fit: true, kind: 'k2e.annotations.DocumentSelectorList'},
-          {name: 'sidebarToolbar', kind: 'onyx.Toolbar', layoutKind: 'FittableColumnsLayout', components: [
-            {name: 'multiSelectButton', kind: 'onyx.Button', classes: 'k2e-icon-button', ontap: 'toggleMultiSelection', components: [
-              {tag: 'i', classes: 'icon-check icon-large'}
-            ]}
-          ]}
-        ]},
-        {kind: 'FittableRows', classes: 'k2e-main-panel', fit: true, components: [
-          {name: 'documentControl', kind: 'k2e.annotations.DocumentControl', fit: true},
-          {name: 'backToolbar', kind: 'onyx.Toolbar', showing: false, components: [
-            {kind: 'onyx.Button', classes: 'k2e-icon-button', ontap: 'showDocumentSelectorList', components: [
-              {tag: 'i', classes: 'icon-left-big icon-large'}
-            ]}
-          ]}
-        ]}
-      ]}
-    ]}
+    { kind: 'enyo.Signals', onkeydown: 'handleKeydown',
+      onFullscreenChange: 'toggleDistractionFreeMode' },
+    { name: 'clippingPickerPopup', kind: 'k2e.ClippingPickerPopup' },
+    { name: 'exportPopup', kind: 'k2e.ProgressPopup' },
+    { name: 'appToolbar', kind: 'onyx.Toolbar', layoutKind: 'FittableColumnsLayout', components: [
+      { name: 'settingsButton', kind: 'onyx.Button',
+        classes: 'k2e-icon-button', ontap: 'toggleSettings', components: [
+          { tag: 'i', classes: 'icon-menu icon-large' },
+        ] },
+      { content: 'k2e', fit: true },
+      { name: 'exportButton', kind: 'k2e.ExportButton', ontap: 'prepareDocumentsAndExport' },
+    ] },
+    { name: 'settings', kind: 'k2e.settings.SettingsSlideable' },
+    { kind: 'FittableColumns', fit: true, components: [
+      { name: 'mainPanels', kind: 'Panels', fit: true, arrangerKind: 'CollapsingArranger',
+        realtimeFit: true, wrap: false, components: [
+          { name: 'sidebar', classes: 'k2e-sidebar', layoutKind: 'FittableRowsLayout', components: [
+            { name: 'documentSelectorList', fit: true,
+              kind: 'k2e.annotations.DocumentSelectorList' },
+            { name: 'sidebarToolbar', kind: 'onyx.Toolbar',
+              layoutKind: 'FittableColumnsLayout', components: [
+                { name: 'multiSelectButton', kind: 'onyx.Button', classes: 'k2e-icon-button',
+                  ontap: 'toggleMultiSelection', components: [
+                    { tag: 'i', classes: 'icon-check icon-large' },
+                  ] },
+              ] },
+          ] },
+          { kind: 'FittableRows', classes: 'k2e-main-panel', fit: true, components: [
+            { name: 'documentControl', kind: 'k2e.annotations.DocumentControl', fit: true },
+            { name: 'backToolbar', kind: 'onyx.Toolbar', showing: false, components: [
+              { kind: 'onyx.Button', classes: 'k2e-icon-button',
+                ontap: 'showDocumentSelectorList', components: [
+                  { tag: 'i', classes: 'icon-left-big icon-large' },
+                ] },
+            ] },
+          ] },
+        ] },
+    ] },
   ],
   published: {
     periodicalTitleSet: undefined,
     ignoredTitleSet: undefined,
     documents: undefined,
-    currentThemeClass: 'k2e-document-view-dark'
+    currentThemeClass: 'k2e-document-view-dark',
   },
   cookieModel: undefined,
   handlers: {
@@ -56,10 +63,10 @@ enyo.kind({
     onFontSizeChanged: 'handleFontSizeChanged',
     onFontChanged: 'handleFontChanged',
     onTextMarginChanged: 'handleTextMarginChanged',
-    onFullscreenRequest: 'toggleFullscreen'
+    onFullscreenRequest: 'toggleFullscreen',
   },
   bindings: [
-    { from: '.cookieModel', to: '.$.settings.cookieModel' }
+    { from: '.cookieModel', to: '.$.settings.cookieModel' },
   ],
 
   toggleDistractionFreeMode,
@@ -89,13 +96,13 @@ enyo.kind({
   parseKindleClippings,
   reflow,
   rendered,
-  create
+  create,
 });
 
 /////////////////////////////////////////////////////////////
 
 function arrayToSet(array) {
-  let set = {};
+  const set = {};
 
   array.forEach((elem) => {
     set[elem] = true;
@@ -116,7 +123,7 @@ function toggleDistractionFreeMode() {
 }
 
 function toggleFullscreen() {
-  let isFullscreen = this.isFullscreen();
+  const isFullscreen = this.isFullscreen();
 
   this.$.documentControl.set('fullscreen', !isFullscreen);
 
@@ -131,12 +138,12 @@ function showDocumentSelectorList() {
 
 function exportDocuments() {
   this.log('Export processing done');
-  let loc = `${location.protocol}//${location.host}${k2e.Constants.EXPORT_PATH}`;
-  let ajax = new enyo.Ajax({
+  const loc = `${location.protocol}//${location.host}${k2e.Constants.EXPORT_PATH}`;
+  const ajax = new enyo.Ajax({
     url: loc,
     contentType: 'application/json',
     method: 'POST',
-    postBody: {q: docsExport}
+    postBody: { q: docsExport },
   });
 
   console.log(loc);
@@ -148,15 +155,15 @@ function exportDocuments() {
   ajax.error(this, 'processExportError');
 }
 
-function processExportResponse(inSender, inResponse) {
+function processExportResponse(/*inSender, inResponse*/) {
   this.$.exportPopup.done('Export done!');
 }
 
 function processExportError(inSender, inResponse) {
   let response = JSON.parse(inSender.xhrResponse.body);
-  response = response ? response.d : { errors: []};
+  response = response ? response.d : { errors: [] };
   if (inResponse === 401) {
-    let cookieModel = this.$.settings.get('cookieModel');
+    const cookieModel = this.$.settings.get('cookieModel');
     cookieModel.fetch();
     cookieModel.set(k2e.Constants.ACCESS_TOKEN_COOKIE_NAME, undefined);
     cookieModel.set(k2e.Constants.CONSUMER_PUBLIC_KEY_COOKIE_NAME, undefined);
@@ -164,19 +171,23 @@ function processExportError(inSender, inResponse) {
     this.$.exportPopup.failed('Export failed', 'Try exporting again');
   }
   else {
-    this.$.exportPopup.failed('Export failed', response.errors.map((error) => {
-      return error.message;
-    }));
+    this.$.exportPopup.failed('Export failed', response.errors.map((error) =>
+      error.message
+    ));
   }
 }
 
 function evernoteAuthPopup(cb, err) {
-  let popup = window.open(k2e.Constants.AUTH_PATH, k2e.Constants.AUTH_WINDOW_NAME, k2e.Constants.AUTH_WINDOW_FEATURES);
-  let noop = () => {};
+  const popup = window.open(
+    k2e.Constants.AUTH_PATH,
+    k2e.Constants.AUTH_WINDOW_NAME,
+    k2e.Constants.AUTH_WINDOW_FEATURES
+  );
+  const noop = () => {};
   cb = cb || noop;
   err = err || noop;
 
-  let pollTimer = window.setInterval(() => {
+  const pollTimer = window.setInterval(() => {
     try {
       if (popup.closed) {
         window.clearInterval(pollTimer);
@@ -195,7 +206,7 @@ function evernoteAuthPopup(cb, err) {
         }
       }
     }
-    catch (ex) {}
+    catch (ex) { this.warn(ex); }
   }, 100); // ms
 }
 
@@ -220,26 +231,26 @@ function prepareDocumentsAndExport(/*inSender, inEvent*/) {
   function doExport(app) {
     app.handleExportBegin();
 
-    let settings = new k2e.settings.SettingsSingleton();
+    const settings = new k2e.settings.SettingsSingleton();
     let ignoredTitleSet = {};
-    let ignoredTitleList = settings.getSetting('ignoredTitleList');
-    let docExportArray;
+    const ignoredTitleList = settings.getSetting('ignoredTitleList');
     let periodicalTitleSet = {};
-    let periodicalTitleList;
 
     if (ignoredTitleList.length > 0) {
       ignoredTitleSet = arrayToSet(ignoredTitleList.split(','));
     }
 
     if (app.$.documentSelectorList.getMultiSelected()) {
-      docsExport = app.documents.exportObject({selectedKeySet: app.$.documentSelectorList.getMultiSelectionKeys()});
+      docsExport = app.documents.exportObject({
+        selectedKeySet: app.$.documentSelectorList.getMultiSelectionKeys(),
+      });
     }
     else {
-      docsExport = app.documents.exportObject({ignoredTitleSet: ignoredTitleSet});
+      docsExport = app.documents.exportObject({ ignoredTitleSet });
     }
-    docExportArray = docsExport.documents;
+    const docExportArray = docsExport.documents;
 
-    periodicalTitleList = settings.getSetting('periodicalTitleList');
+    const periodicalTitleList = settings.getSetting('periodicalTitleList');
     if (periodicalTitleList.length > 0) {
       periodicalTitleSet = arrayToSet(periodicalTitleList.split(','));
     }
@@ -247,7 +258,7 @@ function prepareDocumentsAndExport(/*inSender, inEvent*/) {
     docExportArray.forEach((documentExportObject) => {
       if (settings.getSetting('articleExtraction') === true) {
         app.log('Tagging documents as periodicals');
-        if (periodicalTitleSet.hasOwnProperty(documentExportObject.title)) {
+        if ({}.hasOwnProperty.call(periodicalTitleSet, documentExportObject.title)) {
           documentExportObject.isPeriodical = true;
           documentExportObject.clippings.forEach((clippingExportObject) => {
             app.setSuggestedDataToClipping(clippingExportObject);
@@ -265,18 +276,15 @@ function prepareDocumentsAndExport(/*inSender, inEvent*/) {
 }
 
 function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
-  let settings = new k2e.settings.SettingsSingleton();
-  let quoted = (makeQuotedFlag === undefined) ? true : makeQuotedFlag;
-  let retry = (retryFlag === undefined) ? true : retryFlag;
-  let loc = settings.getSetting('googleSearchApiLoc');
-  let key = settings.getSetting('googleSearchApiKey');
-  let cx = settings.getSetting('googleSearchApiCx');
-  let MAX_QUERY_LENGTH = 128;
+  const settings = new k2e.settings.SettingsSingleton();
+  const quoted = (makeQuotedFlag === undefined) ? true : makeQuotedFlag;
+  const retry = (retryFlag === undefined) ? true : retryFlag;
+  const loc = settings.getSetting('googleSearchApiLoc');
+  const key = settings.getSetting('googleSearchApiKey');
+  const cx = settings.getSetting('googleSearchApiCx');
+  const MAX_QUERY_LENGTH = 128;
   let s = '';
   let q = '';
-  let index;
-  let ajax;
-  let processQueryResponse;
 
   if (clippingExport.content.length > MAX_QUERY_LENGTH) {
     s = clippingExport.content.substring(0, MAX_QUERY_LENGTH);
@@ -285,7 +293,7 @@ function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
     s = clippingExport.content;
   }
 
-  index = s.lastIndexOf(' ');
+  const index = s.lastIndexOf(' ');
   if (index !== -1) {
     q = s.substring(0, index);
   }
@@ -295,19 +303,19 @@ function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
 
   q = quoted ? (`"${q}"`) : q;
 
-  ajax = new enyo.Ajax({
-    url: loc
+  const ajax = new enyo.Ajax({
+    url: loc,
   });
 
   this.handleQueryBegin();
   ajax.go({
     key,
     cx,
-    q
+    q,
   });
 
-  processQueryResponse = (inSender, inResponse) => {
-    let cEx = clippingExport;
+  const processQueryResponse = (inSender, inResponse) => {
+    const cEx = clippingExport;
     if (inResponse.items && inResponse.items.length) {
       cEx.suggestedTitle = inResponse.items[0].title;
       cEx.suggestedUrl = inResponse.items[0].link;
@@ -326,15 +334,12 @@ function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
   ajax.error(this, 'processQueryError');
 }
 
-function processQueryError(inSender, inResponse) {
+function processQueryError(/*inSender, inResponse*/) {
   this.error('Error in google search request');
   this.handleQueryEnd();
 }
 
 function handleDocumentSelected(inSender, inEvent) {
-  let docSelector;
-  let doc;
-
   if (enyo.Panels.isScreenNarrow()) {
     this.$.mainPanels.setIndex(1);
   }
@@ -342,46 +347,46 @@ function handleDocumentSelected(inSender, inEvent) {
     return;
   }
 
-  docSelector = inEvent.originator;
-  doc = this.documents.getDocumentByKey(docSelector.getKey());
+  const docSelector = inEvent.originator;
+  const doc = this.documents.getDocumentByKey(docSelector.getKey());
   this.log(docSelector.getTitle());
   this.log(docSelector.getIndex());
   this.log(doc);
   this.$.documentControl.set('document', doc);
 }
 
-function handleDocumentMultiSelected(inSender, inEvent) {
+function handleDocumentMultiSelected(/*inSender, inEvent*/) {
   if (!this.$.documentSelectorList.getMultiSelected()) {
     this.warn('Document multiselected when multiple selection mode inactive');
     return;
   }
 
-  let selectionKeys = this.$.documentSelectorList.getMultiSelectionKeys();
+  const selectionKeys = this.$.documentSelectorList.getMultiSelectionKeys();
   this.$.exportButton.set('disabled', Object.keys(selectionKeys).length === 0);
 }
 
-function handleExportBegin(inSender, inEvent) {
+function handleExportBegin(/*inSender, inEvent*/) {
   this.log('handleExportBegin');
   exportPreparationSem.v();
 }
 
-function handleExportEnd(inSender, inEvent) {
+function handleExportEnd(/*inSender, inEvent*/) {
   this.log('handleExportEnd');
   exportPreparationSem.p();
 }
 
-function handleQueryBegin(inSender, inEvent) {
+function handleQueryBegin(/*inSender, inEvent*/) {
   this.log('handleQueryBegin');
   exportPreparationSem.v();
 }
 
-function handleQueryEnd(inSender, inEvent) {
+function handleQueryEnd(/*inSender, inEvent*/) {
   this.log('handleQueryEnd');
   exportPreparationSem.p();
 }
 
-function handleClippingsTextChanged(inSender, inEvent) {
-  let clipText = this.$.clippingPickerPopup.getClippingsText();
+function handleClippingsTextChanged(/*inSender, inEvent*/) {
+  const clipText = this.$.clippingPickerPopup.getClippingsText();
   try {
     this.documents = this.parseKindleClippings(clipText);
     this.$.documentSelectorList.set('documentsRef', this.documents);
@@ -395,14 +400,14 @@ function handleClippingsTextChanged(inSender, inEvent) {
 }
 
 function handleKeydown(inSender, inEvent) {
-  let modKeyPressed = inEvent.altKey ||
+  const modKeyPressed = inEvent.altKey ||
     inEvent.ctrlKey ||
     inEvent.shiftKey ||
     inEvent.altGraphKey ||
     inEvent.metaKey;
 
   if (modKeyPressed) {
-    return;
+    return undefined;
   }
 
   if (inEvent.keyCode === 70) { // 'f'
@@ -420,15 +425,15 @@ function handleKeydown(inSender, inEvent) {
   return true;
 }
 
-function toggleSettings(inSender, inEvent) {
-  let settingsButton = this.$.settingsButton;
+function toggleSettings(/*inSender, inEvent*/) {
+  const settingsButton = this.$.settingsButton;
   settingsButton.addRemoveClass('active', !settingsButton.hasClass('active'));
   this.$.settings.toggle();
 }
 
-function toggleMultiSelection(inSender, inEvent) {
-  let exportButton = this.$.exportButton;
-  let multiSelectButton = this.$.multiSelectButton;
+function toggleMultiSelection(/*inSender, inEvent*/) {
+  const exportButton = this.$.exportButton;
+  const multiSelectButton = this.$.multiSelectButton;
   this.$.documentSelectorList.set('multiSelected', !this.$.documentSelectorList.multiSelected);
   exportButton.set('disabled', !exportButton.exportSelected);
   exportButton.set('exportSelected', !exportButton.exportSelected);
@@ -469,8 +474,8 @@ function handleTextMarginChanged(inSender, inEvent) {
 }
 
 function parseKindleClippings(kindleClippings) {
-  let docs = new k2e.annotations.DocumentCollection();
-  let delimeterRegExp = /\r?\n==========\r?\n/;
+  const docs = new k2e.annotations.DocumentCollection();
+  const delimeterRegExp = /\r?\n==========\r?\n/;
 
   kindleClippings = kindleClippings.split(delimeterRegExp);
   kindleClippings.forEach(addClippingToDocumentCollection);
@@ -480,17 +485,7 @@ function parseKindleClippings(kindleClippings) {
   /////////////////////////////////////////////////////////////
 
   function addClippingToDocumentCollection(clipping) {
-    let clippingRegExp = /^(.+)\r?\n- (.+)\r?\n?\r?\n?(.*)$/;
-    let res;
-    let title;
-    let author;
-    let titleAndAuthor;
-    let subtitle;
-    let type;
-    let loc;
-    let timeStamp;
-    let content;
-    let contentText;
+    const clippingRegExp = /^(.+)\r?\n- (.+)\r?\n?\r?\n?(.*)$/;
     clipping = clipping.trim();
 
     if (clipping === '') {
@@ -499,20 +494,20 @@ function parseKindleClippings(kindleClippings) {
     if (!clippingRegExp.test(clipping)) {
       throw {
         code: 1,
-        message: 'Invalid clipping format in clippings file'
+        message: 'Invalid clipping format in clippings file',
       };
     }
 
-    res = clippingRegExp.exec(clipping);
-    titleAndAuthor = splitTitleAndAuthor(res[1]);
-    title = titleAndAuthor[0];
-    author = titleAndAuthor[1];
-    subtitle = res[2].split(/\s+\|\s+/);
-    type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
-    loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
-    timeStamp = /^Added on (.*)$/.exec(subtitle[subtitle.length - 1])[1];
-    content = k2e.util.linkify(enyo.dom.escape(res[3]), { targetBlank: true });
-    contentText = res[3];
+    const res = clippingRegExp.exec(clipping);
+    const titleAndAuthor = splitTitleAndAuthor(res[1]);
+    const title = titleAndAuthor[0];
+    const author = titleAndAuthor[1];
+    const subtitle = res[2].split(/\s+\|\s+/);
+    const type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
+    const loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
+    const timeStamp = /^Added on (.*)$/.exec(subtitle[subtitle.length - 1])[1];
+    const content = k2e.util.linkify(enyo.dom.escape(res[3]), { targetBlank: true });
+    const contentText = res[3];
 
     // Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
     if (type !== 'Bookmark' && type !== 'Clipping') {
@@ -524,7 +519,7 @@ function parseKindleClippings(kindleClippings) {
           loc,
           timeStamp,
           content,
-          contentText
+          contentText,
         })
       );
     }
@@ -533,9 +528,7 @@ function parseKindleClippings(kindleClippings) {
   function splitTitleAndAuthor(s) {
     let author = '';
     let title = '';
-    let splitIndex;
-
-    splitIndex = getAuthorOpenParenIndex(s);
+    const splitIndex = getAuthorOpenParenIndex(s);
 
     if (splitIndex !== undefined) {
       title = s.substring(0, splitIndex);
@@ -547,7 +540,7 @@ function parseKindleClippings(kindleClippings) {
 
     return [
       title.trim() || 'Unknown Title',
-      author.trim() || 'Unknown Author'
+      author.trim() || 'Unknown Author',
     ];
 
     /////////////////////////////////////////////////////////////
@@ -555,18 +548,18 @@ function parseKindleClippings(kindleClippings) {
     // Best effort function to get an author name by finding the opening parenthesis
     // matching the rightmost closing parenthesis
 
-    function getAuthorOpenParenIndex(s) {
-      if (s[s.length - 1] !== ')') {
+    function getAuthorOpenParenIndex(_s) {
+      if (_s[_s.length - 1] !== ')') {
         return undefined;
       }
 
       let rightOpenParens = 1;
 
-      for (let i = s.length - 2; i > -1; --i) {
-        if (s[i] === '(') {
+      for (let i = _s.length - 2; i > -1; --i) {
+        if (_s[i] === '(') {
           --rightOpenParens;
         }
-        if (s[i] === ')') {
+        if (_s[i] === ')') {
           ++rightOpenParens;
         }
         if (rightOpenParens === 0) {
@@ -579,8 +572,8 @@ function parseKindleClippings(kindleClippings) {
 }
 
 function reflow() {
-  let isScreenNarrow = enyo.Panels.isScreenNarrow();
-  let isFullscreen = this.isFullscreen();
+  const isScreenNarrow = enyo.Panels.isScreenNarrow();
+  const isFullscreen = this.isFullscreen();
 
   this.inherited(arguments);
 
@@ -600,7 +593,7 @@ function rendered() {
 function create() {
   this.inherited(arguments);
 
-  let cookieModel = new k2e.CookieModel();
+  const cookieModel = new k2e.CookieModel();
   cookieModel.fetch();
   this.set('cookieModel', cookieModel);
 

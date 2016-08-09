@@ -1,4 +1,6 @@
-/* global k2e, Cookies */
+/* global k2e:false, Cookies:false */
+/* eslint no-new:0 */
+
 (function () {
 
 enyo.kind({
@@ -6,7 +8,7 @@ enyo.kind({
   kind: 'enyo.Source',
   fetch(rec, opts) { opts.success(Cookies.get()); },
   commit,
-  destroy
+  destroy,
 });
 
 new k2e.CookieSource({ name: 'cookieSource' });

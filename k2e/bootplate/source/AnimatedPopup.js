@@ -6,13 +6,13 @@ enyo.kind({
   classes: 'k2e-animated-popup k2e-hidden',
   handlers: {
     ontransitionend: 'handleTransitionend',
-    onWebkitTransitionend: 'handleTransitionend'
+    onWebkitTransitionend: 'handleTransitionend',
   },
   statics: {
-    calculateTimeout
+    calculateTimeout,
   },
   handleTransitionend,
-  showingChanged
+  showingChanged,
 });
 
 function handleTransitionend(inSender, inEvent) {
@@ -66,7 +66,7 @@ function showingChanged(was) {
   }
   this.showHideScrim(this.showing);
   // show after sizing
-  if (this.centered || this.targetPosition && !this.showTransitions) {
+  if (this.centered || (this.targetPosition && !this.showTransitions)) {
     this.applyStyle('visibility', null);
   }
   // events desired due to programmatic show/hide
@@ -78,9 +78,9 @@ function showingChanged(was) {
 function calculateTimeout(s) {
   const MS_REACTION_TIME = 250;
   const MS_PER_CHARACTER = 60000 / (200 * 5); // 200 WPM -> 1000 CPM,
-  let nonSpaceCharacters = Array.prototype.reduce.call(s, nonSpaceReducer, 0);
+  const nonSpaceCharacters = [].reduce.call(s, nonSpaceReducer, 0);
 
-  return (nonSpaceCharacters * MS_PER_CHARACTER) + 2 * MS_REACTION_TIME;
+  return (nonSpaceCharacters * MS_PER_CHARACTER) + (2 * MS_REACTION_TIME);
 }
 
 function nonSpaceReducer(charCount, character) {

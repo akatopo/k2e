@@ -8,17 +8,17 @@ enyo.kind({
     author: '',
     isPeriodical: false,
     clippings: undefined,
-    mostRecentDate: undefined
+    mostRecentDate: undefined,
   },
   events: {
     onExportBegin: '',
     onExportEnd: '',
     onQueryBegin: '',
-    onQueryEnd: ''
+    onQueryEnd: '',
   },
   addClipping,
   create,
-  exportObject
+  exportObject,
 });
 
 /////////////////////////////////////////////////////////////
@@ -40,9 +40,9 @@ function exportObject() {
     title: this.title,
     author: this.author,
     isPeriodical: !!this.isPeriodical,
-    clippings: this.clippings.map((clipping) => {
-      return clipping.exportObject();
-    })
+    clippings: this.clippings.map((clipping) =>
+      clipping.exportObject()
+    ),
   };
 }
 

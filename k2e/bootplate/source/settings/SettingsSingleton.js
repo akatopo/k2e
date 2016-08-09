@@ -1,18 +1,18 @@
-/* global k2e */
+/* global k2e:false */
+/* eslint prefer-rest-params:0, no-caller: 0*/
 
 (function (settings) {
 
 settings.SettingsSingleton = SettingsSingleton;
 
+// FIXME: this looks like a really bad idea/pattern
 function SettingsSingleton() {
   if (arguments.callee.singletonInstance) {
     return arguments.callee.singletonInstance;
   }
 
-  let storage = window.localStorage;
-  let settingExists = (settingName) => {
-    return !!this.defaultSettings[settingName];
-  };
+  const storage = window.localStorage;
+  const settingExists = (settingName) => !!this.defaultSettings[settingName];
   arguments.callee.singletonInstance = this;
 
   this.defaultSettings = enyo.clone(k2e.settings.DefaultSettings.settings);
@@ -35,7 +35,7 @@ function SettingsSingleton() {
       return null;
     }
 
-    let settingValue = storage && storage[settingName] ?
+    const settingValue = storage && storage[settingName] ?
       JSON.parse(storage[settingName]) :
       JSON.parse(this.defaultSettings[settingName]);
     return settingValue;
@@ -43,7 +43,7 @@ function SettingsSingleton() {
 
   function getDefaultSetting(settingName) {
     if (settingExists(settingName)) {
-      let settingValue = JSON.parse(this.defaultSettings[settingName]);
+      const settingValue = JSON.parse(this.defaultSettings[settingName]);
       return settingValue;
     }
     return null;
