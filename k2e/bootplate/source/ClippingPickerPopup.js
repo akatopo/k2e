@@ -78,7 +78,7 @@ function handleShow() {
   const pickerNode = this.$.filePicker.hasNode();
   const sampleClippingsNode = document.querySelector('#sample-clippings');
 
-  if (!sampleClippingsNode) {
+  if (sampleClippingsNode) {
     this.setClippingsText(sampleClippingsNode.innerHTML);
     return;
   }
