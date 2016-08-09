@@ -1,10 +1,8 @@
-/* jshint node:true */
+/* eslint-env node */
 
 import _ from 'underscore';
 import del from 'del';
-import { exec } from 'child_process';
 import streamqueue from 'streamqueue';
-import jshintStylish from 'jshint-stylish';
 import enyoWalker from 'enyo-deploy-walker';
 
 import gulp from 'gulp';
@@ -13,7 +11,6 @@ import rename from 'gulp-rename';
 import runSequence from 'run-sequence';
 import sass from 'gulp-sass';
 import msbuild from 'gulp-msbuild';
-import jshint from 'gulp-jshint';
 import cached from 'gulp-cached';
 import autoprefixer from 'gulp-autoprefixer';
 import jscs from 'gulp-jscs';
@@ -25,11 +22,10 @@ import urlPlugin from 'rework-plugin-url';
 import rebaseCssUrls from 'gulp-css-rebase-urls';
 import uglify from 'gulp-uglify';
 import csso from 'gulp-csso';
+import eslint from 'gulp-eslint';
 
 const BASE_BOOTPLATE_PATH = './k2e/bootplate';
 const BASE_SOURCE_PATH = './k2e/bootplate/source';
-const BASE_DEPLOY_PATH = './k2e/bootplate/deploy';
-const BOWER_COMPONENTS = 'lib';
 const AUTOPREFIXER_OPTIONS = {
   // Taken directly from bootstrap's grunt file
   browsers: [
@@ -40,22 +36,22 @@ const AUTOPREFIXER_OPTIONS = {
     'Explorer >= 8',
     'iOS >= 6',
     'Opera >= 12',
-    'Safari >= 6'
-  ]
+    'Safari >= 6',
+  ],
 };
 
 // get dependencies once for any arguments
 
-let getEnyoDeps = _.memoize(() => {
-  let boot = enyoWalker.getDependencies(`${BASE_BOOTPLATE_PATH}/lib/enyo/source/boot`);
-  let source = enyoWalker.getDependencies(`${BASE_BOOTPLATE_PATH}/lib/enyo/source`);
+const getEnyoDeps = _.memoize(() => {
+  const boot = enyoWalker.getDependencies(`${BASE_BOOTPLATE_PATH}/lib/enyo/source/boot`);
+  const source = enyoWalker.getDependencies(`${BASE_BOOTPLATE_PATH}/lib/enyo/source`);
 
   return enyoWalker.mergeDependencyCollections(boot, source);
 }, _.noop);
 
-let getK2eDeps = _.memoize(() => {
-  return enyoWalker.getDependencies(`${BASE_BOOTPLATE_PATH}`);
-}, _.noop);
+const getK2eDeps = _.memoize(() =>
+  enyoWalker.getDependencies(`${BASE_BOOTPLATE_PATH}`)
+, _.noop);
 
 // using a subset of babel's es2015 preset since enyo does not support strict mode
 // (essentialy everything minus modules-commonjs)
@@ -80,12 +76,12 @@ const BABEL_PLUGINS = [
   'transform-es2015-template-literals',
   'transform-es2015-typeof-symbol',
   'transform-es2015-unicode-regex',
-  'transform-regenerator'
+  'transform-regenerator',
 ];
 
 const BABEL_IGNORE = [
   `${BASE_BOOTPLATE_PATH}/lib/**/*.js`,
-  './node_modules/babel-polyfill/dist/polyfill.js'
+  './node_modules/babel-polyfill/dist/polyfill.js',
 ];
 
 /////////////////////////////////////////////////////////////
@@ -137,18 +133,17 @@ gulp.task('build', (cb) => {
 function lint() {
   return gulp.src(`${BASE_SOURCE_PATH}/**/*.js`)
     .pipe(cached('linting'))
-    .pipe(jshint())
-    .pipe(jscs())
+    .pipe(eslint())
     .pipe(jscs.reporter())
     .pipe(jscs.reporter('fail'))
-    .pipe(jshint.reporter(jshintStylish))
-    .pipe(jshint.reporter('fail'));
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 }
 
 function compileSass() {
   return gulp.src([
       `${BASE_SOURCE_PATH}/scss/*.scss`,
-      `!${BASE_SOURCE_PATH}/scss/_*.scss`
+      `!${BASE_SOURCE_PATH}/scss/_*.scss`,
     ])
     // removing cache until workaround for files that import partials appearing unchanged
     // when the imported partial's changed is found
@@ -179,7 +174,7 @@ function compileBabel() {
 function watch() {
   // relative path for watch, https://github.com/floatdrop/gulp-watch/issues/104
 
-  let sourcePath = BASE_SOURCE_PATH.substr(2);
+  const sourcePath = BASE_SOURCE_PATH.substr(2);
 
   livereload.listen();
   gulp.watch(`${sourcePath}/scss/*.scss`, ['compile-sass']);
@@ -189,14 +184,14 @@ function watch() {
 function buildBackend() {
   return gulp.src('./k2e.sln')
     .pipe(msbuild({
-      configuration: 'Release'
+      configuration: 'Release',
     }));
 }
 
 function buildBackendDebug() {
   return gulp.src('./k2e.sln')
     .pipe(msbuild({
-      configuration: 'Debug'
+      configuration: 'Debug',
     }));
 }
 
@@ -273,13 +268,7 @@ function distConfig() {
   return gulp.src([
     './k2e/EvernoteCredentials.config',
     './k2e/Web.config',
-    './k2e/Web.Release.config'
+    './k2e/Web.Release.config',
   ])
   .pipe(gulp.dest('./dist'));
-}
-
-function execCallback(errCb, err, stdout, stderr) {
-  console.log(stdout);
-  console.log(stderr);
-  errCb(err);
 }
