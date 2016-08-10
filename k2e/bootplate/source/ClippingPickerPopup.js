@@ -31,21 +31,31 @@ enyo.kind({
       { tag: null, content: ' folder of your kindle as ' },
       { tag: 'b', content: 'My clippings.txt' },
     ] },
+    { name: 'cancelButton', kind: 'onyx.Button',
+      classes: 'onyx-dark bottom-fullwidth-button cancel-button',
+      ontap: 'hide', content: 'Cancel' },
   ],
   events: {
     onClippingsTextChanged: '',
   },
   handlers: {
+    onHide: 'handleHide',
     onShow: 'handleShow',
   },
   showErrorMessage,
   loadFile,
-  clippingsTextChanged() { this.doClippingsTextChanged(); },
   handleFiles,
+  handleHide,
   handleShow,
+  autoDismissChanged,
+  show,
 });
 
 /////////////////////////////////////////////////////////////
+
+function handleHide() {
+  reset.bind(this)();
+}
 
 function showErrorMessage() {
   this.$.errorMessage.setShowing(true);
@@ -66,51 +76,90 @@ function handleFiles(inSender, inEvent) {
 
   if (files.length > 0) {
     reader.onload = (e) => {
-      this.setClippingsText(e.target.result);
+      this.set('clippingsText', e.target.result);
+      this.doClippingsTextChanged();
     };
 
     reader.readAsText(files[0]);
   }
 }
 
+function show(options) {
+  const baseOptions = {
+    autoDismiss: false,
+  };
+
+  const opts = extend(baseOptions, options, true);
+
+  Object.keys(opts).forEach((key) => {
+    this.set(key, opts[key]);
+  });
+
+  const popupNode = this.hasNode();
+  const pickerNode = this.$.filePicker.hasNode();
+
+  if (popupNode && pickerNode) {
+    popupNode.addEventListener('dragleave', handleDragleave.bind(this), false);
+    popupNode.addEventListener('dragover', handleDragover.bind(this), false);
+    popupNode.addEventListener('drop', handleDrop.bind(this), false);
+  }
+
+  this.inherited(arguments);
+}
+
 function handleShow() {
   const popupNode = this.hasNode();
   const pickerNode = this.$.filePicker.hasNode();
-  const sampleClippingsNode = document.querySelector('#sample-clippings');
-
-  if (sampleClippingsNode) {
-    this.setClippingsText(sampleClippingsNode.innerHTML);
-    return;
-  }
 
   if (popupNode && pickerNode) {
-    const handleDragleave = (/*ev*/) => {
-      this.removeClass('onyx-blue'); // TODO: use semantic class name
-    };
-
-    const handleDragover = (ev) => {
-      this.addClass('onyx-blue');
-      ev.stopPropagation();
-      ev.preventDefault();
-      ev.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-    };
-
-    const callFileHandler = (files) => {
-      this.handleFiles(null, { target: { files } });
-    };
-
-    const handleDrop = (ev) => {
-      ev.stopPropagation();
-      ev.preventDefault();
-
-      this.removeClass('onyx-blue');
-      callFileHandler(ev.dataTransfer.files); // FileList object.
-    };
-
-    popupNode.addEventListener('dragleave', handleDragleave, false);
-    popupNode.addEventListener('dragover', handleDragover, false);
-    popupNode.addEventListener('drop', handleDrop, false);
+    popupNode.addEventListener('dragleave', handleDragleave.bind(this), false);
+    popupNode.addEventListener('dragover', handleDragover.bind(this), false);
+    popupNode.addEventListener('drop', handleDrop.bind(this), false);
   }
+}
+
+function reset() {
+  this.$.filePicker.hasNode().value = '';
+  this.$.errorMessage.set('showing', false);
+}
+
+function autoDismissChanged(oldValue, newValue) {
+  this.addRemoveClass('can-dismiss', !!newValue);
+}
+
+function handleDragleave(/*ev*/) {
+  this.removeClass('onyx-blue'); // TODO: use semantic class name
+}
+
+function handleDragover(ev) {
+  this.addClass('onyx-blue');
+  ev.stopPropagation();
+  ev.preventDefault();
+  ev.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+}
+
+function handleDrop(ev) {
+  ev.stopPropagation();
+  ev.preventDefault();
+
+  this.removeClass('onyx-blue');
+  this.handleFiles(null, { target: { files: ev.dataTransfer.files } }); // FileList object.
+}
+
+function extend(base, obj, onlyBaseOpts) {
+  const newBase = enyo.isObject(base) ? base : {};
+  const newObj = enyo.isObject(obj) ? obj : {};
+  const ret = enyo.clone(newBase);
+
+  Object.keys(newObj).forEach((key) => {
+    const value = newObj[key];
+    const validKey = onlyBaseOpts ? newBase[key] !== undefined : true;
+    if (value !== undefined && validKey) {
+      ret[key] = value;
+    }
+  });
+
+  return ret;
 }
 
 })();

@@ -128,6 +128,27 @@ body,
   -o-transition: visibility 0s ease-in 0.3s, opacity 0.3s ease-in;
   transition: visibility 0s ease-in 0.3s, opacity 0.3s ease-in; }
 
+.k2e-animated-popup .bottom-fullwidth-button {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 0 0 8px 8px; }
+
+.k2e-animated-popup.can-dismiss {
+  padding-bottom: 50px; }
+
+.k2e-animated-popup.can-dismiss .cancel-button {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transition-delay: 0s;
+       -o-transition-delay: 0s;
+          transition-delay: 0s; }
+
+.k2e-animated-popup .cancel-button {
+  visibility: hidden;
+  opacity: 0; }
+
 .k2e-animated-popup.k2e-hidden {
   display: block !important; }
 
@@ -564,6 +585,9 @@ body,
 .k2e-clipping-picker-popup-info {
   color: #CCC;
   font-size: 80%; }
+
+.k2e-clipping-picker-popup.onyx-blue .cancel-button {
+  background-color: transparent; }
 
 /***********************************************************************************************/
 /* Popup */

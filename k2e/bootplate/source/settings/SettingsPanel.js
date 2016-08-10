@@ -11,6 +11,7 @@ enyo.kind({
   },
   events: {
     onFullscreenRequest: '',
+    onClippingsCleared: '',
   },
   cookieModel: undefined,
   components: [
@@ -56,7 +57,10 @@ enyo.kind({
         { kind: 'onyx.Groupbox', components: [
           { name: 'clearSettings', kind: 'k2e.settings.SettingsActionItem',
             label: 'Restore Default Settings', buttonLabel: 'Restore',
-            onActivated: 'restoreDefaults' }, //,
+            onActivated: 'restoreDefaults' },
+          { name: 'clearClippings', kind: 'k2e.settings.SettingsActionItem',
+            label: 'Clear Stored Clippings', buttonLabel: 'Clear',
+            onActivated: 'clearClippings' },
           // {name: 'clearCache', kind: 'k2e.settings.SettingsActionItem', label: 'Clear Cache',
           //   buttonLabel: 'Clear', onActivated: 'clearCache' },
           // {name: 'exportSettings', kind: 'k2e.settings.SettingsActionItem', label: 'Export Settings',
@@ -82,6 +86,7 @@ enyo.kind({
   handleToggleFullscreenActivated() { this.doFullscreenRequest(); },
   revokeEvernotePermissions,
   restoreDefaults,
+  clearClippings,
   importSettings() { this.log('Import settings'); },
   exportSettings() { this.log('Export settings'); },
   clearCache() { this.log('clear cache'); },
@@ -147,8 +152,6 @@ function revokeEvernotePermissions(/*inSender, inEvent*/) {
 function restoreDefaults() {
   this.log('restore defaults');
 
-  localStorage.clear();
-
   const settings = new k2e.settings.SettingsSingleton();
   const defaultsMap = settings.defaultSettings;
 
@@ -159,6 +162,14 @@ function restoreDefaults() {
       this.$[key].valueChanged();
     });
 
+}
+
+function clearClippings() {
+  const settings = new k2e.settings.SettingsSingleton();
+
+  settings.setSetting('clippingsText', settings.getDefaultSetting('clippingsText'));
+
+  this.doClippingsCleared();
 }
 
 })();

@@ -11,6 +11,17 @@ $overlay-button-right: 15px;
 $overlay-button-bottom: 10px;
 $overlay-button-top: 10px;
 
+@mixin show {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+@mixin hide {
+  visibility: hidden;
+  opacity: 0;
+}
+
 /***********************************************************************************************/
 
 body,
@@ -38,6 +49,26 @@ body,
 .k2e-animated-popup {
   transition: visibility 0s ease-in 0.3s,
     opacity 0.3s ease-in;
+}
+
+.k2e-animated-popup .bottom-fullwidth-button {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 0 0 8px 8px;
+}
+
+.k2e-animated-popup.can-dismiss {
+  padding-bottom: 50px;
+}
+
+.k2e-animated-popup.can-dismiss .cancel-button {
+  @include show();
+}
+
+.k2e-animated-popup .cancel-button {
+  @include hide();
 }
 
 .k2e-animated-popup.k2e-hidden {
@@ -109,14 +140,11 @@ body,
 }
 
 .k2e-hidden {
-  visibility: hidden;
-  opacity: 0;
+  @include hide();
 }
 
 .k2e-hidden.visible {
-  visibility: visible;
-  opacity: 1;
-  transition-delay: 0s;
+  @include show();
 }
 
 /***********************************************************************************************/
@@ -355,6 +383,10 @@ body,
 .k2e-clipping-picker-popup-info {
  color: #CCC;
  font-size: 80%;
+}
+
+.k2e-clipping-picker-popup.onyx-blue .cancel-button {
+  background-color: rgba(0, 0, 0, 0);
 }
 
 /***********************************************************************************************/

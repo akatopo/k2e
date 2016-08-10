@@ -143,6 +143,9 @@ function documentsRefChanged() {
   const docMap = this.documentsRef.getDocMap();
   const keys = this.documentsRef.getKeyArray();
 
+  this.items = [];
+  this.selDocumentSelectorItem = undefined;
+
   // descending (newest to oldest most recent clipping date) key sort
   this.sortedKeys = keys.slice(0).sort((a, b) => {
     const aUnixTimestamp = docMap[a].mostRecentDate.valueOf();

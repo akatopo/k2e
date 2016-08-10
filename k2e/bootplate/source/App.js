@@ -34,6 +34,10 @@ enyo.kind({
                   ontap: 'toggleMultiSelection', components: [
                     { tag: 'i', classes: 'icon-check icon-large' },
                   ] },
+                { name: 'reloadClippingsButton', kind: 'onyx.Button', classes: 'k2e-icon-button',
+                  ontap: 'reloadClippings', components: [
+                    { tag: 'i', classes: 'icon-upload icon-large' },
+                  ] },
               ] },
           ] },
           { kind: 'FittableRows', classes: 'k2e-main-panel', fit: true, components: [
@@ -64,6 +68,7 @@ enyo.kind({
     onFontChanged: 'handleFontChanged',
     onTextMarginChanged: 'handleTextMarginChanged',
     onFullscreenRequest: 'toggleFullscreen',
+    onClippingsCleared: 'handleClippingsCleared',
   },
   bindings: [
     { from: '.cookieModel', to: '.$.settings.cookieModel' },
@@ -93,7 +98,10 @@ enyo.kind({
   handleFontSizeChanged,
   handleFontChanged,
   handleTextMarginChanged,
+  handleClippingsCleared,
   parseKindleClippings,
+  reloadClippings,
+  loadClippings,
   reflow,
   rendered,
   create,
@@ -385,18 +393,31 @@ function handleQueryEnd(/*inSender, inEvent*/) {
   exportPreparationSem.p();
 }
 
-function handleClippingsTextChanged(/*inSender, inEvent*/) {
-  const clipText = this.$.clippingPickerPopup.getClippingsText();
+function handleClippingsTextChanged(inSender, inEvent) {
+  const clipText = inEvent.originator.getClippingsText();
+
   try {
-    this.documents = this.parseKindleClippings(clipText);
-    this.$.documentSelectorList.set('documentsRef', this.documents);
+    this.loadClippings(clipText);
     this.$.clippingPickerPopup.hide();
-    this.$.documentSelectorList.selectNextDocument();
   }
   catch (e) {
     this.$.clippingPickerPopup.showErrorMessage();
     this.warn(e.message, e);
   }
+}
+
+function loadClippings(clippingsText) {
+  try {
+    this.documents = this.parseKindleClippings(clippingsText);
+  }
+  catch (ex) {
+    throw ex;
+  }
+
+  const settings = new k2e.settings.SettingsSingleton();
+  settings.setSetting('clippingsText', clippingsText);
+  this.$.documentSelectorList.set('documentsRef', this.documents);
+  this.$.documentSelectorList.selectNextDocument();
 }
 
 function handleKeydown(inSender, inEvent) {
@@ -571,6 +592,18 @@ function parseKindleClippings(kindleClippings) {
   }
 }
 
+function reloadClippings() {
+  this.$.clippingPickerPopup.show({ autoDismiss: !!this.documents });
+}
+
+function handleClippingsCleared() {
+  if (this.$.settings.isAtMax()) {
+    this.toggleSettings();
+  }
+
+  this.$.clippingPickerPopup.show({ autoDismiss: false });
+}
+
 function reflow() {
   const isScreenNarrow = enyo.Panels.isScreenNarrow();
   const isFullscreen = this.isFullscreen();
@@ -587,15 +620,32 @@ function reflow() {
 
 function rendered() {
   this.inherited(arguments);
-  this.$.clippingPickerPopup.show();
+  if (!this.documents) {
+    this.$.clippingPickerPopup.show({ autoDismiss: false });
+  }
 }
 
 function create() {
   this.inherited(arguments);
+  const settings = new k2e.settings.SettingsSingleton();
 
   const cookieModel = new k2e.CookieModel();
   cookieModel.fetch();
   this.set('cookieModel', cookieModel);
+
+  const sampleClippingsNode = document.querySelector('#sample-clippings');
+  let clippingsText = settings.getSetting('clippingsText');
+  if (
+    !clippingsText &&
+    sampleClippingsNode &&
+    window.location.search.indexOf('sample-clippings') !== -1
+  ) {
+    clippingsText = sampleClippingsNode.innerHTML;
+  }
+
+  if (clippingsText) {
+    this.loadClippings(clippingsText);
+  }
 
   exportPreparationSem = new k2e.util.AsyncSemaphore({ func: this.exportDocuments.bind(this) });
 }
