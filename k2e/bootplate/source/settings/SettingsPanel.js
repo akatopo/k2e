@@ -91,7 +91,7 @@ enyo.kind({
 
 function handleSettingChanged(inSender, inEvent) {
   const settingsItem = inEvent.originator;
-  const value = JSON.stringify(inEvent.newValue || settingsItem.getValue());
+  const value = inEvent.newValue || settingsItem.getValue();
   const name = settingsItem.getName();
 
   this.log(settingsItem.getValue());

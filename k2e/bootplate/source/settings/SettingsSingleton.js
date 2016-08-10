@@ -23,10 +23,8 @@ function SettingsSingleton() {
   /////////////////////////////////////////////////////////////
 
   function setSetting(settingName, settingValue) {
-    if (settingExists(settingName)) {
-      if (storage) {
-        storage[settingName] = settingValue;
-      }
+    if (settingExists(settingName) && storage) {
+      storage[settingName] = JSON.stringify(settingValue);
     }
   }
 
