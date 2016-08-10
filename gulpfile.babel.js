@@ -39,6 +39,7 @@ const AUTOPREFIXER_OPTIONS = {
     'Safari >= 6',
   ],
 };
+const LIVERELOAD_PORT = 10666;
 
 // get dependencies once for any arguments
 
@@ -176,7 +177,7 @@ function watch() {
 
   const sourcePath = BASE_SOURCE_PATH.substr(2);
 
-  livereload.listen();
+  livereload.listen({ port: LIVERELOAD_PORT });
   gulp.watch(`${sourcePath}/scss/*.scss`, ['compile-sass']);
   gulp.watch(`${sourcePath}/**/*.js`, ['compile-babel']);
 }

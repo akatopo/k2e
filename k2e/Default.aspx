@@ -12,7 +12,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-        <script src="http://localhost:35729/livereload.js"></script>
+        <script src="http://localhost:10666/livereload.js"></script>
         <script src="bootplate/source-compiled/polyfill.js" charset="utf-8"></script>
         <script src="https://use.typekit.net/lop6oji.js"></script>
         <script>
