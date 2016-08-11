@@ -95,15 +95,6 @@ function show(options) {
     this.set(key, opts[key]);
   });
 
-  const popupNode = this.hasNode();
-  const pickerNode = this.$.filePicker.hasNode();
-
-  if (popupNode && pickerNode) {
-    popupNode.addEventListener('dragleave', handleDragleave.bind(this), false);
-    popupNode.addEventListener('dragover', handleDragover.bind(this), false);
-    popupNode.addEventListener('drop', handleDrop.bind(this), false);
-  }
-
   this.inherited(arguments);
 }
 
