@@ -1,6 +1,6 @@
 enyo.depends(
   'DefaultSettings.js',
-  'SettingsSingleton.js',
+  'SettingsStorage.js',
   'SettingsSlideable.js',
   'SettingsPanel.js',
   'SettingsItem.js',

@@ -239,7 +239,7 @@ function prepareDocumentsAndExport(/*inSender, inEvent*/) {
   function doExport(app) {
     app.handleExportBegin();
 
-    const settings = new k2e.settings.SettingsSingleton();
+    const settings = k2e.settings.SettingsStorage;
     let ignoredTitleSet = {};
     const ignoredTitleList = settings.getSetting('ignoredTitleList');
     let periodicalTitleSet = {};
@@ -284,7 +284,7 @@ function prepareDocumentsAndExport(/*inSender, inEvent*/) {
 }
 
 function setSuggestedDataToClipping(clippingExport, makeQuotedFlag, retryFlag) {
-  const settings = new k2e.settings.SettingsSingleton();
+  const settings = k2e.settings.SettingsStorage;
   const quoted = (makeQuotedFlag === undefined) ? true : makeQuotedFlag;
   const retry = (retryFlag === undefined) ? true : retryFlag;
   const loc = settings.getSetting('googleSearchApiLoc');
@@ -414,7 +414,7 @@ function loadClippings(clippingsText) {
     throw ex;
   }
 
-  const settings = new k2e.settings.SettingsSingleton();
+  const settings = k2e.settings.SettingsStorage;
   settings.setSetting('clippingsText', clippingsText);
   this.$.documentSelectorList.set('documentsRef', this.documents);
   this.$.documentSelectorList.selectNextDocument();
@@ -627,7 +627,7 @@ function rendered() {
 
 function create() {
   this.inherited(arguments);
-  const settings = new k2e.settings.SettingsSingleton();
+  const settings = k2e.settings.SettingsStorage;
 
   const cookieModel = new k2e.CookieModel();
   cookieModel.fetch();

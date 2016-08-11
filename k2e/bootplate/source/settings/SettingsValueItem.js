@@ -30,7 +30,7 @@ function valueChanged() {
 }
 
 function create() {
-  const settings = new k2e.settings.SettingsSingleton();
+  const settings = k2e.settings.SettingsStorage;
   this.inherited(arguments);
 
   this.createComponent({ fit: true });

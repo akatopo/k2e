@@ -130,7 +130,7 @@ function create() {
 function rendered() {
   this.inherited(arguments);
 
-  const settings = new k2e.settings.SettingsSingleton();
+  const settings = k2e.settings.SettingsStorage;
   const sizePercent = settings.getSetting('fontSize');
   const margin = settings.getSetting('textMargin');
   const theme = settings.getSetting('themeName');

@@ -43,14 +43,14 @@ enyo.kind({
       //     {name: 'articleExtraction', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'onyx.ToggleButton',
       //       label: 'Periodical Article Extraction', onSettingChanged: 'handleExtractionSettingChanged'},
       //     {name: 'periodicalTitleList', kind: 'k2e.settings.SettingsValueItem', inputComponent: {kind: 'k2e.settings.SettingsTextInput'},
-      //       label: 'Periodical titles', disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
+      //       label: 'Periodical titles', disabled: !(k2e.settings.SettingsStorage).getSetting('articleExtraction')},
       //     {name: 'googleSearchApiKey', kind: 'k2e.settings.SettingsValueItem',
       //       inputComponent: {kind: 'k2e.settings.SettingsTextInput', type: 'password'},
-      //       label: 'Google Search Api Key', disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
+      //       label: 'Google Search Api Key', disabled: !(k2e.settings.SettingsStorage).getSetting('articleExtraction')},
       //     {name: 'googleSearchApiCx', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'k2e.settings.SettingsTextInput',
-      //       label: 'Google Search Api Cx', disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')},
+      //       label: 'Google Search Api Cx', disabled: !(k2e.settings.SettingsStorage).getSetting('articleExtraction')},
       //     {name: 'googleSearchApiLoc', kind: 'k2e.settings.SettingsValueItem', defaultInputKind: 'k2e.settings.SettingsTextInput',
-      //       label: 'Google Search Api Url', disabled: !(new k2e.settings.SettingsSingleton()).getSetting('articleExtraction')}
+      //       label: 'Google Search Api Url', disabled: !(k2e.settings.SettingsStorage).getSetting('articleExtraction')}
       //   ]}
       // ]},
       { content: 'Local Storage', components: [
@@ -103,7 +103,7 @@ function handleSettingChanged(inSender, inEvent) {
   this.log(settingsItem.getName());
 
 
-  new k2e.settings.SettingsSingleton().setSetting(name, value);
+  k2e.settings.SettingsStorage.setSetting(name, value);
 
   return true;
 }
@@ -152,7 +152,7 @@ function revokeEvernotePermissions(/*inSender, inEvent*/) {
 function restoreDefaults() {
   this.log('restore defaults');
 
-  const settings = new k2e.settings.SettingsSingleton();
+  const settings = k2e.settings.SettingsStorage;
   const defaultsMap = settings.defaultSettings;
 
   Object.keys(defaultsMap)
@@ -165,7 +165,7 @@ function restoreDefaults() {
 }
 
 function clearClippings() {
-  const settings = new k2e.settings.SettingsSingleton();
+  const settings = k2e.settings.SettingsStorage;
 
   settings.setSetting('clippingsText', settings.getDefaultSetting('clippingsText'));
 
