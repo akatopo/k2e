@@ -13,14 +13,8 @@ enyo.kind({
       onFullscreenChange: 'toggleDistractionFreeMode' },
     { name: 'clippingPickerPopup', kind: 'k2e.ClippingPickerPopup' },
     { name: 'exportPopup', kind: 'k2e.ProgressPopup' },
-    { name: 'appToolbar', kind: 'onyx.Toolbar', layoutKind: 'FittableColumnsLayout', components: [
-      { name: 'settingsButton', kind: 'onyx.Button',
-        classes: 'k2e-icon-button', ontap: 'toggleSettings', components: [
-          { tag: 'i', classes: 'icon-menu icon-large' },
-        ] },
-      { content: 'k2e', fit: true },
-      { name: 'exportButton', kind: 'k2e.ExportButton', ontap: 'prepareDocumentsAndExport' },
-    ] },
+    { name: 'appToolbar', kind: 'k2e.AppToolbar', onExportRequested: 'prepareDocumentsAndExport',
+      onSettingsToggled: 'handleSettingsToggled' },
     { name: 'settings', kind: 'k2e.settings.SettingsSlideable' },
     { kind: 'FittableColumns', fit: true, components: [
       { name: 'mainPanels', kind: 'Panels', fit: true, arrangerKind: 'CollapsingArranger',
@@ -92,7 +86,7 @@ enyo.kind({
   handleQueryEnd,
   handleClippingsTextChanged,
   handleKeydown,
-  toggleSettings,
+  handleSettingsToggled,
   toggleMultiSelection,
   handleThemeChanged,
   handleFontSizeChanged,
@@ -370,7 +364,7 @@ function handleDocumentMultiSelected(/*inSender, inEvent*/) {
   }
 
   const selectionKeys = this.$.documentSelectorList.getMultiSelectionKeys();
-  this.$.exportButton.set('disabled', Object.keys(selectionKeys).length === 0);
+  this.$.appToolbar.set('canExport', Object.keys(selectionKeys).length !== 0);
 }
 
 function handleExportBegin(/*inSender, inEvent*/) {
@@ -446,20 +440,16 @@ function handleKeydown(inSender, inEvent) {
   return true;
 }
 
-function toggleSettings(/*inSender, inEvent*/) {
-  const settingsButton = this.$.settingsButton;
-  settingsButton.addRemoveClass('active', !settingsButton.hasClass('active'));
+function handleSettingsToggled(/*inSender, inEvent*/) {
   this.$.settings.toggle();
 }
 
 function toggleMultiSelection(/*inSender, inEvent*/) {
-  const exportButton = this.$.exportButton;
   const multiSelectButton = this.$.multiSelectButton;
+  const active = !multiSelectButton.hasClass('active');
   this.$.documentSelectorList.set('multiSelected', !this.$.documentSelectorList.multiSelected);
-  exportButton.set('disabled', !exportButton.exportSelected);
-  exportButton.set('exportSelected', !exportButton.exportSelected);
-  multiSelectButton.addRemoveClass('active', !multiSelectButton.hasClass('active'));
-  this.$.appToolbar.reflow();
+  multiSelectButton.addRemoveClass('active', active);
+  this.$.appToolbar.set('multiSelection', active);
 }
 
 function handleThemeChanged(inSender, inEvent) {
@@ -610,12 +600,12 @@ function reflow() {
 
   this.inherited(arguments);
 
-  this.$.backToolbar.setShowing(isScreenNarrow && !isFullscreen);
+  this.$.backToolbar.set('showing', isScreenNarrow && !isFullscreen);
   if (!isScreenNarrow && !isFullscreen) {
     this.$.mainPanels.setIndex(0);
   }
   this.$.documentControl.set('fullscreen', isFullscreen);
-  this.$.exportButton.set('form', (isScreenNarrow && 'short') || 'long');
+  this.$.appToolbar.set('form', (isScreenNarrow && 'short') || 'long');
 }
 
 function rendered() {

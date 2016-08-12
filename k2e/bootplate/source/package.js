@@ -9,6 +9,7 @@ enyo.depends(
   'annotations',
   'App.css',
   'App.js',
+  'AppToolbar.js',
   'CookieSource.js',
   'CookieModel.js',
   'ExportButton.js',
