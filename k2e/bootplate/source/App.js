@@ -421,7 +421,23 @@ function handleKeydown(inSender, inEvent) {
     inEvent.altGraphKey ||
     inEvent.metaKey;
 
-  if (modKeyPressed) {
+  // values taken from jquery.hotkeys
+  // https://github.com/jeresig/jquery.hotkeys/blob/1ec07a6a1900104ba56d049551acaaa83e8417d6/jquery.hotkeys.js#L149
+  // excludes: button, checkbox, file, hidden, image, password, radio, reset, search, submit, url
+  const textAcceptingInputTypes = [
+    'text', 'password', 'number', 'email', 'url', 'range',
+    'date', 'month', 'week', 'time', 'datetime',
+    'datetime-local', 'search', 'color', 'tel',
+  ];
+
+  // default input types not to bind to unless bound directly
+  const textInputTypes = /textarea|input|select/i;
+
+  if (
+    modKeyPressed ||
+    textInputTypes.test(inEvent.target.nodeName) ||
+    textAcceptingInputTypes.find((type) => event.target.type === type)
+  ) {
     return undefined;
   }
 
