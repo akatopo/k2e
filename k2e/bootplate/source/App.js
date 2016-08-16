@@ -544,7 +544,10 @@ function parseKindleClippings(kindleClippings) {
     const type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
     const loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
     const timeStamp = /^Added on (.*)$/.exec(subtitle[subtitle.length - 1])[1];
-    const content = k2e.util.linkify(enyo.dom.escape(res[3]), { targetBlank: true });
+    const content =
+      k2e.util.Linkify.toHtml(enyo.dom.escape(res[3]), { targetBlank: true });
+    const contentComponents =
+      k2e.util.Linkify.toComponents(enyo.dom.escape(res[3]), { targetBlank: true });
     const contentText = res[3];
 
     // Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
@@ -558,6 +561,7 @@ function parseKindleClippings(kindleClippings) {
           timeStamp,
           content,
           contentText,
+          contentComponents,
         })
       );
     }

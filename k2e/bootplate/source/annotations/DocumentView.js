@@ -41,7 +41,9 @@ function appendClippingToDisplay(component, doc, clipping, index) {
   const loc = clipping.loc;
   const type = clipping.type;
   const timestamp = clipping.timeStamp;
-  const content = clipping.content;
+  const contentText = clipping.contentText;
+  const contentComponents = [{ tag: null, content: ' ' }]
+    .concat(clipping.contentComponents);
   const createTwitterUrlFromContent =
     createTwitterUrl.bind(undefined, HASHTAGS, window.location.href);
   const createMailUrlFromContent = createMailUrl.bind(undefined, doc.title, doc.author);
@@ -53,7 +55,7 @@ function appendClippingToDisplay(component, doc, clipping, index) {
   component.createComponent(
     { tag: 'p', components: [
       { tag: 'i', classes: 'icon-quote-left icon-large' },
-      { tag: null, allowHtml: true, content: ` ${content}` },
+      { tag: null, components: contentComponents },
     ] }
   );
 
@@ -63,12 +65,12 @@ function appendClippingToDisplay(component, doc, clipping, index) {
     { tag: 'i', content: `Added on ${timestamp}` },
     { tag: 'span', classes: 'k2e-hide-print', content: ' • ' },
     { tag: 'a', classes: 'onyx-button k2e-icon-button k2e-hide-print',
-      attributes: { href: createTwitterUrlFromContent(clipping.content), target: '_blank' },
+      attributes: { href: createTwitterUrlFromContent(contentText), target: '_blank' },
       components: [
         { tag: 'i', classes: 'icon-twitter' },
       ] },
     { tag: 'a', classes: 'onyx-button k2e-icon-button k2e-hide-print',
-      attributes: { href: createMailUrlFromContent(clipping.content), target: '_blank' },
+      attributes: { href: createMailUrlFromContent(contentText), target: '_blank' },
       components: [
         { tag: 'i', classes: 'icon-mail' },
       ] },

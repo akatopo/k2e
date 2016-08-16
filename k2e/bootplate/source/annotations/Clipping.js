@@ -14,6 +14,7 @@ enyo.kind({
     creationDate: undefined,
     content: '',
     contentText: '',
+    contentComponents: '',
     suggestedTitle: '',
     suggestedUrl: '',
   },
