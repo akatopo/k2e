@@ -37,7 +37,10 @@ enyo.kind({
       onFullscreenChange: 'toggleDistractionFreeMode' },
     { name: 'clippingPickerPopup', kind: 'k2e.ClippingPickerPopup' },
     { name: 'exportPopup', kind: 'k2e.ProgressPopup' },
-    { name: 'appToolbar', kind: 'k2e.AppToolbar', onExportRequested: 'prepareDocumentsAndExport' },
+    { name: 'appToolbar', kind: 'k2e.AppToolbar',
+      onExportRequested: 'prepareDocumentsAndExport',
+      onReloadClippingRequested: 'reloadClippings',
+      onMultiSelectionToggled: 'handleMultiSelectionToggled' },
     { name: 'settings', kind: 'k2e.settings.SettingsSlideable' },
     { kind: 'FittableColumns', fit: true, components: [
       { name: 'mainPanels', kind: 'Panels', fit: true, arrangerKind: 'CollapsingArranger',
@@ -45,17 +48,6 @@ enyo.kind({
           { name: 'sidebar', classes: 'k2e-sidebar', layoutKind: 'FittableRowsLayout', components: [
             { name: 'documentSelectorList', fit: true,
               kind: 'k2e.annotations.DocumentSelectorList' },
-            { name: 'sidebarToolbar', kind: 'onyx.Toolbar',
-              layoutKind: 'FittableColumnsLayout', components: [
-                { name: 'multiSelectButton', kind: 'onyx.Button', classes: 'k2e-icon-button',
-                  ontap: 'toggleMultiSelection', components: [
-                    { tag: 'i', classes: 'icon-check icon-large' },
-                  ] },
-                { name: 'reloadClippingsButton', kind: 'onyx.Button', classes: 'k2e-icon-button',
-                  ontap: 'reloadClippings', components: [
-                    { tag: 'i', classes: 'icon-upload icon-large' },
-                  ] },
-              ] },
           ] },
           { kind: 'FittableRows', classes: 'k2e-main-panel', fit: true, components: [
             { name: 'documentControl', kind: 'k2e.annotations.DocumentControl', fit: true },
@@ -70,6 +62,7 @@ enyo.kind({
     ] },
   ],
 
+  handleMultiSelectionToggled,
   toggleDistractionFreeMode,
   toggleFullscreen,
   showDocumentSelectorList,
@@ -89,7 +82,6 @@ enyo.kind({
   handleClippingsTextChanged,
   handleKeydown,
   handleSettingsToggled,
-  toggleMultiSelection,
   handleThemeChanged,
   handleFontSizeChanged,
   handleFontChanged,
@@ -114,6 +106,11 @@ function arrayToSet(array) {
   });
 
   return set;
+}
+
+function handleMultiSelectionToggled(inSender, inEvent) {
+  const active = inEvent.multiSelect;
+  this.$.documentSelectorList.set('multiSelected', active);
 }
 
 function settingsActiveChanged(/*old, active*/) {
@@ -372,6 +369,7 @@ function handleDocumentMultiSelected(/*inSender, inEvent*/) {
 
   const selectionKeys = this.$.documentSelectorList.getMultiSelectionKeys();
   this.$.appToolbar.set('canExport', Object.keys(selectionKeys).length !== 0);
+  this.$.appToolbar.set('selectedCount', Object.keys(selectionKeys).length);
 }
 
 function handleExportBegin(/*inSender, inEvent*/) {
@@ -400,7 +398,6 @@ function handleClippingsTextChanged(inSender, inEvent) {
   try {
     this.loadClippings(clipText);
     this.$.clippingPickerPopup.hide();
-    this.$.appToolbar.dismissSearchToolbar();
   }
   catch (e) {
     this.$.clippingPickerPopup.showErrorMessage();
@@ -459,7 +456,7 @@ function handleKeydown(inSender, inEvent) {
     this.$.documentSelectorList.selectPrevDocument();
   }
   else if (inEvent.keyCode === 83) { // 's'
-    window.setTimeout(() => this.$.appToolbar.goToSearchToolbar());
+    window.setTimeout(() => this.$.appToolbar.tryPushState(k2e.AppToolbar.SEARCH_TOOLBAR));
   }
   else if (inEvent.keyCode === 27) { // esc
     this.$.mainPanels.setIndex(0);
@@ -469,14 +466,6 @@ function handleKeydown(inSender, inEvent) {
 
 function handleSettingsToggled(/*inSender, inEvent*/) {
   this.$.settings.toggle();
-}
-
-function toggleMultiSelection(/*inSender, inEvent*/) {
-  const multiSelectButton = this.$.multiSelectButton;
-  const active = !multiSelectButton.hasClass('active');
-  this.$.documentSelectorList.set('multiSelected', !this.$.documentSelectorList.multiSelected);
-  multiSelectButton.addRemoveClass('active', active);
-  this.$.appToolbar.set('multiSelection', active);
 }
 
 function handleThemeChanged(inSender, inEvent) {
