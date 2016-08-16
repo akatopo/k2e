@@ -8,13 +8,36 @@ let docsExport;
 enyo.kind({
   name: 'k2e.App',
   kind: 'FittableRows',
+  cookieModel: undefined,
+  published: {
+    periodicalTitleSet: undefined,
+    ignoredTitleSet: undefined,
+    documents: undefined,
+    currentThemeClass: 'k2e-document-view-dark',
+    settingsActive: false,
+  },
+  bindings: [
+    { from: '.$.appToolbar.searchFilter', to: '.$.documentSelectorList.filter' },
+    { from: '.$.appToolbar.settingsButtonActive', to: '.settingsActive', oneWay: false },
+    { from: '.cookieModel', to: '.$.settings.cookieModel' },
+  ],
+  handlers: {
+    onDocumentSelected: 'handleDocumentSelected',
+    onDocumentMultiSelected: 'handleDocumentMultiSelected',
+    onClippingsTextChanged: 'handleClippingsTextChanged',
+    onThemeChanged: 'handleThemeChanged',
+    onFontSizeChanged: 'handleFontSizeChanged',
+    onFontChanged: 'handleFontChanged',
+    onTextMarginChanged: 'handleTextMarginChanged',
+    onFullscreenRequest: 'toggleFullscreen',
+    onClippingsCleared: 'handleClippingsCleared',
+  },
   components: [
     { kind: 'enyo.Signals', onkeydown: 'handleKeydown',
       onFullscreenChange: 'toggleDistractionFreeMode' },
     { name: 'clippingPickerPopup', kind: 'k2e.ClippingPickerPopup' },
     { name: 'exportPopup', kind: 'k2e.ProgressPopup' },
-    { name: 'appToolbar', kind: 'k2e.AppToolbar', onExportRequested: 'prepareDocumentsAndExport',
-      onSettingsToggled: 'handleSettingsToggled' },
+    { name: 'appToolbar', kind: 'k2e.AppToolbar', onExportRequested: 'prepareDocumentsAndExport' },
     { name: 'settings', kind: 'k2e.settings.SettingsSlideable' },
     { kind: 'FittableColumns', fit: true, components: [
       { name: 'mainPanels', kind: 'Panels', fit: true, arrangerKind: 'CollapsingArranger',
@@ -46,27 +69,6 @@ enyo.kind({
         ] },
     ] },
   ],
-  published: {
-    periodicalTitleSet: undefined,
-    ignoredTitleSet: undefined,
-    documents: undefined,
-    currentThemeClass: 'k2e-document-view-dark',
-  },
-  cookieModel: undefined,
-  handlers: {
-    onDocumentSelected: 'handleDocumentSelected',
-    onDocumentMultiSelected: 'handleDocumentMultiSelected',
-    onClippingsTextChanged: 'handleClippingsTextChanged',
-    onThemeChanged: 'handleThemeChanged',
-    onFontSizeChanged: 'handleFontSizeChanged',
-    onFontChanged: 'handleFontChanged',
-    onTextMarginChanged: 'handleTextMarginChanged',
-    onFullscreenRequest: 'toggleFullscreen',
-    onClippingsCleared: 'handleClippingsCleared',
-  },
-  bindings: [
-    { from: '.cookieModel', to: '.$.settings.cookieModel' },
-  ],
 
   toggleDistractionFreeMode,
   toggleFullscreen,
@@ -96,6 +98,7 @@ enyo.kind({
   parseKindleClippings,
   reloadClippings,
   loadClippings,
+  settingsActiveChanged,
   reflow,
   rendered,
   create,
@@ -113,9 +116,13 @@ function arrayToSet(array) {
   return set;
 }
 
+function settingsActiveChanged(/*old, active*/) {
+  this.$.settings.toggle();
+}
+
 function toggleDistractionFreeMode() {
   if (this.$.settings.isAtMax()) {
-    this.toggleSettings();
+    this.set('settingsActive', false);
   }
   this.$.appToolbar.setShowing(!this.$.appToolbar.showing);
   this.$.sidebar.setShowing(!this.$.sidebar.showing);
@@ -351,8 +358,8 @@ function handleDocumentSelected(inSender, inEvent) {
 
   const docSelector = inEvent.originator;
   const doc = this.documents.getDocumentByKey(docSelector.getKey());
-  this.log(docSelector.getTitle());
-  this.log(docSelector.getIndex());
+  this.log(docSelector.get('key'));
+  this.log(docSelector.get('index'));
   this.log(doc);
   this.$.documentControl.set('document', doc);
 }
@@ -393,6 +400,7 @@ function handleClippingsTextChanged(inSender, inEvent) {
   try {
     this.loadClippings(clipText);
     this.$.clippingPickerPopup.hide();
+    this.$.appToolbar.dismissSearchToolbar();
   }
   catch (e) {
     this.$.clippingPickerPopup.showErrorMessage();
@@ -449,6 +457,9 @@ function handleKeydown(inSender, inEvent) {
   }
   else if (inEvent.keyCode === 75) { // 'k'
     this.$.documentSelectorList.selectPrevDocument();
+  }
+  else if (inEvent.keyCode === 83) { // 's'
+    window.setTimeout(() => this.$.appToolbar.goToSearchToolbar());
   }
   else if (inEvent.keyCode === 27) { // esc
     this.$.mainPanels.setIndex(0);
@@ -604,7 +615,7 @@ function reloadClippings() {
 
 function handleClippingsCleared() {
   if (this.$.settings.isAtMax()) {
-    this.toggleSettings();
+    this.set('settingsActive', false);
   }
 
   this.$.clippingPickerPopup.show({ autoDismiss: false });
@@ -629,6 +640,8 @@ function rendered() {
   if (!this.documents) {
     this.$.clippingPickerPopup.show({ autoDismiss: false });
   }
+  this.reflow();
+  this.$.sidebar.resize();
 }
 
 function create() {

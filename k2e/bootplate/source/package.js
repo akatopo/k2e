@@ -3,6 +3,7 @@ enyo.depends(
   '../lib/onyx',    // To theme Onyx using Theme.less, change this line to $lib/onyx/source,
   '../lib/js-cookie/src/js.cookie.js',
   '../lib/moment/moment.js',
+  '../lib/fuzzy/lib/fuzzy.js',
   'Constants.js',
   'util',
   'settings',

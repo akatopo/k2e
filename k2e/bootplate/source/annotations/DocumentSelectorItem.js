@@ -4,7 +4,6 @@ enyo.kind({
   name: 'k2e.annotations.DocumentSelectorItem',
   classes: 'k2e-document-selector-item enyo-border-box',
   published: {
-    title: '',
     index: -1,
     multiSelected: false,
     selected: false,
@@ -30,11 +29,9 @@ enyo.kind({
   handlers: {
     ontap: 'handleTap',
   },
-  bindings: [
-    { from: '.title', to: '.$.label.content' },
-  ],
   handleTap() { this.doDocumentSelected(); },
   isMarked() { return this.$.checkbox.getChecked(); },
+  setTitleComponents,
   multiSelectedChanged,
   selectedChanged,
 });
@@ -54,6 +51,20 @@ function multiSelectedChanged() {
     // No need to emit doDocumentMultiSelected event, so don't set checked to false
     this.$.checkbox.hide();
   }
+}
+
+function setTitleComponents(components) {
+  this.$.label.destroyComponents();
+  if (enyo.isString(components)) {
+    this.$.label.createComponent({ tag: null, content: components });
+  }
+  else if (enyo.isArray(components)) {
+    components.forEach((c) => {
+      this.$.label.createComponent(c);
+    });
+  }
+
+  this.$.label.render();
 }
 
 })();

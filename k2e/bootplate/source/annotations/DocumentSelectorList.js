@@ -1,4 +1,6 @@
-(function () {
+/* global fuzzy:false */
+
+(function (fuzzy) {
 
 enyo.kind({
   name: 'k2e.annotations.DocumentSelectorList',
@@ -14,6 +16,7 @@ enyo.kind({
     documentsRef: undefined,
     selDocumentSelectorItem: null,
     multiSelected: false,
+    filter: '',
   },
   items: undefined,
   handlers: {
@@ -27,6 +30,7 @@ enyo.kind({
   selectNextDocument,
   selectPrevDocument,
   documentsRefChanged,
+  filterChanged,
 });
 
 /////////////////////////////////////////////////////////////
@@ -63,10 +67,13 @@ function handleDocumentSelected(inSender, inEvent) {
 function handleSetupItem(inSender, inEvent) {
   const index = inEvent.index;
   const item = inEvent.item;
+  const matches = this.matches || {};
   const docMap = this.documentsRef.getDocMap();
-  const key = this.sortedKeys[index];
+  const key = this.viewKeys[index];
 
-  item.$.documentSelectorItem.set('title', docMap[key].title);
+  item.$.documentSelectorItem.setTitleComponents(
+    matches[key] && matches[key].title ? matches[key].title : docMap[key].title
+  );
   item.$.documentSelectorItem.set('index', index);
   item.$.documentSelectorItem.set('key', key);
   this.items.push(item.$.documentSelectorItem);
@@ -140,21 +147,106 @@ function selectPrevDocument() {
 }
 
 function documentsRefChanged() {
+  this.items = [];
+  this.filter = '';
+  this.selDocumentSelectorItem = undefined;
+
+  this.viewKeys = getDescendingDocKeys(this.documentsRef);
+
+  this.$.documentSelectorRepeater.setCount(this.viewKeys.length);
+}
+
+function filterChanged(oldFilter, newFilter) {
+  if (!this.documentsRef) {
+    return;
+  }
+
+  const filter = newFilter.trim().toLowerCase();
   const docMap = this.documentsRef.getDocMap();
-  const keys = this.documentsRef.getKeyArray();
+  const matchRegex = /\0[^\0]\0/g;
 
   this.items = [];
   this.selDocumentSelectorItem = undefined;
+  this.matches = {};
+
+  this.viewKeys = getDescendingDocKeys(this.documentsRef)
+    .filter((docKey) => {
+      const title = [docMap[docKey].title];
+      const author = [docMap[docKey].author];
+
+      const [titleRes, authorRes] = [title, author]
+        .map((arr) => fuzzy
+          .filter(filter, arr, { pre: '\0', post: '\0' })
+          .map((matchTuple) => matchTuple.string)
+        );
+
+      const res = {
+        title: titleRes.length ?
+          createHighlightedComponents(titleRes[0], matchRegex) : undefined,
+        author: authorRes.length ?
+          createHighlightedComponents(authorRes[0], matchRegex) : undefined,
+      };
+
+      const matched = res.title || res.author;
+      if (matched) {
+        this.matches[docKey] = res;
+      }
+      return matched;
+    });
+
+  this.$.documentSelectorRepeater.setCount(this.viewKeys.length);
+}
+
+function createHighlightedComponents(s, re) {
+  const newRe = new RegExp(re);
+  const iterable = {
+    [Symbol.iterator]() {
+      return {
+        next() {
+          const value = newRe.exec(s);
+          return { value: value || undefined, done: !value };
+        },
+      };
+    },
+  };
+  const components = [];
+  let oldEnd = 0;
+  for (const res of iterable) {
+    const start = res.index;
+    const end = newRe.lastIndex;
+    const source = res.input;
+
+    const prevNonMatch = source.slice(oldEnd, start);
+    const match = source.slice(start, end);
+
+    if (prevNonMatch) {
+      components.push({ tag: null, content: prevNonMatch });
+    }
+    components.push({ tag: 'span', classes: 'k2e-fuzzy-highlight', content: match });
+    oldEnd = end;
+  }
+
+  if (oldEnd < s.length) {
+    components.push({ tag: null, content: s.slice(oldEnd) });
+  }
+
+  return components;
+}
+
+// descending (newest to oldest most recent clipping date) key sort
+function getDescendingDocKeys(docRef) {
+  const docMap = docRef.getDocMap();
+  const keys = docRef.getKeyArray();
 
   // descending (newest to oldest most recent clipping date) key sort
-  this.sortedKeys = keys.slice(0).sort((a, b) => {
+  const sortedKeys = keys.slice(0).sort((a, b) => {
     const aUnixTimestamp = docMap[a].mostRecentDate.valueOf();
     const bUnixTimestamp = docMap[b].mostRecentDate.valueOf();
 
     return bUnixTimestamp - aUnixTimestamp;
   });
 
-  this.$.documentSelectorRepeater.setCount(this.documentsRef.length);
+  return sortedKeys;
 }
 
-})();
+})(fuzzy);

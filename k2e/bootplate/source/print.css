@@ -1,8 +1,8 @@
 @charset "UTF-8";
 @font-face {
   font-family: 'fontello';
-  src: url("../../assets/fontello.eot?47020726");
-  src: url("../../assets/fontello.eot?47020726#iefix") format("embedded-opentype"), url("../../assets/fontello.woff?47020726") format("woff"), url("../../assets/fontello.ttf?47020726") format("truetype"), url("../../assets/fontello.svg?47020726#fontello") format("svg");
+  src: url("../../assets/fontello.eot?13676472");
+  src: url("../../assets/fontello.eot?13676472#iefix") format("embedded-opentype"), url("../../assets/fontello.woff2?13676472") format("woff2"), url("../../assets/fontello.woff?13676472") format("woff"), url("../../assets/fontello.ttf?13676472") format("truetype"), url("../../assets/fontello.svg?13676472#fontello") format("svg");
   font-weight: normal;
   font-style: normal; }
 
@@ -91,6 +91,10 @@
   content: '\e80b'; }
 
 /* '' */
+.icon-search:before {
+  content: '\e80c'; }
+
+/* '' */
 .icon-docs:before {
   content: '\e80d'; }
 
