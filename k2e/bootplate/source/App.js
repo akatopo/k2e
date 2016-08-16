@@ -547,7 +547,7 @@ function parseKindleClippings(kindleClippings) {
     const content =
       k2e.util.Linkify.toHtml(enyo.dom.escape(res[3]), { targetBlank: true });
     const contentComponents =
-      k2e.util.Linkify.toComponents(enyo.dom.escape(res[3]), { targetBlank: true });
+      k2e.util.Linkify.toComponents(res[3], { targetBlank: true });
     const contentText = res[3];
 
     // Skip kindle bookmarks and clippings (not to be confused with the Clipping class)
