@@ -19,7 +19,7 @@ function displayDocument(doc) {
   this.createComponent({ tag: 'h1', content: doc.title });
   this.createComponent({ classes: 'k2e-document-view-subtitle', components: [
     { tag: 'i', content: 'by ' },
-    { tag: 'span', content: doc.author },
+    { tag: null, content: doc.author },
   ] });
 
   const sortedClippings = doc.clippings.slice(0).sort(sortDescending);
