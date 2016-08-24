@@ -2,6 +2,10 @@
 
 (function (fuzzy) {
 
+const PRE = '\u{E000}';
+const POST = '\u{E001}';
+const MATCH_REGEX = new RegExp(`${PRE}([^${POST}])${POST}`, 'g');
+
 enyo.kind({
   name: 'k2e.annotations.DocumentSelectorList',
   kind: 'enyo.Scroller',
@@ -18,6 +22,8 @@ enyo.kind({
     multiSelected: false,
     filter: '',
   },
+  viewKeys: undefined,
+  matches: undefined,
   items: undefined,
   handlers: {
     onDocumentSelected: 'handleDocumentSelected',
@@ -160,41 +166,51 @@ function filterChanged(oldFilter, newFilter) {
   if (!this.documentsRef) {
     return;
   }
-
   const filter = newFilter.trim().toLowerCase();
   const docMap = this.documentsRef.getDocMap();
-  const matchRegex = /\0[^\0]\0/g;
+  const outMatches = {};
 
   this.items = [];
   this.selDocumentSelectorItem = undefined;
-  this.matches = {};
 
-  this.viewKeys = getDescendingDocKeys(this.documentsRef)
-    .filter((docKey) => {
-      const title = [docMap[docKey].title];
-      const author = [docMap[docKey].author];
-
-      const [titleRes, authorRes] = [title, author]
-        .map((arr) => fuzzy
-          .filter(filter, arr, { pre: '\0', post: '\0' })
-          .map((matchTuple) => matchTuple.string)
-        );
-
-      const res = {
-        title: titleRes.length ?
-          createHighlightedComponents(titleRes[0], matchRegex) : undefined,
-        author: authorRes.length ?
-          createHighlightedComponents(authorRes[0], matchRegex) : undefined,
-      };
-
-      const matched = res.title || res.author;
-      if (matched) {
-        this.matches[docKey] = res;
-      }
-      return matched;
-    });
+  this.viewKeys = (!filter && getDescendingDocKeys(this.documentsRef)) ||
+    this.documentsRef.getKeyArray()
+      .slice(0)
+      .filter(filterMatched.bind(undefined, docMap, outMatches, filter))
+      .sort((aDocKey, bDocKey) =>
+        outMatches[bDocKey].score - outMatches[aDocKey].score
+      );
+  this.matches = outMatches;
 
   this.$.documentSelectorRepeater.setCount(this.viewKeys.length);
+}
+
+function filterMatched(docMap, outMatches, filter, docKey) {
+  const title = [docMap[docKey].title];
+  const author = [docMap[docKey].author];
+
+  const [titleRes, authorRes] = [title, author]
+    .map((arr) => fuzzy
+      .filter(filter, arr, { pre: PRE, post: POST })
+      .map((match) => ({ string: match.string, score: match.score }))
+    );
+
+  const res = {
+    title: titleRes.length ?
+      createHighlightedComponents(titleRes[0].string, MATCH_REGEX) : undefined,
+    author: authorRes.length ?
+      createHighlightedComponents(authorRes[0].string, MATCH_REGEX) : undefined,
+    score: Math.max(
+      titleRes.length ? titleRes[0].score : 0,
+      authorRes.length ? authorRes[0].score : 0
+    ),
+  };
+
+  const matched = res.title || res.author;
+  if (matched) {
+    outMatches[docKey] = res;
+  }
+  return matched;
 }
 
 function createHighlightedComponents(s, re) {
@@ -217,7 +233,7 @@ function createHighlightedComponents(s, re) {
     const source = res.input;
 
     const prevNonMatch = source.slice(oldEnd, start);
-    const match = source.slice(start, end);
+    const match = res[1] || res[0];
 
     if (prevNonMatch) {
       components.push({ tag: null, content: prevNonMatch });
