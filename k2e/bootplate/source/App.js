@@ -5,6 +5,9 @@
 let exportPreparationSem;
 let docsExport;
 
+const SIDEBAR_PANEL = 0;
+const DOCUMENT_PANEL = 1;
+
 enyo.kind({
   name: 'k2e.App',
   kind: 'FittableRows',
@@ -15,11 +18,15 @@ enyo.kind({
     documents: undefined,
     currentThemeClass: 'k2e-document-view-dark',
     settingsActive: false,
+    currentMainPanel: undefined,
+    currentAppToolbar: undefined,
   },
   bindings: [
     { from: '.$.appToolbar.searchFilter', to: '.$.documentSelectorList.filter' },
     { from: '.$.appToolbar.settingsButtonActive', to: '.settingsActive', oneWay: false },
     { from: '.cookieModel', to: '.$.settings.cookieModel' },
+    { from: '.$.mainPanels.index', to: '.currentMainPanel' },
+    { from: '.$.appToolbar.index', to: '.currentAppToolbar' },
   ],
   handlers: {
     onDocumentSelected: 'handleDocumentSelected',
@@ -51,12 +58,6 @@ enyo.kind({
           ] },
           { kind: 'FittableRows', classes: 'k2e-main-panel', fit: true, components: [
             { name: 'documentControl', kind: 'k2e.annotations.DocumentControl', fit: true },
-            { name: 'backToolbar', kind: 'onyx.Toolbar', showing: false, components: [
-              { kind: 'onyx.Button', classes: 'k2e-icon-button',
-                ontap: 'showDocumentSelectorList', components: [
-                  { tag: 'i', classes: 'icon-left-big icon-large' },
-                ] },
-            ] },
           ] },
         ] },
     ] },
@@ -65,7 +66,6 @@ enyo.kind({
   handleMultiSelectionToggled,
   toggleDistractionFreeMode,
   toggleFullscreen,
-  showDocumentSelectorList,
   exportDocuments,
   processExportResponse,
   processExportError,
@@ -91,6 +91,8 @@ enyo.kind({
   reloadClippings,
   loadClippings,
   settingsActiveChanged,
+  currentMainPanelChanged,
+  currentAppToolbarChanged,
   reflow,
   rendered,
   create,
@@ -136,10 +138,6 @@ function toggleFullscreen() {
   return isFullscreen ?
       this.cancelFullscreen() :
       this.requestFullscreen();
-}
-
-function showDocumentSelectorList() {
-  this.$.mainPanels.setIndex(0);
 }
 
 function exportDocuments() {
@@ -346,8 +344,9 @@ function processQueryError(/*inSender, inResponse*/) {
 }
 
 function handleDocumentSelected(inSender, inEvent) {
-  if (enyo.Panels.isScreenNarrow()) {
-    this.$.mainPanels.setIndex(1);
+  const isScreenNarrow = enyo.Panels.isScreenNarrow();
+  if (isScreenNarrow) {
+    this.$.mainPanels.set('index', DOCUMENT_PANEL);
   }
   if (inEvent.reSelected) {
     return;
@@ -359,6 +358,7 @@ function handleDocumentSelected(inSender, inEvent) {
   this.log(docSelector.get('index'));
   this.log(doc);
   this.$.documentControl.set('document', doc);
+  this.$.appToolbar.set('selectedDocumentTitle', doc.title);
 }
 
 function handleDocumentMultiSelected(/*inSender, inEvent*/) {
@@ -459,7 +459,7 @@ function handleKeydown(inSender, inEvent) {
     window.setTimeout(() => this.$.appToolbar.tryPushState(k2e.AppToolbar.SEARCH_TOOLBAR));
   }
   else if (inEvent.keyCode === 27) { // esc
-    this.$.mainPanels.setIndex(0);
+    this.$.mainPanels.set('index', SIDEBAR_PANEL);
   }
   return true;
 }
@@ -614,15 +614,38 @@ function handleClippingsCleared() {
   this.$.clippingPickerPopup.show({ autoDismiss: false });
 }
 
+function currentMainPanelChanged(old, newIndex) {
+  if (newIndex === DOCUMENT_PANEL) {
+    this.$.appToolbar.tryPushSelectedDocumentToolbar();
+  }
+  else if (
+    newIndex === SIDEBAR_PANEL &&
+    this.$.appToolbar.currentState === k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR
+  ) {
+    this.$.appToolbar.popState();
+  }
+}
+
+function currentAppToolbarChanged(oldToolbar) {
+  if (oldToolbar === k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR) {
+    this.$.mainPanels.set('index', SIDEBAR_PANEL);
+  }
+}
+
 function reflow() {
   const isScreenNarrow = enyo.Panels.isScreenNarrow();
   const isFullscreen = this.isFullscreen();
 
   this.inherited(arguments);
 
-  this.$.backToolbar.set('showing', isScreenNarrow && !isFullscreen);
   if (!isScreenNarrow && !isFullscreen) {
-    this.$.mainPanels.setIndex(0);
+    this.$.mainPanels.set('index', SIDEBAR_PANEL);
+  }
+  if (this.$.mainPanels.index === DOCUMENT_PANEL && isScreenNarrow) {
+    this.$.appToolbar.tryPushSelectedDocumentToolbar();
+  }
+  else if (this.$.appToolbar.currentState === k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR) {
+    this.$.appToolbar.popState();
   }
   this.$.documentControl.set('fullscreen', isFullscreen);
   this.$.appToolbar.set('form', (isScreenNarrow && 'short') || 'long');

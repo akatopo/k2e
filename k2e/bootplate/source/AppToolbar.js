@@ -8,17 +8,23 @@ const statics = {
   MAIN_TOOLBAR: 0,
   SEARCH_TOOLBAR: 1,
   MULTI_SELECT_TOOLBAR: 2,
+  SELECTED_DOCUMENT_TOOLBAR: 3,
 };
 
 const validStateTransitions = {
   [statics.MAIN_TOOLBAR]: new Set([
     statics.SEARCH_TOOLBAR,
     statics.MULTI_SELECT_TOOLBAR,
+    statics.SELECTED_DOCUMENT_TOOLBAR,
   ]),
   [statics.SEARCH_TOOLBAR]: new Set([
     statics.MULTI_SELECT_TOOLBAR,
+    statics.SELECTED_DOCUMENT_TOOLBAR,
   ]),
-  [statics.MULTI_SELECT_TOOLBAR]: new Set(),
+  [statics.MULTI_SELECT_TOOLBAR]: new Set([
+    statics.SELECTED_DOCUMENT_TOOLBAR,
+  ]),
+  [statics.SELECTED_DOCUMENT_TOOLBAR]: new Set(),
 };
 
 const popStateHandlers = {
@@ -35,6 +41,7 @@ const popStateHandlers = {
     this.$.multiSelectToolbar.reflow();
     this.doMultiSelectionToggled({ multiSelect: false });
   },
+  [statics.SELECTED_DOCUMENT_TOOLBAR]() {},
 };
 
 const onStateHandlers = {
@@ -51,6 +58,7 @@ const onStateHandlers = {
     this.$.multiSelectToolbar.reflow();
     this.doMultiSelectionToggled({ multiSelect: true });
   },
+  [statics.SELECTED_DOCUMENT_TOOLBAR]() {},
 };
 
 enyo.kind({
@@ -65,6 +73,7 @@ enyo.kind({
     selectedCount: 0,
     searchFilter: '',
     settingsButtonActive: false,
+    selectedDocumentTitle: '',
   },
   currentState: statics.MAIN_TOOLBAR,
   stateStack: [],
@@ -82,6 +91,7 @@ enyo.kind({
           `${selectedCount} document${selectedCount > 1 ? 's' : ''} selected` :
           'No documents selected'
       ) },
+    { from: '.selectedDocumentTitle', to: '.$.documentLabel.content' },
   ],
   events: {
     onExportRequested: '',
@@ -134,14 +144,25 @@ enyo.kind({
           ontap: 'popState', components: [
             { tag: 'i', classes: 'icon-left-big icon-large' },
           ] },
-        { name: 'multiSelectLabel', content: 'selected placeholder', fit: true },
+        { name: 'multiSelectLabel', content: '', fit: true },
         { name: 'multiSelectExportButton', kind: 'k2e.ExportButton', ontap: 'doExportRequested' },
+      ] },
+    { name: 'selectedDocumentToolbar', kind: 'onyx.Toolbar',
+      layoutKind: 'FittableColumnsLayout', components: [
+        { kind: 'onyx.Button', classes: 'k2e-icon-button',
+          ontap: 'popState', components: [
+            { tag: 'i', classes: 'icon-left-big icon-large' },
+          ] },
+        { name: 'documentLabel', content: '', classes: 'k2e-label-truncated', fit: true },
       ] },
   ],
   toggleSettings,
   tryPushState,
   tryPushMultiSelectToolbar() { return this.tryPushState(k2e.AppToolbar.MULTI_SELECT_TOOLBAR); },
   tryPushSearchToolbar() { return this.tryPushState(k2e.AppToolbar.SEARCH_TOOLBAR); },
+  tryPushSelectedDocumentToolbar() {
+    return this.tryPushState(k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR);
+  },
   popState,
   handleSearchInput,
   handleSearchKeydown,
@@ -215,7 +236,7 @@ function settingsButtonActiveChanged(old, active) {
 
 function rendered() {
   this.inherited(arguments);
-  const height = this.children[0].getComputedStyleValue('height', 0);
+  const height = this.children[this.currentState].getComputedStyleValue('height', 0);
   this.applyStyle('height', height);
 }
 

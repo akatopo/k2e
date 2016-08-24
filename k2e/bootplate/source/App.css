@@ -644,3 +644,14 @@ body,
 /* App Toolbar */
 .k2e-app-toolbar > * {
   height: auto !important; }
+
+@media (max-width: 480px) {
+  .k2e-app-toolbar .onyx-toolbar-inline > * {
+    font-size: 70%;
+    margin-left: 0;
+    margin-right: 1px; } }
+
+.k2e-label-truncated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }

@@ -454,3 +454,17 @@ body,
 .k2e-app-toolbar > * {
   height: auto !important;
 }
+
+.k2e-app-toolbar .onyx-toolbar-inline > * {
+  @media (max-width: $screen-xs-min) {
+    font-size: 70%;
+    margin-left: 0;
+    margin-right: 1px;
+  }
+}
+
+.k2e-label-truncated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
