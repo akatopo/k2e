@@ -39,6 +39,7 @@ enyo.kind({
   },
   events: {
     onFullscreenRequest: '',
+    onDocumentScrolled: '',
   },
   handlers: {
     onScroll: 'handleScroll',
@@ -63,7 +64,7 @@ enyo.kind({
   strategyKind: 'ScrollStrategy',
   handleScroll,
   handleFullscreenButtonTap() { this.doFullscreenRequest(); },
-  scrollDocumentToTop() { this.$.scroller.scrollTo(0, 0); },
+  scrollDocumentToTop,
   fullscreenChanged,
   documentChanged,
   fontSizeChanged,
@@ -76,11 +77,18 @@ enyo.kind({
 
 /////////////////////////////////////////////////////////////
 
-function handleScroll(/*inSender, inEvent*/) {
+function handleScroll(inSender, inEvent) {
   const scrollBounds = this.$.scroller.getScrollBounds();
   const isNotAtTop = scrollBounds.top !== 0;
 
   this.$.toTopButton.addRemoveClass('visible', isNotAtTop);
+  this.doDocumentScrolled(inEvent);
+}
+
+function scrollDocumentToTop() {
+  this.$.scroller.scrollTo(0, 0);
+  const scrollBounds = this.$.scroller.getScrollBounds();
+  this.doDocumentScrolled({ scrollBounds });
 }
 
 function fullscreenChanged() {

@@ -27,10 +27,12 @@ enyo.kind({
     { from: '.cookieModel', to: '.$.settings.cookieModel' },
     { from: '.$.mainPanels.index', to: '.currentMainPanel' },
     { from: '.$.appToolbar.index', to: '.currentAppToolbar' },
+    { from: '.$.appToolbarSlideable.value', to: '.appToolbarSlidePercentage' },
   ],
   handlers: {
     onDocumentSelected: 'handleDocumentSelected',
     onDocumentMultiSelected: 'handleDocumentMultiSelected',
+    onDocumentScrolled: 'handleDocumentScrolled',
     onClippingsTextChanged: 'handleClippingsTextChanged',
     onThemeChanged: 'handleThemeChanged',
     onFontSizeChanged: 'handleFontSizeChanged',
@@ -40,31 +42,34 @@ enyo.kind({
     onClippingsCleared: 'handleClippingsCleared',
   },
   components: [
-    { kind: 'enyo.Signals', onkeydown: 'handleKeydown',
-      onFullscreenChange: 'toggleDistractionFreeMode' },
+    { kind: 'enyo.Signals', onkeydown: 'handleKeydown' },
     { name: 'clippingPickerPopup', kind: 'k2e.ClippingPickerPopup' },
     { name: 'exportPopup', kind: 'k2e.ProgressPopup' },
-    { name: 'appToolbar', kind: 'k2e.AppToolbar',
-      onExportRequested: 'prepareDocumentsAndExport',
-      onReloadClippingRequested: 'reloadClippings',
-      onMultiSelectionToggled: 'handleMultiSelectionToggled' },
+    { kind: 'Slideable', min: -100, max: 0, value: 0,
+      unit: '%', axis: 'v', name: 'appToolbarSlideable', components: [
+        { name: 'appToolbar', kind: 'k2e.AppToolbar',
+          onExportRequested: 'prepareDocumentsAndExport',
+          onReloadClippingRequested: 'reloadClippings',
+          onMultiSelectionToggled: 'handleMultiSelectionToggled' },
+      ] },
     { name: 'settings', kind: 'k2e.settings.SettingsSlideable' },
     { kind: 'FittableColumns', fit: true, components: [
       { name: 'mainPanels', kind: 'Panels', fit: true, arrangerKind: 'CollapsingArranger',
         realtimeFit: true, wrap: false, components: [
           { name: 'sidebar', classes: 'k2e-sidebar', layoutKind: 'FittableRowsLayout', components: [
-            { name: 'documentSelectorList', fit: true,
+            { name: 'documentSelectorList', style: 'height:100%',
               kind: 'k2e.annotations.DocumentSelectorList' },
           ] },
           { kind: 'FittableRows', classes: 'k2e-main-panel', fit: true, components: [
-            { name: 'documentControl', kind: 'k2e.annotations.DocumentControl', fit: true },
+            { name: 'documentControl', kind: 'k2e.annotations.DocumentControl',
+              style: 'height:100%' },
           ] },
         ] },
     ] },
   ],
 
+  appToolbarSlidePercentageChanged,
   handleMultiSelectionToggled,
-  toggleDistractionFreeMode,
   toggleFullscreen,
   exportDocuments,
   processExportResponse,
@@ -75,6 +80,7 @@ enyo.kind({
   processQueryError,
   handleDocumentSelected,
   handleDocumentMultiSelected,
+  handleDocumentScrolled,
   handleExportBegin,
   handleExportEnd,
   handleQueryBegin,
@@ -100,6 +106,23 @@ enyo.kind({
 
 /////////////////////////////////////////////////////////////
 
+function appToolbarSlidePercentageChanged(oldValue, newValue) {
+  if (!this.$.fittableColumns) {
+    return;
+  }
+
+  const appToolbarHeight = this.$.appToolbar.hasNode().scrollHeight;
+  const currentFittableColumnsHeight = this.$.fittableColumns.hasNode().scrollHeight;
+  const pixelsFromPercentage = (percentage) => Math.round((percentage / 100) * appToolbarHeight);
+
+  const oldPixels = pixelsFromPercentage(oldValue);
+  const newPixels = pixelsFromPercentage(newValue);
+  const offset = newPixels - oldPixels;
+
+  this.$.fittableColumns.applyStyle('margin-top', `${newPixels}px`);
+  this.$.fittableColumns.applyStyle('height', `${currentFittableColumnsHeight - offset}px`);
+}
+
 function arrayToSet(array) {
   const set = {};
 
@@ -117,17 +140,6 @@ function handleMultiSelectionToggled(inSender, inEvent) {
 
 function settingsActiveChanged(/*old, active*/) {
   this.$.settings.toggle();
-}
-
-function toggleDistractionFreeMode() {
-  if (this.$.settings.isAtMax()) {
-    this.set('settingsActive', false);
-  }
-  this.$.appToolbar.setShowing(!this.$.appToolbar.showing);
-  this.$.sidebar.setShowing(!this.$.sidebar.showing);
-
-  this.$.mainPanels.reflow();
-  this.reflow();
 }
 
 function toggleFullscreen() {
@@ -359,6 +371,7 @@ function handleDocumentSelected(inSender, inEvent) {
   this.log(doc);
   this.$.documentControl.set('document', doc);
   this.$.appToolbar.set('selectedDocumentTitle', doc.title);
+  this.$.appToolbarSlideable.animateToMax();
 }
 
 function handleDocumentMultiSelected(/*inSender, inEvent*/) {
@@ -370,6 +383,33 @@ function handleDocumentMultiSelected(/*inSender, inEvent*/) {
   const selectionKeys = this.$.documentSelectorList.getMultiSelectionKeys();
   this.$.appToolbar.set('canExport', Object.keys(selectionKeys).length !== 0);
   this.$.appToolbar.set('selectedCount', Object.keys(selectionKeys).length);
+}
+
+function handleDocumentScrolled(inSender, inEvent) {
+  const [TO_TOP, TO_BOTTOM, NEUTRAL] = [-1, 1, 0];
+  const verticalDirection = inEvent.scrollBounds.yDir;
+  const appToolbarHeight = this.$.appToolbar.hasNode().scrollHeight;
+  const top = inEvent.scrollBounds.top;
+
+  if (
+    verticalDirection === NEUTRAL ||
+    this.$.appToolbar.currentState !== k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR
+  ) {
+    return;
+  }
+
+  if (verticalDirection === TO_TOP && this.$.appToolbarSlideable.isAtMin()) {
+    this.$.appToolbarSlideable.animateToMax();
+  }
+  else if (
+    verticalDirection === TO_BOTTOM &&
+    this.$.appToolbarSlideable.isAtMax() &&
+    top > appToolbarHeight
+  ) {
+    this.$.appToolbarSlideable.animateToMin();
+  }
+
+
 }
 
 function handleExportBegin(/*inSender, inEvent*/) {
@@ -629,6 +669,7 @@ function currentMainPanelChanged(old, newIndex) {
 function currentAppToolbarChanged(oldToolbar) {
   if (oldToolbar === k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR) {
     this.$.mainPanels.set('index', SIDEBAR_PANEL);
+    this.$.appToolbarSlideable.animateToMax();
   }
 }
 
@@ -639,7 +680,7 @@ function reflow() {
   this.inherited(arguments);
 
   if (!isScreenNarrow && !isFullscreen) {
-    this.$.mainPanels.set('index', SIDEBAR_PANEL);
+    // this.$.mainPanels.set('index', SIDEBAR_PANEL);
   }
   if (this.$.mainPanels.index === DOCUMENT_PANEL && isScreenNarrow) {
     this.$.appToolbar.tryPushSelectedDocumentToolbar();
