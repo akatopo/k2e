@@ -23,7 +23,8 @@ enyo.kind({
   },
   bindings: [
     { from: '.$.appToolbar.searchFilter', to: '.$.documentSelectorList.filter' },
-    { from: '.$.appToolbar.settingsButtonActive', to: '.settingsActive', oneWay: false },
+    { from: '.$.settings.slidedToMin', to: '.$.appToolbar.settingsButtonActive',
+      transform: (slidedToMin) => !slidedToMin },
     { from: '.cookieModel', to: '.$.settings.cookieModel' },
     { from: '.$.mainPanels.index', to: '.currentMainPanel' },
     { from: '.$.appToolbar.index', to: '.currentAppToolbar' },
@@ -33,6 +34,7 @@ enyo.kind({
     onDocumentSelected: 'handleDocumentSelected',
     onDocumentMultiSelected: 'handleDocumentMultiSelected',
     onDocumentScrolled: 'handleDocumentScrolled',
+    onSettingsToggled: 'handleSettingsToggled',
     onClippingsTextChanged: 'handleClippingsTextChanged',
     onThemeChanged: 'handleThemeChanged',
     onFontSizeChanged: 'handleFontSizeChanged',

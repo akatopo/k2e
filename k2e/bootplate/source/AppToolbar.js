@@ -224,9 +224,7 @@ function handleSearchKeydown(inSender, inEvent) {
 }
 
 function toggleSettings(/*inSender, inEvent*/) {
-  const settingsButton = this.$.settingsButton;
-  const active = !settingsButton.hasClass('active');
-  this.set('settingsButtonActive', active);
+  this.doSettingsToggled();
 }
 
 function settingsButtonActiveChanged(old, active) {

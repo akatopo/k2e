@@ -8,7 +8,7 @@ enyo.kind({
   max: 0,
   value: -100,
   unit: '%',
-  draggable: false,
+  draggable: true,
   cookieModel: undefined,
   components: [
     { name: 'scroller', kind: 'enyo.Scroller', strategyKind: 'ScrollStrategy',
@@ -18,21 +18,36 @@ enyo.kind({
   ],
   bindings: [
     { from: '.cookieModel', to: '.$.panel.cookieModel' },
+    { from: '.value', to: '.slidedToMin', transform: (value) => value === -100 },
   ],
+  handlers: {
+    onAnimateFinish: 'handleAnimateFinish',
+  },
   toggle,
+  handleAnimateFinish,
 });
 
 /////////////////////////////////////////////////////////////
 
 function toggle() {
-  this.addRemoveClass('active', this.isAtMin());
+  this.addClass('transition');
 
   if (this.isAtMin()) {
     this.animateToMax();
   }
   else {
     this.animateToMin();
+  }
+}
+
+function handleAnimateFinish(/*inSender, inEvent*/) {
+  this.removeClass('transition');
+  if (this.isAtMin()) {
+    this.removeClass('active');
     this.$.scroller.scrollToTop();
+  }
+  else {
+    this.addClass('active');
   }
 }
 
