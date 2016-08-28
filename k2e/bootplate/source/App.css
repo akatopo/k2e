@@ -240,7 +240,12 @@ body,
 
 .k2e-document-selector-item-container {
   padding: 16px 12px;
-  height: 32px; }
+  height: 62px; }
+
+.k2e-document-selector-item-info-container {
+  vertical-align: middle;
+  width: 90%;
+  /* hack */ }
 
 .k2e-document-selector-item-separator {
   left: 2%;
@@ -276,16 +281,15 @@ body,
   .k2e-document-selector-item:hover + .k2e-document-selector-item .k2e-document-selector-item-separator {
     border-color: transparent; } }
 
-.k2e-document-selector-item-label {
+.k2e-document-selector-item-info-label {
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 90%;
-  /* hack */
+  width: 100%;
   padding-left: 10px;
   line-height: 31px; }
 
-.k2e-document-selector-item .onyx-checkbox {
-  vertical-align: baseline; }
+.k2e-document-selector-item-info-label-author {
+  color: #8E9AA5; }
 
 /***********************************************************************************************/
 /* Document Display */

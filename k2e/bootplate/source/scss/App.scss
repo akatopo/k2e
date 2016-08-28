@@ -168,7 +168,12 @@ body,
 .k2e-document-selector-item-container {
   // border: 2px solid transparent;
   padding: 16px 12px;
-  height: 32px; // checkbox is 32px x 32px
+  height: 62px; // checkbox is 32px x 32px
+}
+
+.k2e-document-selector-item-info-container {
+  vertical-align: middle;
+  width: 90%; /* hack */
 }
 
 .k2e-document-selector-item-separator {
@@ -213,16 +218,16 @@ body,
   }
 }
 
-.k2e-document-selector-item-label {
+.k2e-document-selector-item-info-label {
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 90%; /* hack */
+  width: 100%;
   padding-left: 10px;
   line-height: (32px - 1px); // vertically aligned text
 }
 
-.k2e-document-selector-item .onyx-checkbox {
-  vertical-align: baseline;
+.k2e-document-selector-item-info-label-author {
+  color: #8E9AA5;
 }
 
 /***********************************************************************************************/

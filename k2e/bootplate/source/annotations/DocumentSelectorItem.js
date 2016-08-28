@@ -20,7 +20,16 @@ enyo.kind({
           onActivate: 'doDocumentMultiSelected',
         },
       },
-      { name: 'label', classes: 'enyo-inline k2e-document-selector-item-label' },
+      { name: 'infoContainer', classes: 'enyo-inline k2e-document-selector-item-info-container',
+        components: [
+          { name: 'title', classes: 'k2e-document-selector-item-info-label' },
+          { classes: `k2e-document-selector-item-info-label
+              k2e-document-selector-item-info-label-author`,
+            components: [
+              { tag: null, content: 'by ' },
+              { name: 'author', tag: null },
+            ] },
+        ] },
     ] },
   ],
   events: {
@@ -31,7 +40,7 @@ enyo.kind({
   },
   handleTap() { this.doDocumentSelected(); },
   isMarked() { return this.$.checkbox.getChecked(); },
-  setTitleComponents,
+  setDocumentInfoComponents,
   multiSelectedChanged,
   selectedChanged,
 });
@@ -53,18 +62,22 @@ function multiSelectedChanged() {
   }
 }
 
-function setTitleComponents(components) {
-  this.$.label.destroyComponents();
+function setDocumentInfoComponents({ titleComponents, authorComponents }) {
+  setComponents(this.$.title, titleComponents);
+  setComponents(this.$.author, authorComponents);
+  this.$.infoContainer.render();
+}
+
+function setComponents(component, components) {
+  component.destroyComponents();
   if (enyo.isString(components)) {
-    this.$.label.createComponent({ tag: null, content: components });
+    component.createComponent({ tag: null, content: components });
   }
   else if (enyo.isArray(components)) {
     components.forEach((c) => {
-      this.$.label.createComponent(c);
+      component.createComponent(c);
     });
   }
-
-  this.$.label.render();
 }
 
 })();

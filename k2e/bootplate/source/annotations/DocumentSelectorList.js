@@ -76,10 +76,14 @@ function handleSetupItem(inSender, inEvent) {
   const matches = this.matches || {};
   const docMap = this.documentsRef.getDocMap();
   const key = this.viewKeys[index];
-
-  item.$.documentSelectorItem.setTitleComponents(
-    matches[key] && matches[key].title ? matches[key].title : docMap[key].title
+  const getComponentsFor = (prop) => (
+    matches[key] && matches[key][prop] ? matches[key][prop] : docMap[key][prop]
   );
+
+  item.$.documentSelectorItem.setDocumentInfoComponents({
+    titleComponents: getComponentsFor('title'),
+    authorComponents: getComponentsFor('author'),
+  });
   item.$.documentSelectorItem.set('index', index);
   item.$.documentSelectorItem.set('key', key);
   this.items.push(item.$.documentSelectorItem);
