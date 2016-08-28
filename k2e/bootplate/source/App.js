@@ -455,10 +455,13 @@ function loadClippings(clippingsText) {
     throw ex;
   }
 
+  const isScreenNarrow = enyo.Panels.isScreenNarrow();
   const settings = k2e.settings.SettingsStorage;
   settings.setSetting('clippingsText', clippingsText);
   this.$.documentSelectorList.set('documentsRef', this.documents);
-  this.$.documentSelectorList.selectNextDocument();
+  if (this.$.mainPanels.index === SIDEBAR_PANEL && !isScreenNarrow) {
+    this.$.documentSelectorList.selectNextDocument();
+  }
 }
 
 function handleKeydown(inSender, inEvent) {
@@ -482,8 +485,10 @@ function handleKeydown(inSender, inEvent) {
 
   if (
     modKeyPressed ||
-    textInputTypes.test(inEvent.target.nodeName) ||
-    textAcceptingInputTypes.find((type) => event.target.type === type)
+    (textInputTypes.test(inEvent.target.nodeName) &&
+      inEvent.keyCode !== 27 /* esc */) ||
+    (textAcceptingInputTypes.find((type) => event.target.type === type) &&
+      inEvent.keyCode !== 27 /* esc */)
   ) {
     return undefined;
   }
@@ -501,7 +506,8 @@ function handleKeydown(inSender, inEvent) {
     window.setTimeout(() => this.$.appToolbar.tryPushState(k2e.AppToolbar.SEARCH_TOOLBAR));
   }
   else if (inEvent.keyCode === 27) { // esc
-    this.$.mainPanels.set('index', SIDEBAR_PANEL);
+    // this.$.mainPanels.set('index', SIDEBAR_PANEL);
+    this.$.appToolbar.popState();
   }
   return true;
 }
@@ -681,9 +687,6 @@ function reflow() {
 
   this.inherited(arguments);
 
-  if (!isScreenNarrow && !isFullscreen) {
-    // this.$.mainPanels.set('index', SIDEBAR_PANEL);
-  }
   if (this.$.mainPanels.index === DOCUMENT_PANEL && isScreenNarrow) {
     this.$.appToolbar.tryPushSelectedDocumentToolbar();
   }

@@ -129,8 +129,8 @@ enyo.kind({
           ontap: 'popState', components: [
             { tag: 'i', classes: 'icon-left-big icon-large' },
           ] },
-        { kind: 'onyx.InputDecorator', onkeydown: 'handleSearchKeydown',
-          oninput: 'handleSearchInput', fit: true, components: [
+        { kind: 'onyx.InputDecorator', oninput: 'handleSearchInput',
+          fit: true, components: [
             { name: 'input', kind: 'onyx.Input', style: 'width: 100%' },
           ] },
         { name: 'searchMultiSelectButton', kind: 'onyx.Button', classes: 'k2e-icon-button',
@@ -165,7 +165,6 @@ enyo.kind({
   },
   popState,
   handleSearchInput,
-  handleSearchKeydown,
   settingsButtonActiveChanged,
   rendered,
 });
@@ -187,6 +186,10 @@ function tryPushState(stateIndex) {
 }
 
 function popState() {
+  if (this.stateStack.length === 0) {
+    return this.currentState;
+  }
+
   popStateHandlers[this.currentState].call(this);
   this.currentState = this.stateStack.pop();
   onStateHandlers[this.currentState].call(this);
@@ -199,26 +202,6 @@ function handleSearchInput(inSender, inEvent) {
   enyo.job('k2e.AppToolbar.filterJob', () => {
     this.set('searchFilter', inEvent.originator.value);
   }, THROTLE_INTERVAL);
-
-  return true;
-}
-
-function handleSearchKeydown(inSender, inEvent) {
-  const modKeyPressed = inEvent.altKey ||
-    inEvent.ctrlKey ||
-    inEvent.shiftKey ||
-    inEvent.altGraphKey ||
-    inEvent.metaKey;
-
-  if (modKeyPressed) {
-    return undefined;
-  }
-
-  if (inEvent.keyCode === 27) { // esc
-    if (this.currentState === k2e.AppToolbar.SEARCH_TOOLBAR) {
-      this.popState();
-    }
-  }
 
   return true;
 }
