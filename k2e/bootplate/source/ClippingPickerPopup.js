@@ -112,6 +112,7 @@ function handleShow() {
 function reset() {
   this.$.filePicker.hasNode().value = '';
   this.$.errorMessage.set('showing', false);
+  this.set('autoDismiss', false);
 }
 
 function autoDismissChanged(oldValue, newValue) {
