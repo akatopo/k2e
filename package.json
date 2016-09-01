@@ -58,7 +58,7 @@
     "gulp-css-rebase-urls": "0.0.5",
     "gulp-csso": "^1.0.1",
     "gulp-eslint": "^3.0.1",
-    "gulp-jscs": "^3.0.1",
+    "gulp-jscs": "^4.0.0",
     "gulp-livereload": "^3.8.0",
     "gulp-msbuild": "^0.2.13",
     "gulp-rename": "^1.2.2",
