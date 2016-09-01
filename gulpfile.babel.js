@@ -4,6 +4,8 @@ import _ from 'underscore';
 import del from 'del';
 import streamqueue from 'streamqueue';
 import enyoWalker from 'enyo-deploy-walker';
+import fs from 'fs';
+import escapeRegExp from 'lodash.escaperegexp';
 
 import gulp from 'gulp';
 import livereload from 'gulp-livereload';
@@ -23,6 +25,8 @@ import rebaseCssUrls from 'gulp-css-rebase-urls';
 import uglify from 'gulp-uglify';
 import csso from 'gulp-csso';
 import eslint from 'gulp-eslint';
+import rev from 'gulp-rev';
+import mustache from 'gulp-mustache';
 
 const BASE_BOOTPLATE_PATH = './k2e/bootplate';
 const BASE_SOURCE_PATH = './k2e/bootplate/source';
@@ -51,8 +55,8 @@ const getEnyoDeps = _.memoize(() => {
 }, _.noop);
 
 const getK2eDeps = _.memoize(() =>
-  enyoWalker.getDependencies(`${BASE_BOOTPLATE_PATH}`)
-, _.noop);
+  enyoWalker.getDependencies(`${BASE_BOOTPLATE_PATH}`), _.noop
+);
 
 // using a subset of babel's es2015 preset since enyo does not support strict mode
 // (essentialy everything minus modules-commonjs)
@@ -113,10 +117,27 @@ gulp.task('dist-css', ['compile-sass'], distCss);
 
 gulp.task('dist-assets', distAssets);
 
+gulp.task('rev-scripts', revScripts);
+
+gulp.task('rev-css', revCss);
+
+gulp.task('rev-assets', revAssets);
+
+gulp.task('rev-lib', revLib);
+
+gulp.task('rev-default-aspx', revDefaultAspx);
+
+gulp.task('dist-service-worker', distServiceWorker);
+
 gulp.task('dist', (cb) => {
   runSequence(
     ['lint', 'dist-clean'],
     ['dist-scripts', 'dist-css', 'dist-assets', 'dist-aspx', 'dist-config', 'dist-bin'],
+    ['rev-assets', 'rev-lib'],
+    ['rev-scripts'],
+    ['rev-css'],
+    ['rev-default-aspx'],
+    ['dist-service-worker'],
     cb
   );
 });
@@ -207,9 +228,127 @@ function distScripts() {
     gulp.src(getEnyoDeps().scripts)
       .pipe(concat('enyo.js'))
       .pipe(uglify({ mangle: true })),
-    gulp.src('./node_modules/babel-polyfill/dist/polyfill.min.js')
+    gulp.src('./node_modules/babel-polyfill/dist/polyfill.min.js'),
+    gulp.src(`${BASE_BOOTPLATE_PATH}/lib/sw-toolbox/sw-toolbox.js`)
   )
   .pipe(gulp.dest('./dist/build'));
+}
+
+function distServiceWorker() {
+  const manifestPaths = [
+    './dist/build/rev-manifest.json',
+    './dist/lib/rev-manifest.json',
+    './dist/assets/rev-manifest.json',
+  ];
+
+  const [buildManifest, libManifest, assetsManifest] = readManifests(manifestPaths);
+  const cacheFirst = Object.keys(buildManifest)
+    .map((orig) => `/build/${buildManifest[orig]}`);
+  const preCacheLib = Object.keys(libManifest)
+    .map((orig) => `/lib/${libManifest[orig]}`);
+  const preCacheAssets = Object.keys(assetsManifest)
+    .map((orig) => `/assets/${assetsManifest[orig]}`);
+  const preCache = preCacheLib.concat(preCacheAssets);
+
+  // const manifest = Object.assign({}, assetManifest, buildManifest);
+  return gulp.src(`${BASE_BOOTPLATE_PATH}/sw.mustache`)
+    .pipe(mustache({ cacheFirst, preCache }, { extension: '.js' }))
+    .pipe(gulp.dest('./dist/'));
+}
+
+function readManifests(_manifestPaths) {
+  const manifestPaths = Array.isArray(_manifestPaths) ?
+    _manifestPaths : [_manifestPaths];
+
+  return manifestPaths
+    .map((manifestPath) => JSON.parse(fs.readFileSync(manifestPath, 'utf8')));
+}
+
+function revCss() {
+  const manifestPaths = [
+    './dist/assets/rev-manifest.json',
+    './dist/lib/rev-manifest.json',
+  ];
+
+  const [assetManifest, libManifest] = readManifests(manifestPaths);
+
+  const manifest = Object.assign({}, assetManifest, libManifest);
+
+  const substituteRevUrl = (url) => {
+    let res = url;
+    Object.keys(manifest).some((orig) => {
+      const regEx = new RegExp(`${escapeRegExp(orig)}$`);
+      if (regEx.test(url)) {
+        res = url.replace(orig, manifest[orig]);
+        return true;
+      }
+      return false;
+    });
+
+    return res;
+  };
+
+  return gulp.src('./dist/build/*.css')
+    .pipe(rework(urlPlugin(substituteRevUrl)))
+    .pipe(csso())
+    .pipe(rev())
+    .pipe(gulp.dest('./dist/build'))
+    .pipe(rev.manifest(
+      'dist/build/rev-manifest.json',
+      { base: `${process.cwd()}/dist/build`, merge: true })
+    )
+    .pipe(gulp.dest('./dist/build'));
+}
+
+function revScripts() {
+  return gulp.src('./dist/build/*.js')
+    .pipe(rev())
+    .pipe(gulp.dest('./dist/build'))
+    .pipe(rev.manifest(
+      'dist/build/rev-manifest.json',
+      { base: `${process.cwd()}/dist/build`, merge: true })
+    )
+    .pipe(gulp.dest('./dist/build'));
+}
+
+function revAssets() {
+  return gulp.src('./dist/assets/*')
+    .pipe(rev())
+    .pipe(gulp.dest('./dist/assets'))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('./dist/assets'));
+}
+
+function revLib() {
+  return gulp.src(['./dist/lib/**/*.png', './dist/lib/**/*.gif'])
+    .pipe(rev())
+    .pipe(gulp.dest('./dist/lib'))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest('./dist/lib'));
+}
+
+function revDefaultAspx() {
+  const manifestPaths = [
+    './dist/assets/rev-manifest.json',
+    './dist/build/rev-manifest.json',
+  ];
+
+  const [assetManifest, buildManifest] = readManifests(manifestPaths);
+
+  const manifest = Object.assign({}, assetManifest, buildManifest);
+
+  const getRevName = () => (
+    (text, render) => (
+      manifest && manifest[text] ?
+        render(manifest[text]) :
+        render(text)
+    )
+  );
+
+  return gulp.src('./k2e/Default-dist.mustache')
+    .pipe(rename('Default.mustache'))
+    .pipe(mustache({ getRevName }, { extension: '.aspx' }))
+    .pipe(gulp.dest('./dist'));
 }
 
 function distCss() {
@@ -257,8 +396,6 @@ function distBin() {
 
 function distAspx() {
   return streamqueue({ objectMode: true },
-    gulp.src('./k2e/Default-dist.aspx')
-      .pipe(rename('Default.aspx')),
     gulp.src('./k2e/Auth.aspx'),
     gulp.src('./k2e/Global.asax')
   )

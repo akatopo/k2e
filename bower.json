@@ -6,7 +6,8 @@
     "layout": "enyojs/layout#2.5.1.1",
     "onyx": "enyojs/onyx#2.6.0-pre.4",
     "moment": "~2.10.6",
-    "fuzzy": "^0.1.1"
+    "fuzzy": "^0.1.1",
+    "sw-toolbox": "^3.2.1"
   },
   "private": true
 }

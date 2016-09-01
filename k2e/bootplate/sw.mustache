@@ -1,0 +1,27 @@
+(global => {
+  'use strict';
+
+  // Load the sw-toolbox library.
+  importScripts('/build/sw-toolbox.js');
+
+  global.toolbox.precache([
+    {{#preCache}}
+    '{{{.}}}',
+    {{/preCache}}
+  ]);
+
+  global.toolbox.router.get('/', global.toolbox.networkFirst);
+
+  {{#cacheFirst}}
+  global.toolbox.router.get('{{{.}}}', global.toolbox.cacheFirst);
+  {{/cacheFirst}}
+
+  {{#preCache}}
+  global.toolbox.router.get('{{{.}}}', global.toolbox.cacheFirst);
+  {{/preCache}}
+
+  // Boilerplate to ensure our service worker takes control of the page as soon
+  // as possible.
+  global.addEventListener('install', () => global.skipWaiting());
+  global.addEventListener('activate', () => global.clients.claim());
+})(self);

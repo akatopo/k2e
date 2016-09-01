@@ -5,8 +5,8 @@
 */
 @font-face {
   font-family: 'fontello';
-  src: url("../../assets/fontello.eot?13676472");
-  src: url("../../assets/fontello.eot?13676472#iefix") format("embedded-opentype"), url("../../assets/fontello.woff2?13676472") format("woff2"), url("../../assets/fontello.woff?13676472") format("woff"), url("../../assets/fontello.ttf?13676472") format("truetype"), url("../../assets/fontello.svg?13676472#fontello") format("svg");
+  src: url("../../assets/fontello.eot");
+  src: url("../../assets/fontello.eot#iefix") format("embedded-opentype"), url("../../assets/fontello.woff2") format("woff2"), url("../../assets/fontello.woff") format("woff"), url("../../assets/fontello.ttf") format("truetype"), url("../../assets/fontello.svg#fontello") format("svg");
   font-weight: normal;
   font-style: normal; }
 
@@ -108,6 +108,51 @@
   vertical-align: -10%;
   font-size: 1.3333333333333333em; }
 
+.ripple {
+  overflow: hidden; }
+
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  background: white;
+  -webkit-animation: ripple-animation 2s;
+       -o-animation: ripple-animation 2s;
+          animation: ripple-animation 2s; }
+
+@-webkit-keyframes ripple-animation {
+  from {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+    opacity: 0.4; }
+  to {
+    -webkit-transform: scale(100);
+            transform: scale(100);
+    opacity: 0; } }
+
+@-o-keyframes ripple-animation {
+  from {
+    -o-transform: scale(1);
+       transform: scale(1);
+    opacity: 0.4; }
+  to {
+    -o-transform: scale(100);
+       transform: scale(100);
+    opacity: 0; } }
+
+@keyframes ripple-animation {
+  from {
+    -webkit-transform: scale(1);
+         -o-transform: scale(1);
+            transform: scale(1);
+    opacity: 0.4; }
+  to {
+    -webkit-transform: scale(100);
+         -o-transform: scale(100);
+            transform: scale(100);
+    opacity: 0; } }
+
 /***********************************************************************************************/
 body,
 .onyx {
@@ -198,7 +243,8 @@ body,
   -webkit-box-shadow: none;
           box-shadow: none; }
 
-.onyx-toolbar .k2e-icon-button:hover {
+.onyx-toolbar .k2e-icon-button:hover,
+.onyx-toolbar .k2e-icon-button:focus {
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.8); }
 
 .onyx-toolbar .k2e-icon-button.active:hover {
@@ -399,7 +445,9 @@ body,
   .k2e-document-view-dark .k2e-icon-button {
     color: #8E9AA5; }
   .k2e-document-view-dark a.k2e-icon-button:hover,
-  .k2e-document-view-dark .k2e-icon-button:hover {
+  .k2e-document-view-dark .k2e-icon-button:hover,
+  .k2e-document-view-dark a.k2e-icon-button:focus,
+  .k2e-document-view-dark .k2e-icon-button:focus {
     color: white; }
   .k2e-document-view-dark .k2e-to-top-button,
   .k2e-document-view-dark .k2e-toggle-fullscreen-button {
@@ -439,7 +487,9 @@ body,
   .k2e-document-view-light .k2e-icon-button {
     color: #8d8d8d; }
   .k2e-document-view-light a.k2e-icon-button:hover,
-  .k2e-document-view-light .k2e-icon-button:hover {
+  .k2e-document-view-light .k2e-icon-button:hover,
+  .k2e-document-view-light a.k2e-icon-button:focus,
+  .k2e-document-view-light .k2e-icon-button:focus {
     color: #272727; }
   .k2e-document-view-light .k2e-to-top-button,
   .k2e-document-view-light .k2e-toggle-fullscreen-button {

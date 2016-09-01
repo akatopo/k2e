@@ -109,4 +109,8 @@ function createFontDetector() {
   };
 }
 
-})(k2e.Constants, Typekit.promise);
+})(
+  k2e.Constants,
+  (window.Typekit && window.Typekit.promise) ||
+    Promise.reject(new Error('typekit not instantiated'))
+);

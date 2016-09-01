@@ -1,0 +1,45 @@
+﻿<%@ Page Title="Home Page" Language="C#"
+    Inherits="k2e.Default" %>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="theme-color" content="#4c4c4c">
+    <title>k2e</title>
+    <link rel="shortcut icon" href="assets/{{#getRevName}}favicon.ico{{/getRevName}}"/>
+    <!-- -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <script data-service-worker="/sw.js">
+      (function() {
+        'use strict';
+        var workerScript = document.currentScript && document.currentScript.dataset.serviceWorker;
+
+        if (workerScript && 'serviceWorker' in navigator) {
+          navigator.serviceWorker.register(workerScript);
+        }
+      })();
+    </script>
+    <!-- css -->
+    <link href="build/{{#getRevName}}enyo.css{{/getRevName}}" rel="stylesheet" media="screen" />
+    <link href="build/{{#getRevName}}app.css{{/getRevName}}" rel="stylesheet" media="screen" />
+    <link href="build/{{#getRevName}}print.css{{/getRevName}}" rel="stylesheet" media="print" />
+    <!-- js -->
+    <script src="build/{{#getRevName}}polyfill.min.js{{/getRevName}}"></script>
+    <script src="https://use.typekit.net/lop6oji.js"></script>
+    <script>try{Typekit.promise=new Promise(function(a,b){Typekit.load({async:!0,active:a,inactive:b})})}catch(e){}</script>
+    <script src="build/{{#getRevName}}enyo.js{{/getRevName}}"></script>
+    <script src="build/{{#getRevName}}app.js{{/getRevName}}"></script>
+  </head>
+  <body class="enyo-unselectable">
+    <script>
+      if (!window.k2e.App) {
+        alert('No application build found, redirecting to debug.html.');
+        location = 'debug.html';
+      }
+      new k2e.App().renderInto(document.body);
+    </script>
+  </body>
+</html>
