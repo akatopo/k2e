@@ -17,5 +17,5 @@
   "requireBlocksOnNewline": 1,
   "disallowDanglingUnderscores": null,
   "disallowSpacesInCallExpression": true,
-  "disallowTrailingComma": false,
+  "disallowTrailingComma": false
 }
