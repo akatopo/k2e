@@ -48,7 +48,7 @@ enyo.kind({
     { name: 'clippingPickerPopup', kind: 'k2e.ClippingPickerPopup' },
     { name: 'exportPopup', kind: 'k2e.ProgressPopup' },
     { kind: 'Slideable', min: -100, max: 0, value: 0,
-      unit: '%', axis: 'v', name: 'appToolbarSlideable', components: [
+      unit: '%', axis: 'v', draggable: false, name: 'appToolbarSlideable', components: [
         { name: 'appToolbar', kind: 'k2e.AppToolbar',
           onExportRequested: 'prepareDocumentsAndExport',
           onReloadClippingRequested: 'reloadClippings',
@@ -487,7 +487,7 @@ function handleKeydown(inSender, inEvent) {
     modKeyPressed ||
     (textInputTypes.test(inEvent.target.nodeName) &&
       inEvent.keyCode !== 27 /* esc */) ||
-    (textAcceptingInputTypes.find((type) => event.target.type === type) &&
+    (textAcceptingInputTypes.find((type) => inEvent.target.type === type) &&
       inEvent.keyCode !== 27 /* esc */)
   ) {
     return undefined;
