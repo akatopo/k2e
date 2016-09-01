@@ -44,6 +44,7 @@ const AUTOPREFIXER_OPTIONS = {
   ],
 };
 const LIVERELOAD_PORT = 10666;
+let isWatching = false;
 
 // get dependencies once for any arguments
 
@@ -178,12 +179,22 @@ function compileSass() {
 }
 
 function compileBabel() {
+  const babelStream = gulp.src(`${BASE_SOURCE_PATH}/**/*.js`, { base: BASE_SOURCE_PATH })
+    .pipe(cached('compileBabel-scripts'))
+    .pipe(sourcemaps.init())
+    .pipe(babel({ babelrc: false, plugins: BABEL_PLUGINS, ignore: BABEL_IGNORE }));
+  babelStream.on('error', (err) => {
+    console.error(err.stack);
+    if (isWatching) {
+      babelStream.emit('end');
+    }
+    else {
+      throw err;
+    }
+  });
+
   return streamqueue({ objectMode: true },
-    gulp.src(`${BASE_SOURCE_PATH}/**/*.js`, { base: BASE_SOURCE_PATH })
-      .pipe(cached('compileBabel-scripts'))
-      .pipe(sourcemaps.init())
-      .pipe(babel({ babelrc: false, plugins: BABEL_PLUGINS, ignore: BABEL_IGNORE }))
-      .pipe(sourcemaps.write('.')),
+    babelStream.pipe(sourcemaps.write('.')),
     gulp.src('./node_modules/babel-polyfill/dist/polyfill.js')
       .pipe(cached('compileBabel-polyfill')),
     gulp.src(`${BASE_SOURCE_PATH}/**/*.css`, { base: BASE_SOURCE_PATH })
@@ -197,6 +208,8 @@ function watch() {
   // relative path for watch, https://github.com/floatdrop/gulp-watch/issues/104
 
   const sourcePath = BASE_SOURCE_PATH.substr(2);
+
+  isWatching = true;
 
   livereload.listen({ port: LIVERELOAD_PORT });
   gulp.watch(`${sourcePath}/scss/*.scss`, ['compile-sass']);
