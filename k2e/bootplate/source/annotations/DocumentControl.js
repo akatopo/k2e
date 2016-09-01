@@ -61,7 +61,6 @@ enyo.kind({
         ] },
       ] },
   ],
-  strategyKind: 'ScrollStrategy',
   handleScroll,
   handleFullscreenButtonTap() { this.doFullscreenRequest(); },
   scrollDocumentToTop,
