@@ -6,8 +6,17 @@
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="theme-color" content="#4c4c4c">
+        <meta name="apple-mobile-web-app-title" content="k2e">
+        <meta name="application-name" content="k2e">
         <title>k2e</title>
-        <link rel="shortcut icon" href="assets/favicon.ico"/>
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=Om5ry92pE7">
+        <link rel="icon" type="image/png" href="/favicon-32x32.png?v=Om5ry92pE7" sizes="32x32">
+        <link rel="icon" type="image/png" href="/favicon-16x16.png?v=Om5ry92pE7" sizes="16x16">
+        <link rel="manifest" href="/manifest.json?v=Om5ry92pE7">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg?v=Om5ry92pE7" color="#5bbad5">
+        <link rel="shortcut icon" href="/favicon.ico?v=Om5ry92pE7">
+        <meta name="apple-mobile-web-app-title" content="k2e">
+        <meta name="application-name" content="k2e">
         <!-- -->
         <meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
         <meta name="apple-mobile-web-app-capable" content="yes"/>

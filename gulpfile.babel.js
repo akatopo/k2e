@@ -263,9 +263,10 @@ function distServiceWorker() {
     .map((orig) => `/assets/${assetsManifest[orig]}`);
   const preCache = preCacheLib.concat(preCacheAssets);
 
-  // const manifest = Object.assign({}, assetManifest, buildManifest);
   return gulp.src(`${BASE_BOOTPLATE_PATH}/sw.mustache`)
     .pipe(mustache({ cacheFirst, preCache }, { extension: '.js' }))
+    .pipe(babel({ babelrc: false, plugins: BABEL_PLUGINS, ignore: BABEL_IGNORE }))
+    .pipe(uglify({ mangle: true }))
     .pipe(gulp.dest('./dist/'));
 }
 
@@ -383,21 +384,26 @@ function distCss() {
       .pipe(csso())
   )
   .pipe(gulp.dest('./dist/build'));
+}
 
-  /////////////////////////////////////////////////////////////
-
-  function isUrlOrUri(url) {
-    // borrowed from enyo's minifier
-    // skip an external url (one that starts with <protocol>: or just //, includes data:)
-    return /^([\w-]*:)|(\/\/)/.test(url);
-  }
+function isUrlOrUri(url) {
+  // borrowed from enyo's minifier
+  // skip an external url (one that starts with <protocol>: or just //, includes data:)
+  return /^([\w-]*:)|(\/\/)/.test(url);
 }
 
 function distAssets() {
   return streamqueue({ objectMode: true },
     gulp.src('./k2e/assets/**/*', { base: './k2e' }),
     gulp.src(getK2eDeps().assets, { base: BASE_BOOTPLATE_PATH }),
-    gulp.src(getEnyoDeps().assets, { base: `${BASE_BOOTPLATE_PATH}/lib/enyo` })
+    gulp.src(getEnyoDeps().assets, { base: `${BASE_BOOTPLATE_PATH}/lib/enyo` }),
+    gulp.src('./k2e/manifest.json', { base: './k2e' }),
+    gulp.src('./k2e/icon-*.png', { base: './k2e' }),
+    gulp.src('./k2e/favicon*', { base: './k2e' }),
+    gulp.src('./k2e/safari-pinned-tab.svg', { base: './k2e' }),
+    gulp.src('./k2e/mstile-150x150.png', { base: './k2e' }),
+    gulp.src('./k2e/browserconfig.xml', { base: './k2e' }),
+    gulp.src('./k2e/apple-touch-icon.png', { base: './k2e' })
   )
   .pipe(gulp.dest('./dist'));
 }
