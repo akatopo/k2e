@@ -9,6 +9,7 @@ enyo.kind({
   value: -100,
   unit: '%',
   draggable: true,
+  overMoving: false,
   cookieModel: undefined,
   components: [
     { name: 'scroller', kind: 'enyo.Scroller', strategyKind: 'ScrollStrategy',
