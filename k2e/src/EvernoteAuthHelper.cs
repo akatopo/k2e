@@ -67,7 +67,6 @@ namespace EvernoteWebQuickstart
 		private const string REQUEST_KEY_OAUTH_VERIFIER = "oauth_verifier";
         private const string RESPONSE_KEY_EDAM_NOTESTORE_URL = "edam_noteStoreUrl";
 
-        // TODO: replace this url with the production one when ready
 		private static readonly string EvernoteHost = 
 			string.IsNullOrEmpty(ConfigurationManager.AppSettings["Production"]) ?
 				"sandbox.evernote.com" :
