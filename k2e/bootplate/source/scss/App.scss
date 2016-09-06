@@ -22,6 +22,12 @@ $overlay-button-top: 10px;
   opacity: 0;
 }
 
+.overflow-ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 /***********************************************************************************************/
 
 body,
@@ -123,20 +129,19 @@ body,
   background-color: transparent;
   border-color: transparent;
   box-shadow: none;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.onyx-toolbar .k2e-icon-button:hover {
-  text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
-}
-
-.onyx-toolbar .k2e-icon-button.active:hover {
-  text-shadow: none;
+.k2e-app-toolbar:not(.has-touch) .onyx-toolbar .k2e-icon-button:hover {
+  background-color: rgba(#707070, 0.5);
 }
 
 .onyx-toolbar .k2e-icon-button.active {
-  border-color: rgba(0, 0, 0, 0.5);
   background-color: #707070;
-  box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.1);
+}
+
+.k2e-app-toolbar:not(.has-touch) .onyx-toolbar .k2e-icon-button.active:hover {
+  background-color: #707070;
 }
 
 .onyx-button.k2e-caution-button {
@@ -162,18 +167,27 @@ body,
   white-space: nowrap;
   position: relative;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+}
+
+.k2e-document-selector-item.onyx-selected {
+  transition: background-color 0.3s ease-in-out;
 }
 
 .k2e-document-selector-item-container {
   // border: 2px solid transparent;
-  padding: 16px 12px;
+  padding: 16px;
   height: 62px; // checkbox is 32px x 32px
 }
 
 .k2e-document-selector-item-info-container {
   vertical-align: middle;
-  width: 90%; /* hack */
+  width: 100%;
+}
+
+.k2e-document-selector-item-multiselected .k2e-document-selector-item-info-container {
+  padding-left: 10px;
+  width: 90%;
+  width: calc(100% - 32px); // checkbox is 32px x 32px
 }
 
 .k2e-document-selector-item-separator {
@@ -207,22 +221,10 @@ body,
   border-color: transparent;
 }
 
-@media (min-width: $screen-narrow-max) {
-  .k2e-document-selector-item:hover {
-    background-color: #226B9A;
-  }
-
-  .k2e-document-selector-item:hover .k2e-document-selector-item-separator,
-  .k2e-document-selector-item:hover + .k2e-document-selector-item .k2e-document-selector-item-separator {
-    border-color: transparent;
-  }
-}
-
 .k2e-document-selector-item-info-label {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
-  padding-left: 10px;
   line-height: (32px - 1px); // vertically aligned text
 }
 
@@ -466,10 +468,4 @@ body,
     margin-left: 0;
     margin-right: 1px;
   }
-}
-
-.k2e-label-truncated {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }

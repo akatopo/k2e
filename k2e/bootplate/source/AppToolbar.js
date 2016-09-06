@@ -1,6 +1,6 @@
 /* global k2e:false */
 
-(function () {
+(function (Features) {
 
 const THROTLE_INTERVAL = 200; // ms
 
@@ -108,7 +108,7 @@ enyo.kind({
         classes: 'k2e-icon-button', ontap: 'toggleSettings', components: [
           { tag: 'i', classes: 'icon-menu icon-large' },
         ] },
-      { content: 'Clippings', fit: true },
+      { content: 'Clippings', classes: 'overflow-ellipsis', fit: true },
       { name: 'reloadClippingsButton', kind: 'onyx.Button', classes: 'k2e-icon-button',
         ontap: 'doReloadClippingRequested', components: [
           { tag: 'i', classes: 'icon-upload icon-large' },
@@ -144,7 +144,7 @@ enyo.kind({
           ontap: 'popState', components: [
             { tag: 'i', classes: 'icon-left-big icon-large' },
           ] },
-        { name: 'multiSelectLabel', content: '', fit: true },
+        { name: 'multiSelectLabel', classes: 'overflow-ellipsis', content: '', fit: true },
         { name: 'multiSelectExportButton', kind: 'k2e.ExportButton', ontap: 'doExportRequested' },
       ] },
     { name: 'selectedDocumentToolbar', kind: 'onyx.Toolbar',
@@ -153,7 +153,7 @@ enyo.kind({
           ontap: 'popState', components: [
             { tag: 'i', classes: 'icon-left-big icon-large' },
           ] },
-        { name: 'documentLabel', content: '', classes: 'k2e-label-truncated', fit: true },
+        { name: 'documentLabel', content: '', classes: 'overflow-ellipsis', fit: true },
       ] },
   ],
   toggleSettings,
@@ -219,6 +219,10 @@ function rendered() {
   this.inherited(arguments);
   const height = this.children[this.currentState].getComputedStyleValue('height', 0);
   this.applyStyle('height', height);
+
+  Features.hasTouch().then(() => {
+    this.addClass('has-touch');
+  });
 }
 
-})();
+})(k2e.util.Features);

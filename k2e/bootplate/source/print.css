@@ -218,10 +218,8 @@
   .k2e-document-view .icon-quote-left,
   .k2e-document-view .k2e-icon-button {
     color: #8d8d8d; }
-  .k2e-document-view a.k2e-icon-button:hover,
-  .k2e-document-view .k2e-icon-button:hover,
-  .k2e-document-view a.k2e-icon-button:focus,
-  .k2e-document-view .k2e-icon-button:focus {
+  .k2e-document-view:not(.has-touch) a.k2e-icon-button:hover,
+  .k2e-document-view:not(.has-touch) .k2e-icon-button:hover {
     color: #272727; }
   .k2e-document-view .k2e-to-top-button,
   .k2e-document-view .k2e-toggle-fullscreen-button {

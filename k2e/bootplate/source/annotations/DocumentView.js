@@ -1,14 +1,17 @@
-(function () {
+/* global k2e:false */
+
+(function (Features) {
 
 const TWITTER_BASE_URL = 'https://twitter.com/intent/tweet';
 const HASHTAGS = ['k2e'];
-const CLIPBOARD_SUPPORTED = detectClipboardSupport();
+const CLIPBOARD_SUPPORTED = Features.hasClipboard();
 
 enyo.kind({
   name: 'k2e.annotations.DocumentView',
   classes: 'k2e-document-view',
   displayDocument,
   clearDocument() { this.destroyComponents(); },
+  rendered,
 });
 
 /////////////////////////////////////////////////////////////
@@ -96,19 +99,12 @@ function createMailUrl(title, author, text) {
   return `mailto:?subject=${title} by ${author}&body=${text}`;
 }
 
-function detectClipboardSupport() {
-  // document.queryCommandSupported return value fixed in Chrome 48
-  let supported = document.queryCommandSupported('copy');
-  if (supported) {
-    // Check that the browser isn't Firefox pre-41
-    try {
-      document.execCommand('copy');
-    } catch (e) {
-      supported = false;
-    }
-  }
+function rendered() {
+  this.inherited(arguments);
 
-  return supported;
+  Features.hasTouch().then(() => {
+    this.addClass('has-touch');
+  });
 }
 
-})();
+})(k2e.util.Features);

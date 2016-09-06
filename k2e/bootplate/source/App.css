@@ -108,50 +108,10 @@
   vertical-align: -10%;
   font-size: 1.3333333333333333em; }
 
-.ripple {
+.overflow-ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden; }
-
-.ripple-effect {
-  position: absolute;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  background: white;
-  -webkit-animation: ripple-animation 2s;
-       -o-animation: ripple-animation 2s;
-          animation: ripple-animation 2s; }
-
-@-webkit-keyframes ripple-animation {
-  from {
-    -webkit-transform: scale(1);
-            transform: scale(1);
-    opacity: 0.4; }
-  to {
-    -webkit-transform: scale(100);
-            transform: scale(100);
-    opacity: 0; } }
-
-@-o-keyframes ripple-animation {
-  from {
-    -o-transform: scale(1);
-       transform: scale(1);
-    opacity: 0.4; }
-  to {
-    -o-transform: scale(100);
-       transform: scale(100);
-    opacity: 0; } }
-
-@keyframes ripple-animation {
-  from {
-    -webkit-transform: scale(1);
-         -o-transform: scale(1);
-            transform: scale(1);
-    opacity: 0.4; }
-  to {
-    -webkit-transform: scale(100);
-         -o-transform: scale(100);
-            transform: scale(100);
-    opacity: 0; } }
 
 /***********************************************************************************************/
 body,
@@ -241,20 +201,19 @@ body,
   background-color: transparent;
   border-color: transparent;
   -webkit-box-shadow: none;
-          box-shadow: none; }
+          box-shadow: none;
+  -webkit-transition: background-color 0.2s ease-in-out;
+  -o-transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out; }
 
-.onyx-toolbar .k2e-icon-button:hover,
-.onyx-toolbar .k2e-icon-button:focus {
-  text-shadow: 0 0 3px rgba(0, 0, 0, 0.8); }
-
-.onyx-toolbar .k2e-icon-button.active:hover {
-  text-shadow: none; }
+.k2e-app-toolbar:not(.has-touch) .onyx-toolbar .k2e-icon-button:hover {
+  background-color: rgba(112, 112, 112, 0.5); }
 
 .onyx-toolbar .k2e-icon-button.active {
-  border-color: rgba(0, 0, 0, 0.5);
-  background-color: #707070;
-  -webkit-box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.1);
-          box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.1); }
+  background-color: #707070; }
+
+.k2e-app-toolbar:not(.has-touch) .onyx-toolbar .k2e-icon-button.active:hover {
+  background-color: #707070; }
 
 .onyx-button.k2e-caution-button {
   background-color: #d85959;
@@ -279,19 +238,26 @@ body,
   overflow: hidden;
   white-space: nowrap;
   position: relative;
-  cursor: pointer;
-  -webkit-transition: background-color 0.2s ease-in-out;
-  -o-transition: background-color 0.2s ease-in-out;
-  transition: background-color 0.2s ease-in-out; }
+  cursor: pointer; }
+
+.k2e-document-selector-item.onyx-selected {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  -o-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out; }
 
 .k2e-document-selector-item-container {
-  padding: 16px 12px;
+  padding: 16px;
   height: 62px; }
 
 .k2e-document-selector-item-info-container {
   vertical-align: middle;
+  width: 100%; }
+
+.k2e-document-selector-item-multiselected .k2e-document-selector-item-info-container {
+  padding-left: 10px;
   width: 90%;
-  /* hack */ }
+  width: -webkit-calc(100% - 32px);
+  width: calc(100% - 32px); }
 
 .k2e-document-selector-item-separator {
   left: 2%;
@@ -320,18 +286,10 @@ body,
 .k2e-document-selector-item.onyx-selected + .k2e-document-selector-item .k2e-document-selector-item-separator {
   border-color: transparent; }
 
-@media (min-width: 801px) {
-  .k2e-document-selector-item:hover {
-    background-color: #226B9A; }
-  .k2e-document-selector-item:hover .k2e-document-selector-item-separator,
-  .k2e-document-selector-item:hover + .k2e-document-selector-item .k2e-document-selector-item-separator {
-    border-color: transparent; } }
-
 .k2e-document-selector-item-info-label {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
-  padding-left: 10px;
   line-height: 31px; }
 
 .k2e-document-selector-item-info-label-author {
@@ -444,10 +402,8 @@ body,
   .k2e-document-view-dark .icon-quote-left,
   .k2e-document-view-dark .k2e-icon-button {
     color: #8E9AA5; }
-  .k2e-document-view-dark a.k2e-icon-button:hover,
-  .k2e-document-view-dark .k2e-icon-button:hover,
-  .k2e-document-view-dark a.k2e-icon-button:focus,
-  .k2e-document-view-dark .k2e-icon-button:focus {
+  .k2e-document-view-dark:not(.has-touch) a.k2e-icon-button:hover,
+  .k2e-document-view-dark:not(.has-touch) .k2e-icon-button:hover {
     color: white; }
   .k2e-document-view-dark .k2e-to-top-button,
   .k2e-document-view-dark .k2e-toggle-fullscreen-button {
@@ -486,10 +442,8 @@ body,
   .k2e-document-view-light .icon-quote-left,
   .k2e-document-view-light .k2e-icon-button {
     color: #8d8d8d; }
-  .k2e-document-view-light a.k2e-icon-button:hover,
-  .k2e-document-view-light .k2e-icon-button:hover,
-  .k2e-document-view-light a.k2e-icon-button:focus,
-  .k2e-document-view-light .k2e-icon-button:focus {
+  .k2e-document-view-light:not(.has-touch) a.k2e-icon-button:hover,
+  .k2e-document-view-light:not(.has-touch) .k2e-icon-button:hover {
     color: #272727; }
   .k2e-document-view-light .k2e-to-top-button,
   .k2e-document-view-light .k2e-toggle-fullscreen-button {
@@ -704,8 +658,3 @@ body,
     font-size: 70%;
     margin-left: 0;
     margin-right: 1px; } }
-
-.k2e-label-truncated {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; }

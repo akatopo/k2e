@@ -122,8 +122,8 @@
         color: $color-foreground-secondary;
     }
 
-    a.k2e-icon-button:hover,
-    .k2e-icon-button:hover {
+    &:not(.has-touch) a.k2e-icon-button:hover,
+    &:not(.has-touch) .k2e-icon-button:hover {
         color: lighten($color-foreground-secondary, 40%);
     }
 
@@ -176,8 +176,8 @@
         color: $color-foreground-secondary;
     }
 
-    a.k2e-icon-button:hover,
-    .k2e-icon-button:hover {
+    &:not(.has-touch) a.k2e-icon-button:hover,
+    &:not(.has-touch) .k2e-icon-button:hover {
         color: darken($color-foreground-secondary, 40%);
     }
 

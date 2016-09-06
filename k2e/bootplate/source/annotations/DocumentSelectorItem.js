@@ -52,6 +52,7 @@ function selectedChanged() {
 }
 
 function multiSelectedChanged() {
+  this.addRemoveClass('k2e-document-selector-item-multiselected', this.multiSelected);
   if (this.multiSelected) {
     this.$.checkbox.set('checked', false);
     this.$.checkbox.show();
