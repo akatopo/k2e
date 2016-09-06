@@ -30,6 +30,9 @@ enyo.kind({
     { from: '.$.appToolbar.index', to: '.currentAppToolbar' },
     { from: '.$.appToolbarSlideable.value', to: '.appToolbarSlidePercentage' },
   ],
+  observers: [
+    { method: 'appToolbarSearchFilterChanged', path: ['$.appToolbar.searchFilter'] },
+  ],
   handlers: {
     onDocumentSelected: 'handleDocumentSelected',
     onDocumentMultiSelected: 'handleDocumentMultiSelected',
@@ -70,6 +73,7 @@ enyo.kind({
     ] },
   ],
 
+  appToolbarSearchFilterChanged,
   appToolbarSlidePercentageChanged,
   handleMultiSelectionToggled,
   toggleFullscreen,
@@ -107,6 +111,10 @@ enyo.kind({
 });
 
 /////////////////////////////////////////////////////////////
+
+function appToolbarSearchFilterChanged(/*previous, current, property*/) {
+  this.$.documentSelectorList.scrollToTop();
+}
 
 function appToolbarSlidePercentageChanged(oldValue, newValue) {
   if (!this.$.fittableColumns) {
