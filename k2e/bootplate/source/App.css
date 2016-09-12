@@ -116,7 +116,7 @@
 /***********************************************************************************************/
 body,
 .onyx {
-  font-family: 'droid sans', Helvetica, sans; }
+  font-family: 'droid sans', sans-serif-light, sans-serif; }
 
 #app {
   background-color: #333; }
@@ -256,8 +256,8 @@ body,
 .k2e-document-selector-item-multiselected .k2e-document-selector-item-info-container {
   padding-left: 10px;
   width: 90%;
-  width: -webkit-calc(100% - 32px);
-  width: calc(100% - 32px); }
+  width: -webkit-calc(100% - 42px);
+  width: calc(100% - 42px); }
 
 .k2e-document-selector-item-separator {
   left: 2%;
