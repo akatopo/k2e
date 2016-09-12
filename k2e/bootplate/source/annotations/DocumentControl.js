@@ -1,6 +1,6 @@
 /* global k2e */
 
-(function (Constants) {
+(function (Constants, Features) {
 
 const THEME_CLASS_NAME_MAP = Constants.THEME_INFO
   .reduce((map, currentTheme) => {
@@ -145,7 +145,11 @@ function rendered() {
   this.set('fontSize', sizePercent);
   this.set('margin', margin);
   this.set('theme', theme);
+
+  Features.hasTouch().then(() => {
+    this.$.scroller.addClass('has-touch');
+  });
 }
 
-})(k2e.Constants);
+})(k2e.Constants, k2e.util.Features);
 

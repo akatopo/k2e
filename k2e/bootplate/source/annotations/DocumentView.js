@@ -11,7 +11,6 @@ enyo.kind({
   classes: 'k2e-document-view',
   displayDocument,
   clearDocument() { this.destroyComponents(); },
-  rendered,
 });
 
 /////////////////////////////////////////////////////////////
@@ -97,14 +96,6 @@ function createTwitterUrl(hashtags, url, text) {
 
 function createMailUrl(title, author, text) {
   return `mailto:?subject=${title} by ${author}&body=${text}`;
-}
-
-function rendered() {
-  this.inherited(arguments);
-
-  Features.hasTouch().then(() => {
-    this.addClass('has-touch');
-  });
 }
 
 })(k2e.util.Features);
