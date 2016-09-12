@@ -138,7 +138,6 @@
     <Content Include="EvernoteCredentials.config" />
     <Content Include="packages.config" />
     <Content Include="Auth.aspx" />
-    <Content Include="Default-dist.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
