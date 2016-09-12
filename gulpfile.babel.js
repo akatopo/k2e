@@ -6,6 +6,7 @@ import streamqueue from 'streamqueue';
 import enyoWalker from 'enyo-deploy-walker';
 import fs from 'fs';
 import escapeRegExp from 'lodash.escaperegexp';
+import path from 'path';
 
 import gulp from 'gulp';
 import livereload from 'gulp-livereload';
@@ -27,6 +28,8 @@ import csso from 'gulp-csso';
 import eslint from 'gulp-eslint';
 import rev from 'gulp-rev';
 import mustache from 'gulp-mustache';
+import ghPages from 'gh-pages';
+import gutil from 'gulp-util';
 
 const BASE_BOOTPLATE_PATH = './k2e/bootplate';
 const BASE_SOURCE_PATH = './k2e/bootplate/source';
@@ -150,6 +153,8 @@ gulp.task('build', (cb) => {
     cb
   );
 });
+
+gulp.task('deploy', ['dist'], deploy);
 
 //////////////////////////////////////////////////////////////
 
@@ -428,4 +433,13 @@ function distConfig() {
     './k2e/Web.Release.config',
   ])
   .pipe(gulp.dest('./dist'));
+}
+
+function deploy(done) {
+  ghPages.publish(path.join(__dirname, 'dist'), {
+    logger: gutil.log,
+    src: ['**/*', '!EvernoteCredentials.config'],
+    repo: 'https://akatopo@appharbor.com/k2e.git',
+    branch: 'master',
+  }, done);
 }
