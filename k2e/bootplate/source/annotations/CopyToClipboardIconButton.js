@@ -6,17 +6,16 @@ let POPUP_TIMEOUT;
 
 enyo.kind({
   name: 'k2e.annotations.CopyToClipboardIconButton',
-  kind: 'enyo.Control',
-  style: 'display:inline-block',
-  classes: 'k2e-hide-print',
+  kind: 'onyx.Button',
+  classes: 'k2e-hide-print onyx-button k2e-icon-button k2e-clipboard-icon-position-hack',
+  handlers: {
+    ontap: 'handleClipboardTap',
+  },
   published: {
     clipping: undefined,
   },
   components: [
-    { kind: 'onyx.Button', ontap: 'handleClipboardTap', classes: 'onyx-button k2e-icon-button',
-      components: [
-        { tag: 'i', classes: 'icon-docs' },
-      ] },
+    { tag: 'i', classes: 'icon-docs' },
     { name: 'popup', kind: 'k2e.AnimatedPopup', modal: false, floating: true,
       content: 'Clipping copied to clipboard' },
   ],
