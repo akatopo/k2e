@@ -49,116 +49,6 @@ The 4-Hour Workweek: Escape 9–5, Live Anywhere, and Join the New Rich - Expand
 
 LeechBlock to block certain sites entirely for set periods. From their site (http://www.proginosko.com/leechblock.html):
 ==========
-The Legend of Zelda: Spirit Tracks (DS) FAQ/Walkthrough (Devin Morgan)
-- Bookmark Loc. 603  | Added on Thursday, January 27, 2011, 01:00 AM
-
-
-==========
-The Legend of Zelda: Spirit Tracks (DS) FAQ/Walkthrough (Devin Morgan)
-- Bookmark Loc. 1103  | Added on Thursday, January 27, 2011, 01:03 AM
-
-
-==========
-The Legend of Zelda: Spirit Tracks (DS) FAQ/Walkthrough (Devin Morgan)
-- Bookmark Loc. 682  | Added on Tuesday, February 01, 2011, 09:37 PM
-
-
-==========
-yakuza_3 (akatopo@gmail.com)
-- Bookmark Loc. 739  | Added on Saturday, February 12, 2011, 02:18 AM
-
-
-==========
-yakuza_3 (akatopo@gmail.com)
-- Bookmark Loc. 1897  | Added on Saturday, February 12, 2011, 02:19 AM
-
-
-==========
-yakuza_3 (akatopo@gmail.com)
-- Bookmark Loc. 920  | Added on Saturday, February 12, 2011, 05:12 AM
-
-
-==========
-yakuza_3 (akatopo@gmail.com)
-- Bookmark Loc. 1066  | Added on Sunday, February 13, 2011, 07:30 AM
-
-
-==========
-yakuza_3 (akatopo@gmail.com)
-- Bookmark Loc. 3291  | Added on Monday, February 14, 2011, 08:21 AM
-
-
-==========
-yakuza_3 (akatopo@gmail.com)
-- Bookmark Loc. 1214  | Added on Sunday, February 20, 2011, 04:58 AM
-
-
-==========
-yakuza_3 (akatopo@gmail.com)
-- Bookmark Loc. 1429  | Added on Wednesday, February 23, 2011, 05:42 AM
-
-
-==========
-yakuza_3 (akatopo@gmail.com)
-- Bookmark Loc. 1570  | Added on Monday, February 28, 2011, 06:54 AM
-
-
-==========
-Yakuza 3 (PS3) FAQ/Walkthrough [Appendices] (Patrick Coffman)
-- Bookmark Loc. 1054  | Added on Sunday, March 20, 2011, 02:56 AM
-
-
-==========
-The 4-Hour Body: An Uncommon Guide to Rapid Fat-Loss, Incredible Sex, and Becoming Superhuman (Timothy Ferriss)
-- Bookmark Loc. 1414  | Added on Thursday, June 02, 2011, 10:10 PM
-
-
-==========
-The 4-Hour Body: An Uncommon Guide to Rapid Fat-Loss, Incredible Sex, and Becoming Superhuman (Timothy Ferriss)
-- Bookmark Loc. 437  | Added on Thursday, June 02, 2011, 10:11 PM
-
-
-==========
-The 4-Hour Body: An Uncommon Guide to Rapid Fat-Loss, Incredible Sex, and Becoming Superhuman (Timothy Ferriss)
-- Bookmark Loc. 3012  | Added on Thursday, June 02, 2011, 11:26 PM
-
-
-==========
-The 4-Hour Body: An Uncommon Guide to Rapid Fat-Loss, Incredible Sex, and Becoming Superhuman (Timothy Ferriss)
-- Bookmark Loc. 1488  | Added on Thursday, June 02, 2011, 11:28 PM
-
-
-==========
-The 4-Hour Body: An Uncommon Guide to Rapid Fat-Loss, Incredible Sex, and Becoming Superhuman (Timothy Ferriss)
-- Bookmark Loc. 3317  | Added on Friday, June 03, 2011, 06:46 AM
-
-
-==========
-Shenmue 2 (XBOX) FAQ/Walkthrough (American Arsenal)
-- Bookmark Loc. 624  | Added on Thursday, June 16, 2011, 08:15 PM
-
-
-==========
-Shenmue 2 (XBOX) FAQ/Walkthrough (American Arsenal)
-- Bookmark Loc. 1161  | Added on Thursday, June 16, 2011, 08:16 PM
-
-
-==========
-Shenmue 2 (XBOX) FAQ/Walkthrough (American Arsenal)
-- Bookmark Loc. 624  | Added on Thursday, June 16, 2011, 08:33 PM
-
-
-==========
-Shenmue 2 (XBOX) FAQ/Walkthrough (American Arsenal)
-- Bookmark Loc. 706  | Added on Monday, June 20, 2011, 07:38 AM
-
-
-==========
-Shenmue 2 (XBOX) FAQ/Walkthrough (American Arsenal)
-- Bookmark Loc. 729  | Added on Wednesday, June 22, 2011, 05:56 AM
-
-
-==========
 Shenmue 2 (DC) Secrets FAQ (Adam Doran)
 - Highlight Loc. 205-10  | Added on Wednesday, June 22, 2011, 06:00 AM
 
@@ -178,9 +68,6 @@ Shenmue 2 (DC) Secrets FAQ (Adam Doran)
 - Highlight Loc. 255-56  | Added on Wednesday, June 22, 2011, 06:02 AM
 
 Insert your GD-ROMS into your PC CD Drive and then open them, find the folder called 'OMAKE' and inside you will find some HTML files which you can view as web pages. Each disc has different pages to see.
-==========
-Shenmue 2 (XBOX) FAQ/Walkthrough (American Arsenal)
-- Bookmark Loc. 858  | Added on Friday, June 24, 2011, 03:29 AM
 
 
 ==========
@@ -193,10 +80,6 @@ Instapaper (Instapaper)
 - Highlight Loc. 75-108  | Added on Tuesday, July 05, 2011, 11:05 PM
 
 2. Bubble Bobble Item generation mechanism, vast assortment of items, Bubble Alphabet, game modes and codes, and ending conditions Published & developed by Taito Designed by Fukio Mitsuji Reason for inclusion: How could this one not be included? Possibly the most mysterious game ever produced for arcades, with the only likely exception being its sequel, Rainbow Islands. Lots of stuff about this game was only fully understood when someone finally disassembled the code a few years back. The game: Bubble Bobble’s multiple layers of secret knowledge make it a game for wizards. A huge array of arcane trivia must be learned to exploit Bubble Bobble’s many systems. Some of it is only now becoming commonly known. First thing to know is that the arcade game has secret codes. That was almost unheard of at the time — yet Bubble Bobble not only has them, it will tell the player about them in the right circumstances, and using one is required to see the game’s real ending. The circumstances in question, however, are nearly obscene: a game must be played to level 20, 30 or 50 without dying in order to see one, and death is rather common in Bubble Bobble after the first few levels. Once on the proper level, the bonus item normally generated in the level will instead be a door to a secret room, containing huge score bonuses and the code printed on the background… but the code, itself, is written in code. At first it just looks like background decoration of runic glyphs, but it’s really a secret message from the developers. The secret is spilled on the ending screen, where the player is informed “But it was not a true end!” and the specialness of the glyphs is revealed. That is, if he won in two-player mode. Winning with only a single player in the game sends him back to a random level. D’oh! One of the secret codes makes the doors that lead to the bonus levels appear regardless of lives lost, which is nice to know once the player’s already figured out the code, I guess. Another code, when entered from the title screen in the machine’s attract mode, puts the game into “Super” mode, which mixes up the enemies in the levels and is somewhat more difficult. But it is only in Super mode that the game can truly be won, by working through all 100 levels again and finishing up in two-player mode. (And without dying, incidentally, but fortunately most people who win actually play as one player through most of the game, only putting player two in after the last boss has been beaten, and having just joined he won’t have ever died.) This is far from the only mysterious thing about the game. Probably the most mysterious is the formula that determines when special items appear. Most players believe it to be random, but actually they’re all directly determined by the player’s actions. The game maintains counts of a large array of trivia, like bubbles popped, times jumped, water bubbles burst, and times wrapped around the screen. When a counter exceeds a threshold value, a flag is set scheduling the item to be generated in an upcoming level. The counts and flags are not reset when a game is finished, which is why new players often get treated to advanced items in the very first levels. But it also means if someone knows that, say, popping water bubbles makes level-skipping umbrellas appear more often, he can take advantage of that fact to skip ahead more often. Some of the tricks that make items appear cannot be done on every level, so it also tends to cause certain items to “clump,” generating more often on particular boards. It’s nearly a textbook example of chaotic behavior in game design. The player’s many varied actions lead, through unknown processes, to results that you’d assume are random, but seem to have some mysterious consistency to them. It is an interesting way to bring players into a game: to pin success on objects that appear almost on command, but without telling exactly what that command is. Design lesson: Pseudo-random numbers are used by many games, but Bubble Bobble, while apparently random, in fact contains few of them. Once their principles are understood they can be gamed, but they are not explained to the player. The result is that different play styles produce consistent variation in the game’s response to them, which can provoke responses from players so complex that they border on superstition. Links: The Bubble Bobble mechanics discovered through source code examination are explicated at the Bubble Bobble Info Pages.
-==========
-The 4-Hour Body: An Uncommon Guide to Rapid Fat-Loss, Incredible Sex, and Becoming Superhuman (Timothy Ferriss)
-- Bookmark Loc. 4645  | Added on Monday, August 29, 2011, 05:21 AM
-
 
 ==========
 Instapaper (calibre)
@@ -223,89 +106,18 @@ Instapaper (calibre)
 - Highlight Loc. 1555-58  | Added on Sunday, November 13, 2011, 06:32 PM
 
 It’s sort of fundamentally opposite to the idea that a game should take a certain number of hours to finish, and its inherent value to the consumer is based on how many hours it takes to finish, as opposed to the quality of those hours. I mean I’d rather play a game that takes five minutes, like Passage, that I find really thought provoking, interesting and memorable, than I would want to play a 200 hour JRPG where I didn’t find any of those things true.
-==========
-Kafka on the shore (Haruki Murakami)
-- Bookmark Loc. 703  | Added on Sunday, November 27, 2011, 02:52 AM
-
 
 ==========
 Instapaper (calibre)
 - Highlight Loc. 374-80  | Added on Saturday, February 25, 2012, 04:51 PM
 
 Some good starting points are ‘About Face 3: The Essentials of Interaction Design’ by Alan Cooper, ‘Designing Interfaces’ by Jenifer Tidwell and also the pttrns mobile app design pattern showcase. Approach the design from different perspectives; to learn more about the mechanics of using use cases to take a user journey centric approach I recommend the excellent ‘Writing Effective Use Cases’ book by Alistar Cockburn. And keep looking at the design through the eyes of the personas you are targeting, otherwise you may end up designing the product just for yourself!
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 98 | Loc. 1489  | Added on Saturday, May 12, 2012, 02:54 AM
-
-
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 98 | Loc. 1493  | Added on Saturday, May 12, 2012, 02:55 AM
-
-
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 108 | Loc. 1645  | Added on Saturday, May 12, 2012, 03:20 AM
-
-
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 113 | Loc. 1729  | Added on Saturday, May 19, 2012, 10:34 PM
-
-
-==========
-Ready Player One (Ernest Cline)
-- Bookmark on Page 29 | Loc. 442  | Added on Tuesday, May 22, 2012, 12:16 AM
-
-
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 116 | Loc. 1774  | Added on Sunday, May 27, 2012, 06:40 PM
-
-
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 123 | Loc. 1879  | Added on Sunday, May 27, 2012, 07:06 PM
-
-
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 140 | Loc. 2145  | Added on Monday, May 28, 2012, 01:41 PM
-
-
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 155 | Loc. 2366  | Added on Wednesday, May 30, 2012, 03:18 AM
-
-
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 164 | Loc. 2512  | Added on Wednesday, May 30, 2012, 03:42 AM
-
-
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 185 | Loc. 2824  | Added on Monday, June 04, 2012, 07:57 PM
-
-
-==========
-Harry Potter and the Sorcerer's Stone (J.K. Rowling)
-- Bookmark on Page 196 | Loc. 2993  | Added on Wednesday, June 06, 2012, 02:03 PM
-
 
 ==========
 Instapaper (calibre)
 - Highlight Loc. 109-14  | Added on Friday, July 06, 2012, 01:21 PM
 
 Players are able to choose to experience distinct narrative sections, many of which are optional, without the hassle of fighting enemies to get there. Enemy levels are set according to the critical path, guiding players along it without overtly forcing them through it. Each enemy encounter is visible and avoidable, giving players control over when to fight and when to avoid confrontations. Once they have completed the game, players can use the New Game+ feature to circumvent and deconstruct the critical path that they followed on the first playthrough.
-==========
-The Last Story (Wii) FAQ/Walkthrough (CO Mel (Mel Mah))
-- Bookmark Loc. 2097  | Added on Friday, July 13, 2012, 03:54 PM
-
-
-==========
-Kafka on the shore (Haruki Murakami)
-- Bookmark Loc. 6379  | Added on Wednesday, July 25, 2012, 08:12 PM
 
 
 ==========
