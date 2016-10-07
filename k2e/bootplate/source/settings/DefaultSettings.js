@@ -14,7 +14,7 @@ enyo.kind({
       googleSearchApiKey: '""',
       googleSearchApiCx: '""',
       googleSearchApiLoc: '"https://www.googleapis.com/customsearch/v1?"',
-      font: '"Georgia"',
+      font: '"Acuta"',
       clippingsText: '""',
     },
   },

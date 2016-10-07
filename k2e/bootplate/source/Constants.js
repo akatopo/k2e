@@ -19,16 +19,20 @@ enyo.kind({
     ],
     FONT_INFO: [
       [
-        { name: 'Georgia', family: 'georgia' },
+        { name: 'Acuta', family: 'acuta', webFont: true, fallback: 'serif' },
         { name: 'Serif', family: 'serif' },
       ],
-      { name: 'Caslon Pro', family: 'adobe-caslon-pro' },
-      { name: 'Bookerly', family: 'bookerly' },
       [
-        { name: 'Droid', family: 'droid sans' },
-        { name: 'Roboto', family: 'roboto', fallback: 'sans' },
-        { name: 'Verdana', family: 'verdana', fallback: 'sans' },
-        { name: 'Sans', family: 'sans' },
+        { name: 'Bookerly', family: 'bookerly', fallback: 'serif' },
+        { name: 'Georgia', family: 'georgia', fallback: 'serif' },
+        { name: 'Serif', family: 'serif' },
+      ],
+      [
+        { name: 'PT Sans', family: 'pt-sans', webFont: true, fallback: 'sans-serif' },
+        { name: 'Droid', family: 'droid sans', fallback: 'sans-serif' },
+        { name: 'Roboto', family: 'roboto', fallback: 'sans-serif' },
+        { name: 'Verdana', family: 'verdana', fallback: 'sans-serif' },
+        { name: 'Sans', family: 'sans-serif' },
       ],
     ],
   },

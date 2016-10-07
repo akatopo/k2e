@@ -19,8 +19,7 @@ enyo.kind({
   components: [
     { name: 'group', kind: 'k2e.settings.SettingsRadioGroup',
       items: Constants.FONT_INFO
-        .map((font) => (Array.isArray(font) ? font[0] : font))
-        .map((font) => ({ content: font.name })) },
+        .map((font) => ({ content: (Array.isArray(font) ? font[0] : font).name })) },
   ],
   valueChanged,
   rendered,
@@ -38,22 +37,28 @@ function rendered() {
 
   typekitPromise
     .then(
-      rebuildFontGroup.bind(undefined, this),
-      rebuildFontGroup.bind(undefined, this)
+      rebuildFontGroup.bind(undefined, this, true),
+      rebuildFontGroup.bind(undefined, this, false)
     );
   this.doFontChanged({ name: this.value });
 
   /////////////////////////////////////////////////////////////
 
-  function rebuildFontGroup(component) {
+  function rebuildFontGroup(component, webFontsLoaded) {
+    const fontNames = new Set();
     component.$.group.items = Constants.FONT_INFO
       .map((font) => {
         const fonts = Array.isArray(font) ? font : [font];
 
-        return fonts.filter((f) => detector.detect(f.family));
+        return fonts.filter((f) => (webFontsLoaded && f.webFont) || detector.detect(f.family));
       })
       .filter((fonts) => fonts.length)
-      .map((font) => ({ content: font[0].name }));
+      .map((font) => ({ content: font[0].name }))
+      .filter((font) => {
+        const hasFont = fontNames.has(font.content);
+        fontNames.add(font.content);
+        return !hasFont;
+      });
     component.$.group.build();
   }
 }
