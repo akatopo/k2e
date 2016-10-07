@@ -129,8 +129,11 @@ function appToolbarSlidePercentageChanged(oldValue, newValue) {
   const newPixels = pixelsFromPercentage(newValue);
   const offset = newPixels - oldPixels;
 
-  this.$.fittableColumns.applyStyle('margin-top', `${newPixels}px`);
-  this.$.fittableColumns.applyStyle('height', `${currentFittableColumnsHeight - offset}px`);
+
+  enyo.requestAnimationFrame(() => {
+    this.$.fittableColumns.applyStyle('margin-top', `${newPixels}px`);
+    this.$.fittableColumns.applyStyle('height', `${currentFittableColumnsHeight - offset}px`);
+  });
 }
 
 function arrayToSet(array) {
