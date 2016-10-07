@@ -377,7 +377,9 @@ function distCss() {
       .pipe(concat('app.css'))
       // assets are a level up in dist build
       .pipe(rework(urlPlugin((url) => {
-        if (isUrlOrUri(url)) { return url; }
+        if (isUrlOrUri(url)) {
+          return url;
+        }
         return /^\.\./.test(url) ?
           url : `../${url}`;
       })))
