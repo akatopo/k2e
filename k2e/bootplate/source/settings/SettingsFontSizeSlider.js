@@ -16,7 +16,7 @@ enyo.kind({
     { from: '.value', to: '$.slider.value', oneWay: false },
   ],
   components: [
-    { name: 'slider', kind: 'onyx.Slider', min: 40, max: 160, increment: 20 },
+    { name: 'slider', kind: 'onyx.Slider', min: 90, max: 170, increment: 20 },
   ],
   valueChanged() { this.doFontSizeChanged({ sizePercent: this.value }); },
 });

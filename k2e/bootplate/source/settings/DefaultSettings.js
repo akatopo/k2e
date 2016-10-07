@@ -6,7 +6,7 @@ enyo.kind({
   statics: {
     settings: {
       themeName: '"Dark"',
-      fontSize: '100',
+      fontSize: '120',
       textMargin: '"20"',
       ignoredTitleList: '""',
       articleExtraction: 'false',
