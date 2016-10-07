@@ -28,6 +28,10 @@ $overlay-button-top: 10px;
   overflow: hidden;
 }
 
+.display-inline-block {
+  display: inline-block;
+}
+
 /***********************************************************************************************/
 
 body,
@@ -311,6 +315,16 @@ body,
     padding-left: 15%;
     padding-right: 15%;
   }
+}
+
+.k2e-document-view-clip-footer-action-container .k2e-icon-button {
+  vertical-align: middle;
+}
+
+.k2e-clipboard-icon-position-hack > i {
+  height: 16px;
+  overflow: visible;
+  margin-top: -5px;
 }
 
 /***********************************************************************************************/

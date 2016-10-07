@@ -6,6 +6,9 @@
     border-color: transparent;
     box-shadow: none;
     color: $color-light;
+    transition: color 0.2s ease-in-out,
+        background-color 0.2s ease-in-out;
+    padding: 3px;
 }
 
 @mixin k2e-base-theme {
@@ -24,7 +27,7 @@
     line-height: 1;
 
     a {
-        transition: color 0.2s ease-in;
+        transition: color 0.2s ease-in-out;
         word-break: break-all;
         /* Non standard for webkit */
         word-break: break-word;
@@ -34,7 +37,7 @@
     h1 {
         font-size: 2em;
         font-weight: 700;
-        line-height: 1.3;
+        line-height: 1.3em;
         margin: 0;
         padding: 0;
         border: 0;
@@ -52,6 +55,8 @@
     }
 
     > * {
+        font-feature-settings: "liga" 1, "kern" 1;
+        font-variant-ligatures: common-ligatures;
         -webkit-font-smoothing: antialiased;
     }
 
@@ -86,8 +91,6 @@
 
     .k2e-icon-button {
         @include k2e-icon-button-reset;
-        transition: color 0.1s ease-in;
-        padding: 0;
     }
 
     a.k2e-icon-button:visited {
@@ -125,6 +128,7 @@
     &:not(.has-touch) a.k2e-icon-button:hover,
     &:not(.has-touch) .k2e-icon-button:hover {
         color: lighten($color-foreground-secondary, 40%);
+        background-color: rgba(#707070, 0.5);
     }
 
     .k2e-to-top-button,
@@ -179,6 +183,7 @@
     &:not(.has-touch) a.k2e-icon-button:hover,
     &:not(.has-touch) .k2e-icon-button:hover {
         color: darken($color-foreground-secondary, 40%);
+        background-color: rgba(#707070, 0.1);
     }
 
     .k2e-to-top-button,

@@ -113,6 +113,9 @@
   white-space: nowrap;
   overflow: hidden; }
 
+.display-inline-block {
+  display: inline-block; }
+
 /***********************************************************************************************/
 body,
 .onyx {
@@ -327,9 +330,9 @@ body,
   vertical-align: baseline;
   line-height: 1; }
   .k2e-document-view a {
-    -webkit-transition: color 0.2s ease-in;
-    -o-transition: color 0.2s ease-in;
-    transition: color 0.2s ease-in;
+    -webkit-transition: color 0.2s ease-in-out;
+    -o-transition: color 0.2s ease-in-out;
+    transition: color 0.2s ease-in-out;
     word-break: break-all;
     /* Non standard for webkit */
     word-break: break-word;
@@ -340,7 +343,7 @@ body,
   .k2e-document-view h1 {
     font-size: 2em;
     font-weight: 700;
-    line-height: 1.3;
+    line-height: 1.3em;
     margin: 0;
     padding: 0;
     border: 0; }
@@ -352,6 +355,12 @@ body,
     line-height: 1.55em;
     margin: 1.2em 0; }
   .k2e-document-view > * {
+    -webkit-font-feature-settings: "liga" 1, "kern" 1;
+       -moz-font-feature-settings: "liga" 1, "kern" 1;
+            font-feature-settings: "liga" 1, "kern" 1;
+    -webkit-font-variant-ligatures: common-ligatures;
+       -moz-font-variant-ligatures: common-ligatures;
+            font-variant-ligatures: common-ligatures;
     -webkit-font-smoothing: antialiased; }
   .k2e-document-view .k2e-document-view-clip-footer,
   .k2e-document-view .k2e-document-view-subtitle {
@@ -379,10 +388,10 @@ body,
     -webkit-box-shadow: none;
             box-shadow: none;
     color: #F2F2F2;
-    -webkit-transition: color 0.1s ease-in;
-    -o-transition: color 0.1s ease-in;
-    transition: color 0.1s ease-in;
-    padding: 0; }
+    -webkit-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    -o-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    padding: 3px; }
   .k2e-document-view a.k2e-icon-button:visited {
     color: inherit; }
 
@@ -404,7 +413,8 @@ body,
     color: #8E9AA5; }
   .k2e-document-view-dark:not(.has-touch) a.k2e-icon-button:hover,
   .k2e-document-view-dark:not(.has-touch) .k2e-icon-button:hover {
-    color: white; }
+    color: white;
+    background-color: rgba(112, 112, 112, 0.5); }
   .k2e-document-view-dark .k2e-to-top-button,
   .k2e-document-view-dark .k2e-toggle-fullscreen-button {
     color: #F2F2F2;
@@ -418,7 +428,11 @@ body,
         border-color: transparent;
         -webkit-box-shadow: none;
                 box-shadow: none;
-        color: #F2F2F2; } }
+        color: #F2F2F2;
+        -webkit-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        -o-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        padding: 3px; } }
   @media (max-width: 801px) {
     .k2e-document-view-dark.k2e-fullscreen .k2e-to-top-button,
     .k2e-document-view-dark.k2e-fullscreen .k2e-toggle-fullscreen-button {
@@ -444,7 +458,8 @@ body,
     color: #8d8d8d; }
   .k2e-document-view-light:not(.has-touch) a.k2e-icon-button:hover,
   .k2e-document-view-light:not(.has-touch) .k2e-icon-button:hover {
-    color: #272727; }
+    color: #272727;
+    background-color: rgba(112, 112, 112, 0.1); }
   .k2e-document-view-light .k2e-to-top-button,
   .k2e-document-view-light .k2e-toggle-fullscreen-button {
     color: #555656;
@@ -458,7 +473,11 @@ body,
         border-color: transparent;
         -webkit-box-shadow: none;
                 box-shadow: none;
-        color: #F2F2F2; } }
+        color: #F2F2F2;
+        -webkit-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        -o-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        padding: 3px; } }
   @media (max-width: 801px) {
     .k2e-document-view-light.k2e-fullscreen .k2e-to-top-button,
     .k2e-document-view-light.k2e-fullscreen .k2e-toggle-fullscreen-button {
@@ -498,7 +517,11 @@ body,
         border-color: transparent;
         -webkit-box-shadow: none;
                 box-shadow: none;
-        color: #F2F2F2; } }
+        color: #F2F2F2;
+        -webkit-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        -o-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        padding: 3px; } }
   @media (max-width: 801px) {
     .k2e-document-view-omg-ponies.k2e-fullscreen .k2e-to-top-button
 .k2e-document-view-omg-ponies.k2e-fullscreen .k2e-toggle-fullscreen-button {
@@ -535,6 +558,14 @@ body,
     .k2e-document-view-padding-40 {
       padding-left: 15%;
       padding-right: 15%; } }
+
+.k2e-document-view-clip-footer-action-container .k2e-icon-button {
+  vertical-align: middle; }
+
+.k2e-clipboard-icon-position-hack > i {
+  height: 16px;
+  overflow: visible;
+  margin-top: -5px; }
 
 /***********************************************************************************************/
 /* Settings panel */

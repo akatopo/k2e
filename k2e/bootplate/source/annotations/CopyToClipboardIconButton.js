@@ -7,7 +7,7 @@ let POPUP_TIMEOUT;
 enyo.kind({
   name: 'k2e.annotations.CopyToClipboardIconButton',
   kind: 'onyx.Button',
-  classes: 'k2e-hide-print onyx-button k2e-icon-button k2e-clipboard-icon-position-hack',
+  classes: 'onyx-button k2e-icon-button k2e-clipboard-icon-position-hack',
   handlers: {
     ontap: 'handleClipboardTap',
   },

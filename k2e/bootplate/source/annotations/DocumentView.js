@@ -61,28 +61,34 @@ function appendClippingToDisplay(component, doc, clipping, index) {
     ] }
   );
 
-  const footerComponents = [
-    { tag: 'i', content: `${type}, ${loc}` },
-    { tag: null, content: ' • ' },
-    { tag: 'i', content: `Added on ${timestamp}` },
-    { tag: 'span', classes: 'k2e-hide-print', content: ' • ' },
-    { tag: 'a', classes: 'onyx-button k2e-icon-button k2e-hide-print',
+  const actionComponents = [
+    { tag: 'a', classes: 'onyx-button k2e-icon-button',
       attributes: { href: createTwitterUrlFromContent(contentText), target: '_blank' },
       components: [
         { tag: 'i', classes: 'icon-twitter' },
       ] },
-    { tag: 'a', classes: 'onyx-button k2e-icon-button k2e-hide-print',
+    { tag: 'a', classes: 'onyx-button k2e-icon-button',
       attributes: { href: createMailUrlFromContent(contentText), target: '_blank' },
       components: [
         { tag: 'i', classes: 'icon-mail' },
       ] },
   ];
+
   if (CLIPBOARD_SUPPORTED) {
-    footerComponents.push({
+    actionComponents.push({
       kind: 'k2e.annotations.CopyToClipboardIconButton',
       clipping,
     });
   }
+
+  const footerComponents = [
+    { tag: 'i', content: `${type}, ${loc}` },
+    { tag: null, content: ' • ' },
+    { tag: 'i', content: `Added on ${timestamp}` },
+    { tag: 'span', classes: 'k2e-hide-print', content: ' • ' },
+    { classes: 'display-inline-block k2e-hide-print k2e-document-view-clip-footer-action-container',
+      components: actionComponents },
+  ];
 
   component.createComponent({
     classes: 'k2e-document-view-clip-footer',
