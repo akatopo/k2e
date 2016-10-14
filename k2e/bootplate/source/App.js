@@ -62,12 +62,12 @@ enyo.kind({
       { name: 'mainPanels', kind: 'Panels', fit: true, arrangerKind: 'CollapsingArranger',
         realtimeFit: true, wrap: false, components: [
           { name: 'sidebar', classes: 'k2e-sidebar', layoutKind: 'FittableRowsLayout', components: [
-            { name: 'documentSelectorList', style: 'height:100%',
+            { name: 'documentSelectorList', classes: 'full-height',
               kind: 'k2e.annotations.DocumentSelectorList' },
           ] },
           { kind: 'FittableRows', classes: 'k2e-main-panel', fit: true, components: [
             { name: 'documentControl', kind: 'k2e.annotations.DocumentControl',
-              style: 'height:100%' },
+              classes: 'full-height' },
           ] },
         ] },
     ] },

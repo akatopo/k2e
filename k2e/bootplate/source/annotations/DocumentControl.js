@@ -46,8 +46,8 @@ enyo.kind({
   },
   components: [
     { name: 'scroller', kind: 'enyo.Scroller',
-      strategyKind: 'ScrollStrategy', style: 'height: 100%',
-      classes: 'k2e-document-scroller', components: [
+      strategyKind: 'ScrollStrategy', classes: 'k2e-document-scroller full-height',
+      components: [
         { name: 'documentView', kind: 'k2e.annotations.DocumentView' },
         { name: 'toggleFullscreenButton',
           classes: 'k2e-toggle-fullscreen-button k2e-icon-button k2e-hidden',

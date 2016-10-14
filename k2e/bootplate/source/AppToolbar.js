@@ -131,7 +131,7 @@ enyo.kind({
           ] },
         { kind: 'onyx.InputDecorator', oninput: 'handleSearchInput',
           fit: true, components: [
-            { name: 'input', kind: 'onyx.Input', style: 'width: 100%' },
+            { name: 'input', kind: 'onyx.Input', classes: 'full-width' },
           ] },
         { name: 'searchMultiSelectButton', kind: 'onyx.Button', classes: 'k2e-icon-button',
           ontap: 'tryPushMultiSelectToolbar', components: [

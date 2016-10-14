@@ -13,7 +13,7 @@ enyo.kind({
   cookieModel: undefined,
   components: [
     { name: 'scroller', kind: 'enyo.Scroller', strategyKind: 'ScrollStrategy',
-      style: 'height: 100%', components: [
+      classes: 'full-height', components: [
         { name: 'panel', kind: 'k2e.settings.SettingsPanel' },
       ] },
   ],
