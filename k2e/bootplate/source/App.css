@@ -203,7 +203,21 @@ body,
   width: 25%; }
 
 .k2e-icon-button {
-  padding: 6px; }
+  padding: 6px;
+  position: relative;
+  overflow: visible; }
+
+.k2e-icon-button-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  background-color: rgba(255, 255, 255, 0.2); }
+
+.k2e-icon-button > i {
+  position: inherit; }
 
 .onyx-toolbar .k2e-icon-button {
   background-image: none;
@@ -421,6 +435,8 @@ body,
   .k2e-document-view-dark:not(.has-touch) .k2e-icon-button:hover {
     color: white;
     background-color: rgba(112, 112, 112, 0.5); }
+  .k2e-document-view-dark .k2e-icon-button-overlay {
+    background-color: rgba(255, 255, 255, 0.2); }
   .k2e-document-view-dark .k2e-to-top-button,
   .k2e-document-view-dark .k2e-toggle-fullscreen-button {
     color: #F2F2F2;
@@ -466,6 +482,8 @@ body,
   .k2e-document-view-light:not(.has-touch) .k2e-icon-button:hover {
     color: #272727;
     background-color: rgba(112, 112, 112, 0.1); }
+  .k2e-document-view-light .k2e-icon-button-overlay {
+    background-color: rgba(0, 0, 0, 0.1); }
   .k2e-document-view-light .k2e-to-top-button,
   .k2e-document-view-light .k2e-toggle-fullscreen-button {
     color: #555656;

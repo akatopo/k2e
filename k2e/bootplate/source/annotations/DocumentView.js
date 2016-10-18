@@ -62,16 +62,10 @@ function appendClippingToDisplay(component, doc, clipping, index) {
   );
 
   const actionComponents = [
-    { tag: 'a', classes: 'onyx-button k2e-icon-button',
-      attributes: { href: createTwitterUrlFromContent(contentText), target: '_blank' },
-      components: [
-        { tag: 'i', classes: 'icon-twitter' },
-      ] },
-    { tag: 'a', classes: 'onyx-button k2e-icon-button',
-      attributes: { href: createMailUrlFromContent(contentText), target: '_blank' },
-      components: [
-        { tag: 'i', classes: 'icon-mail' },
-      ] },
+    { kind: 'k2e.LinkIconButton', iconClasses: 'icon-twitter',
+      href: createTwitterUrlFromContent(contentText), targetBlank: true },
+    { kind: 'k2e.LinkIconButton', iconClasses: 'icon-mail',
+      href: createMailUrlFromContent(contentText), targetBlank: true },
   ];
 
   if (CLIPBOARD_SUPPORTED) {

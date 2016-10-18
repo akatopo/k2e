@@ -228,6 +228,8 @@
   .k2e-document-view:not(.has-touch) .k2e-icon-button:hover {
     color: #272727;
     background-color: rgba(112, 112, 112, 0.1); }
+  .k2e-document-view .k2e-icon-button-overlay {
+    background-color: rgba(0, 0, 0, 0.1); }
   .k2e-document-view .k2e-to-top-button,
   .k2e-document-view .k2e-toggle-fullscreen-button {
     color: #555656;

@@ -104,55 +104,39 @@ enyo.kind({
   },
   components: [
     { name: 'mainToolbar', kind: 'onyx.Toolbar', layoutKind: 'FittableColumnsLayout', components: [
-      { name: 'settingsButton', kind: 'onyx.Button',
-        classes: 'k2e-icon-button', ontap: 'toggleSettings', components: [
-          { tag: 'i', classes: 'icon-menu icon-large' },
-        ] },
+      { name: 'settingsButton', kind: 'k2e.IconButton',
+        iconClasses: 'icon-menu icon-large', ontap: 'toggleSettings' },
       { content: 'Clippings', classes: 'overflow-ellipsis', fit: true },
-      { name: 'reloadClippingsButton', kind: 'onyx.Button', classes: 'k2e-icon-button',
-        ontap: 'doReloadClippingRequested', components: [
-          { tag: 'i', classes: 'icon-upload icon-large' },
-        ] },
-      { name: 'multiSelectButton', kind: 'onyx.Button', classes: 'k2e-icon-button',
-        ontap: 'tryPushMultiSelectToolbar', components: [
-          { tag: 'i', classes: 'icon-check icon-large' },
-        ] },
-      { name: 'searchButton', kind: 'onyx.Button',
-        classes: 'k2e-icon-button', ontap: 'tryPushSearchToolbar', components: [
-          { tag: 'i', classes: 'icon-search icon-large' },
-        ] },
+      { name: 'reloadClippingsButton', kind: 'k2e.IconButton',
+        iconClasses: 'icon-upload icon-large', ontap: 'doReloadClippingRequested' },
+      { name: 'multiSelectButton', kind: 'k2e.IconButton',
+        iconClasses: 'icon-check icon-large', ontap: 'tryPushMultiSelectToolbar' },
+      { name: 'searchButton', kind: 'k2e.IconButton',
+        iconClasses: 'icon-search icon-large', ontap: 'tryPushSearchToolbar' },
       { name: 'exportButton', kind: 'k2e.ExportButton', ontap: 'doExportRequested' },
     ] },
     { name: 'searchToolbar', kind: 'onyx.Toolbar',
       layoutKind: 'FittableColumnsLayout', components: [
-        { kind: 'onyx.Button', classes: 'k2e-icon-button',
-          ontap: 'popState', components: [
-            { tag: 'i', classes: 'icon-left-big icon-large' },
-          ] },
+        { kind: 'k2e.IconButton', iconClasses: 'icon-left-big icon-large',
+          ontap: 'popState' },
         { kind: 'onyx.InputDecorator', oninput: 'handleSearchInput',
           fit: true, components: [
             { name: 'input', kind: 'onyx.Input', classes: 'full-width' },
           ] },
-        { name: 'searchMultiSelectButton', kind: 'onyx.Button', classes: 'k2e-icon-button',
-          ontap: 'tryPushMultiSelectToolbar', components: [
-            { tag: 'i', classes: 'icon-check icon-large' },
-          ] },
+        { name: 'searchMultiSelectButton', kind: 'k2e.IconButton',
+          iconClasses: 'icon-check icon-large', ontap: 'tryPushMultiSelectToolbar' },
       ] },
     { name: 'multiSelectToolbar', kind: 'onyx.Toolbar',
       layoutKind: 'FittableColumnsLayout', components: [
-        { kind: 'onyx.Button', classes: 'k2e-icon-button',
-          ontap: 'popState', components: [
-            { tag: 'i', classes: 'icon-left-big icon-large' },
-          ] },
+        { kind: 'k2e.IconButton', iconClasses: 'icon-left-big icon-large',
+          ontap: 'popState' },
         { name: 'multiSelectLabel', classes: 'overflow-ellipsis', content: '', fit: true },
         { name: 'multiSelectExportButton', kind: 'k2e.ExportButton', ontap: 'doExportRequested' },
       ] },
     { name: 'selectedDocumentToolbar', kind: 'onyx.Toolbar',
       layoutKind: 'FittableColumnsLayout', components: [
-        { kind: 'onyx.Button', classes: 'k2e-icon-button',
-          ontap: 'popState', components: [
-            { tag: 'i', classes: 'icon-left-big icon-large' },
-          ] },
+        { kind: 'k2e.IconButton', iconClasses: 'icon-left-big icon-large',
+          ontap: 'popState' },
         { name: 'documentLabel', content: '', classes: 'overflow-ellipsis', fit: true },
       ] },
   ],

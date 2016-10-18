@@ -6,16 +6,15 @@ let POPUP_TIMEOUT;
 
 enyo.kind({
   name: 'k2e.annotations.CopyToClipboardIconButton',
-  kind: 'onyx.Button',
-  classes: 'onyx-button k2e-icon-button k2e-clipboard-icon-position-hack',
-  handlers: {
-    ontap: 'handleClipboardTap',
-  },
+  kind: 'enyo.Control',
+  classes: 'display-inline-block',
   published: {
     clipping: undefined,
   },
   components: [
-    { tag: 'i', classes: 'icon-docs' },
+    { name: 'iconButton', kind: 'k2e.IconButton',
+      iconClasses: 'icon-docs', ontap: 'handleClipboardTap',
+      clasess: 'onyx-button k2e-icon-button k2e-clipboard-icon-position-hack' },
     { name: 'popup', kind: 'k2e.AnimatedPopup', modal: false, floating: true,
       content: 'Clipping copied to clipboard' },
   ],
@@ -29,7 +28,6 @@ function handleClipboardTap(inSender, inEvent) {
   this.startJob('hideCopiedPopup', () => {
     this.$.popup.hide();
   }, POPUP_TIMEOUT);
-  return true;
 }
 
 function rendered() {
