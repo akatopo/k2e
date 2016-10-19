@@ -13,9 +13,9 @@ enyo.kind({
   },
   bindings: [
     { from: '.disabled', to: '.$.button.disabled' },
-    { from: '.buttonLabel', to: '.$.button.content' },
+    { from: '.buttonLabel', to: '.$.buttonLabel.content' },
     { from: '.buttonClasses', to: '.$.button.classes', transform(classes) {
-      return `k2e-settings-action-item-button onyx-button ${classes}`;
+      return `k2e-settings-action-item-button onyx-button k2e-button ${classes}`;
     } },
   ],
   handleTap() { this.doActivated(); },
@@ -28,7 +28,11 @@ function create() {
   this.inherited(arguments);
 
   this.createComponent({ fit: true });
-  this.createComponent({ name: 'button', kind: 'onyx.Button', ontap: 'handleTap' });
+  this.createComponent({
+    name: 'button', kind: 'k2e.Button',
+    ontap: 'handleTap', components: [
+      { name: 'buttonLabel' },
+    ] });
 }
 
 })();

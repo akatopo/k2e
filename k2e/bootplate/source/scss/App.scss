@@ -132,24 +132,51 @@ body,
   width: 25%;
 }
 
+.k2e-button {
+  position: relative;
+  overflow: visible;
+}
+
+.onyx-button.k2e-button.pressed:not(.k2e-icon-button) {
+  background-image: url('#{$path-assets}/gradient.png');
+  background-position: bottom;
+  border: 1px solid rgba(15, 15, 15, 0.2);
+  box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.2);
+}
+
+.onyx-toolbar .onyx-button.k2e-button.pressed:not(.k2e-icon-button) {
+  background-image: url('#{$path-assets}/gradient.png');
+  background-position: bottom;
+  border-color: rgba(15, 15, 15, 0.5);
+  box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.2);
+}
+
 .k2e-icon-button {
   padding: 6px;
   position: relative;
   overflow: visible;
 }
 
-.k2e-icon-button-overlay {
+.k2e-button .k2e-button-activation-layer {
+  background-color: rgba(#555, 1);
+}
+
+.k2e-icon-button .k2e-button-activation-layer {
+  background-color: rgba(#fff, 0.2);
+}
+
+.k2e-button-activation-layer {
   position: absolute;
   left: 50%;
   top: 50%;
   width: 1px;
   height: 1px;
   opacity: 0;
-  background-color: rgba(#fff, 0.2);
 }
 
-.k2e-icon-button > i {
-  position: inherit;
+.k2e-icon-button > *:not(.k2e-button-activation-layer),
+.k2e-button > *:not(.k2e-button-activation-layer) {
+  position: relative;
 }
 
 .onyx-toolbar .k2e-icon-button {

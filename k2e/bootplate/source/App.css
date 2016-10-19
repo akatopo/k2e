@@ -202,22 +202,46 @@ body,
 .k2e-sidebar {
   width: 25%; }
 
+.k2e-button {
+  position: relative;
+  overflow: visible; }
+
+.onyx-button.k2e-button.pressed:not(.k2e-icon-button) {
+  background-image: url("../../assets/gradient.png");
+  background-position: bottom;
+  border: 1px solid rgba(15, 15, 15, 0.2);
+  -webkit-box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.2);
+          box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.2); }
+
+.onyx-toolbar .onyx-button.k2e-button.pressed:not(.k2e-icon-button) {
+  background-image: url("../../assets/gradient.png");
+  background-position: bottom;
+  border-color: rgba(15, 15, 15, 0.5);
+  -webkit-box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.2);
+          box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.2); }
+
 .k2e-icon-button {
   padding: 6px;
   position: relative;
   overflow: visible; }
 
-.k2e-icon-button-overlay {
+.k2e-button .k2e-button-activation-layer {
+  background-color: #555555; }
+
+.k2e-icon-button .k2e-button-activation-layer {
+  background-color: rgba(255, 255, 255, 0.2); }
+
+.k2e-button-activation-layer {
   position: absolute;
   left: 50%;
   top: 50%;
   width: 1px;
   height: 1px;
-  opacity: 0;
-  background-color: rgba(255, 255, 255, 0.2); }
+  opacity: 0; }
 
-.k2e-icon-button > i {
-  position: inherit; }
+.k2e-icon-button > *:not(.k2e-button-activation-layer),
+.k2e-button > *:not(.k2e-button-activation-layer) {
+  position: relative; }
 
 .onyx-toolbar .k2e-icon-button {
   background-image: none;
@@ -435,7 +459,7 @@ body,
   .k2e-document-view-dark:not(.has-touch) .k2e-icon-button:hover {
     color: white;
     background-color: rgba(112, 112, 112, 0.5); }
-  .k2e-document-view-dark .k2e-icon-button-overlay {
+  .k2e-document-view-dark .k2e-button-activation-layer {
     background-color: rgba(255, 255, 255, 0.2); }
   .k2e-document-view-dark .k2e-to-top-button,
   .k2e-document-view-dark .k2e-toggle-fullscreen-button {
@@ -482,7 +506,7 @@ body,
   .k2e-document-view-light:not(.has-touch) .k2e-icon-button:hover {
     color: #272727;
     background-color: rgba(112, 112, 112, 0.1); }
-  .k2e-document-view-light .k2e-icon-button-overlay {
+  .k2e-document-view-light .k2e-button-activation-layer {
     background-color: rgba(0, 0, 0, 0.1); }
   .k2e-document-view-light .k2e-to-top-button,
   .k2e-document-view-light .k2e-toggle-fullscreen-button {

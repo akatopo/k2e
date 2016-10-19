@@ -7,7 +7,7 @@ const LABELS = {
 
 enyo.kind({
   name: 'k2e.ExportButton',
-  kind: 'onyx.Button',
+  kind: 'k2e.Button',
   classes: 'k2e-export-button',
   form: 'long',
   exportSelected: false,

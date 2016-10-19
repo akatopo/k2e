@@ -17,7 +17,7 @@ enyo.kind({
       content: 'Invalid clippings provided, try loading a correct "My Clippings.txt" file' },
     { classes: 'onyx-toolbar-inline', components: [
       { content: 'Drag your kindle clippings here or ' },
-      { kind: 'onyx.Button', classes: 'onyx-blue', ontap: 'loadFile', components: [
+      { kind: 'k2e.Button', classes: 'onyx-blue', ontap: 'loadFile', components: [
         { tag: 'i', classes: 'icon-upload icon-large' },
         { tag: 'span', content: 'Load from File' },
       ] },
@@ -31,9 +31,9 @@ enyo.kind({
       { tag: null, content: ' folder of your kindle as ' },
       { tag: 'b', content: 'My clippings.txt' },
     ] },
-    { name: 'cancelButton', kind: 'onyx.Button',
-      classes: 'onyx-dark bottom-fullwidth-button cancel-button',
-      ontap: 'hide', content: 'Cancel' },
+    { name: 'cancelButton', kind: 'k2e.Button',
+      classes: 'onyx-dark k2e-buttton bottom-fullwidth-button cancel-button',
+      ontap: 'hide', components: [{ content: 'Cancel' }] },
   ],
   events: {
     onClippingsTextChanged: '',

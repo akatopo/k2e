@@ -3,7 +3,6 @@
 enyo.kind({
   name: 'k2e.LinkIconButton',
   kind: 'k2e.IconButton',
-  classes: 'onyx-button k2e-icon-button',
   tag: 'a',
   attributes: {
     type: null,

@@ -6,6 +6,7 @@ enyo.depends(
   '../lib/fuzzy/lib/fuzzy.js',
   '../lib/velocity/velocity.js',
   'Constants.js',
+  'Button.js',
   'IconButton.js',
   'LinkIconButton.js',
   'util',
