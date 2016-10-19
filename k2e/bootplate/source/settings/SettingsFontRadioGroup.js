@@ -19,7 +19,10 @@ enyo.kind({
   components: [
     { name: 'group', kind: 'k2e.settings.SettingsRadioGroup',
       items: Constants.FONT_INFO
-        .map((font) => ({ content: (Array.isArray(font) ? font[0] : font).name })) },
+        .map((font) => ({
+          kind: 'k2e.KeyedRadioButton',
+          key: (Array.isArray(font) ? font[0] : font).name,
+        })) },
   ],
   valueChanged,
   rendered,
@@ -53,10 +56,10 @@ function rendered() {
         return fonts.filter((f) => (webFontsLoaded && f.webFont) || detector.detect(f.family));
       })
       .filter((fonts) => fonts.length)
-      .map((font) => ({ content: font[0].name }))
+      .map((font) => ({ kind: 'k2e.KeyedRadioButton', key: font[0].name }))
       .filter((font) => {
-        const hasFont = fontNames.has(font.content);
-        fontNames.add(font.content);
+        const hasFont = fontNames.has(font.key);
+        fontNames.add(font.key);
         return !hasFont;
       });
     component.$.group.build();

@@ -18,7 +18,7 @@ enyo.kind({
   ],
   components: [
     { name: 'group', kind: 'k2e.settings.SettingsRadioGroup', items: Constants.THEME_INFO.map(
-      (theme) => ({ content: theme.name })
+      (theme) => ({ kind: 'k2e.KeyedRadioButton', key: theme.name })
     ) },
   ],
   valueChanged,

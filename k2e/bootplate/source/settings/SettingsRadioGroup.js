@@ -22,17 +22,15 @@ function handleActivate(inSender, inEvent) {
     return true;
   }
 
-  this.set('value', inEvent.originator.getContent());
+  this.set('value', inEvent.originator.get('key'));
   return true;
 }
 
 function valueChanged() {
   const found = this.getComponents()
-    .filter((c) =>
-      c.kind === 'onyx.RadioButton'
-    )
+    .filter((c) => c.kind === 'k2e.KeyedRadioButton')
     .some((component) => {
-      if (component.getContent() === this.value) {
+      if (component.get('key') === this.value) {
         component.setActive(true);
         return true;
       }
@@ -43,7 +41,7 @@ function valueChanged() {
     return true;
   }
   else if (this.$.group.getActive()) {
-    this.value = this.$.group.getActive().getContent();
+    this.value = this.$.group.getActive().get('key');
   }
   else {
     this.value = '';
@@ -56,12 +54,8 @@ function valueChanged() {
 
 function disabledChanged() {
   this.getComponents()
-    .filter((c) =>
-      c.kind === 'onyx.RadioButton'
-    )
-    .forEach((component) => {
-      component.setDisabled(this.disabled);
-    });
+    .filter((c) => c.kind === 'k2e.KeyedRadioButton')
+    .forEach((component) => { component.setDisabled(this.disabled); });
 }
 
 function build() {

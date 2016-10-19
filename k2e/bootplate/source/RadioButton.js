@@ -1,10 +1,10 @@
 (function () {
 
 enyo.kind({
-  name: 'k2e.Button',
-  kind: 'onyx.Button',
+  name: 'k2e.RadioButton',
+  kind: 'onyx.RadioButton',
   mixins: ['k2e.ButtonActivationMixin'],
-  classes: 'onyx-button k2e-button',
+  classes: 'k2e-button',
   handlers: {
     ontap: 'handleTap',
   },
@@ -20,6 +20,10 @@ function handleTap(inSender, inEvent) {
     activationLayerComponent: this.$.overlay,
     inEvent,
   });
+
+  if (!this.get('disabled')) {
+    this.set('active', true);
+  }
 }
 
 })();
