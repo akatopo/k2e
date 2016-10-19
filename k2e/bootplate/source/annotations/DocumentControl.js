@@ -49,16 +49,12 @@ enyo.kind({
       strategyKind: 'ScrollStrategy', classes: 'k2e-document-scroller full-height',
       components: [
         { name: 'documentView', kind: 'k2e.annotations.DocumentView' },
-        { name: 'toggleFullscreenButton',
-          classes: 'k2e-toggle-fullscreen-button k2e-icon-button k2e-hidden',
-          ontap: 'handleFullscreenButtonTap', kind: 'onyx.Button', components: [
-            { tag: 'i', classes: 'icon-resize-small icon-large' },
-        ] },
-        { name: 'toTopButton', kind: 'onyx.Button',
-          classes: 'k2e-to-top-button k2e-icon-button k2e-hidden',
-          ontap: 'scrollDocumentToTop', components: [
-            { tag: 'i', classes: 'icon-chevron-up icon-large' },
-        ] },
+        { name: 'toggleFullscreenButton', kind: 'k2e.IconButton',
+          classes: 'k2e-toggle-fullscreen-button k2e-hidden',
+          ontap: 'handleFullscreenButtonTap', iconClasses: 'icon-resize-small icon-large' },
+        { name: 'toTopButton', kind: 'k2e.IconButton',
+          classes: 'k2e-to-top-button k2e-hidden',
+          ontap: 'scrollDocumentToTop', iconClasses: 'icon-chevron-up icon-large' },
       ] },
   ],
   handleScroll,

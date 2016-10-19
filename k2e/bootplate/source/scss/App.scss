@@ -179,12 +179,13 @@ body,
   position: relative;
 }
 
-.onyx-toolbar .k2e-icon-button {
+.onyx-toolbar .k2e-icon-button,
+.k2e-document-scroller .k2e-icon-button {
   background-image: none;
   background-color: transparent;
   border-color: transparent;
   box-shadow: none;
-  transition: background-color 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .k2e-app-toolbar:not(.has-touch) .onyx-toolbar .k2e-icon-button:hover {
