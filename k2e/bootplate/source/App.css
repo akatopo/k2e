@@ -202,9 +202,22 @@ body,
 .k2e-sidebar {
   width: 25%; }
 
+.k2e-hidden {
+  visibility: hidden;
+  opacity: 0; }
+
+.k2e-hidden.visible {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transition-delay: 0s;
+       -o-transition-delay: 0s;
+          transition-delay: 0s; }
+
+/***********************************************************************************************/
+/* Buttons */
 .k2e-button {
   position: relative;
-  overflow: visible; }
+  overflow: hidden; }
 
 .onyx-button.k2e-button.pressed:not(.k2e-icon-button) {
   background-image: url("../../assets/gradient.png");
@@ -226,7 +239,12 @@ body,
   overflow: visible; }
 
 .k2e-button .k2e-button-activation-layer {
-  background-color: #555555; }
+  background-color: rgba(85, 85, 85, 0.8); }
+
+.k2e-button.active .k2e-button-activation-layer,
+.k2e-button.k2e-export-button .k2e-button-activation-layer,
+.k2e-button.k2e-caution-button .k2e-button-activation-layer {
+  background-color: rgba(255, 255, 255, 0.5); }
 
 .k2e-icon-button .k2e-button-activation-layer {
   background-color: rgba(255, 255, 255, 0.2); }
@@ -266,17 +284,6 @@ body,
 .onyx-button.k2e-caution-button {
   background-color: #d85959;
   color: #F2F2F2; }
-
-.k2e-hidden {
-  visibility: hidden;
-  opacity: 0; }
-
-.k2e-hidden.visible {
-  visibility: visible;
-  opacity: 1;
-  -webkit-transition-delay: 0s;
-       -o-transition-delay: 0s;
-          transition-delay: 0s; }
 
 /***********************************************************************************************/
 /* Document selector list */
