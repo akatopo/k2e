@@ -233,19 +233,6 @@
   .k2e-document-view .k2e-to-top-button,
   .k2e-document-view .k2e-toggle-fullscreen-button {
     color: #555656; }
-    @media (max-width: 801px) {
-      .k2e-document-view .k2e-to-top-button,
-      .k2e-document-view .k2e-toggle-fullscreen-button {
-        background-image: none;
-        background-color: transparent;
-        border-color: transparent;
-        -webkit-box-shadow: none;
-                box-shadow: none;
-        color: #F2F2F2;
-        -webkit-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-        -o-transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-        transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-        padding: 3px; } }
   @media (max-width: 801px) {
     .k2e-document-view.k2e-fullscreen .k2e-to-top-button,
     .k2e-document-view.k2e-fullscreen .k2e-toggle-fullscreen-button {

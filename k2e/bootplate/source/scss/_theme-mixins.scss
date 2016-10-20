@@ -138,12 +138,6 @@
     .k2e-to-top-button,
     .k2e-toggle-fullscreen-button {
         color: $color-light;
-        // background-color: #555656;
-        // border-color: rgba(15, 15, 15, 0.5);
-
-        @media (max-width: $screen-narrow-max) {
-            @include k2e-icon-button-reset;
-        }
     }
 
     &.k2e-fullscreen .k2e-to-top-button,
@@ -197,12 +191,6 @@
     .k2e-to-top-button,
     .k2e-toggle-fullscreen-button {
         color: #555656;
-        // background-color: $color-light;
-        // border-color: rgba(15, 15, 15, 0.5);
-
-        @media (max-width: $screen-narrow-max) {
-            @include k2e-icon-button-reset;
-        }
     }
 
     &.k2e-fullscreen .k2e-to-top-button,
@@ -247,12 +235,6 @@
     .k2e-to-top-button,
     .k2e-toggle-fullscreen-button {
         color: #555656;
-        // background-color: $color-light;
-        // border-color: rgba(15, 15, 15, 0.5);
-
-        @media (max-width: $screen-narrow-max) {
-            @include k2e-icon-button-reset;
-        }
     }
 
     &.k2e-fullscreen .k2e-to-top-button
