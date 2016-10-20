@@ -1,6 +1,6 @@
-/* global k2e */
+/* global k2e:false, Velocity:false */
 
-(function (Constants, Features) {
+(function (Constants, Features, velocity) {
 
 const THEME_CLASS_NAME_MAP = Constants.THEME_INFO
   .reduce((map, currentTheme) => {
@@ -81,9 +81,18 @@ function handleScroll(inSender, inEvent) {
 }
 
 function scrollDocumentToTop() {
-  this.$.scroller.scrollTo(0, 0);
-  const scrollBounds = this.$.scroller.getScrollBounds();
-  this.doDocumentScrolled({ scrollBounds });
+  const container = this.$.scroller.hasNode();
+  const target = this.$.documentView.hasNode();
+  if (!container || !target) {
+    this.warn('DOM Node for container and/or scroll target does not exist');
+    return;
+  }
+
+  velocity(target, 'scroll', { container, duration: 1000 })
+    .then(() => {
+      const scrollBounds = this.$.scroller.getScrollBounds();
+      this.doDocumentScrolled({ scrollBounds });
+    });
 }
 
 function fullscreenChanged() {
@@ -147,5 +156,5 @@ function rendered() {
   });
 }
 
-})(k2e.Constants, k2e.util.Features);
+})(k2e.Constants, k2e.util.Features, Velocity);
 
