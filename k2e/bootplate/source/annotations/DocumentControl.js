@@ -30,6 +30,7 @@ const DEFAULT_FONT_FAMILY = Constants.FONT_INFO[0].family;
 enyo.kind({
   name: 'k2e.annotations.DocumentControl',
   kind: 'enyo.Control',
+  isScrollingToTop: false,
   published: {
     fullscreen: false,
     document: undefined,
@@ -87,11 +88,19 @@ function scrollDocumentToTop() {
     this.warn('DOM Node for container and/or scroll target does not exist');
     return;
   }
+  if (this.isScrollingToTop) {
+    return;
+  }
 
+  this.isScrollingToTop = true;
   velocity(target, 'scroll', { container, duration: 1000 })
     .then(() => {
       const scrollBounds = this.$.scroller.getScrollBounds();
       this.doDocumentScrolled({ scrollBounds });
+    })
+    .catch(() => {})
+    .then(() => {
+      this.isScrollingToTop = false;
     });
 }
 
@@ -103,6 +112,11 @@ function fullscreenChanged() {
 function documentChanged() {
   if (!this.document) {
     return;
+  }
+
+  const target = this.$.documentView.hasNode();
+  if (target && this.isScrollingToTop) {
+    velocity(target, 'stop');
   }
 
   this.$.documentView.displayDocument(this.document);
