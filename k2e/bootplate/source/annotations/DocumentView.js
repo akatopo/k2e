@@ -1,10 +1,11 @@
-/* global k2e:false */
+/* global k2e:false, window:false */
 
-(function (Features) {
+(function (Features, encodeURIComponent) {
 
 const TWITTER_BASE_URL = 'https://twitter.com/intent/tweet';
 const HASHTAGS = ['k2e'];
 const CLIPBOARD_SUPPORTED = Features.hasClipboard();
+const MAX_NON_BREAKING_CONTENT_LENGTH = 70;
 
 enyo.kind({
   name: 'k2e.annotations.DocumentView',
@@ -40,10 +41,12 @@ function displayDocument(doc) {
 }
 
 function appendClippingToDisplay(component, doc, clipping, index) {
-  const loc = clipping.loc;
-  const type = clipping.type;
-  const timestamp = clipping.timeStamp;
-  const contentText = clipping.contentText;
+  const {
+    loc,
+    type,
+    timeStamp,
+    contentText
+  } = clipping;
   const contentComponents = [{ tag: null, content: ' ' }]
     .concat(clipping.contentComponents);
   const createTwitterUrlFromContent =
@@ -63,22 +66,22 @@ function appendClippingToDisplay(component, doc, clipping, index) {
 
   const actionComponents = [
     { kind: 'k2e.LinkIconButton', iconClasses: 'icon-twitter',
-      href: createTwitterUrlFromContent(contentText), targetBlank: true },
+      href: createTwitterUrlFromContent(createShareText(clipping, doc)), targetBlank: true },
     { kind: 'k2e.LinkIconButton', iconClasses: 'icon-mail',
-      href: createMailUrlFromContent(contentText), targetBlank: true },
+      href: createMailUrlFromContent(createShareText(clipping, doc)), targetBlank: true },
   ];
 
   if (CLIPBOARD_SUPPORTED) {
     actionComponents.push({
       kind: 'k2e.annotations.CopyToClipboardIconButton',
-      clipping,
+      shareText: createShareText(clipping, doc),
     });
   }
 
   const footerComponents = [
     { tag: 'i', content: `${type}, ${loc}` },
     { tag: null, content: ' • ' },
-    { tag: 'i', content: `Added on ${timestamp}` },
+    { tag: 'i', content: `Added on ${timeStamp}` },
     { tag: 'span', classes: 'k2e-hide-print', content: ' • ' },
     { classes: 'display-inline-block k2e-hide-print k2e-document-view-clip-footer-action-container',
       components: actionComponents },
@@ -91,11 +94,32 @@ function appendClippingToDisplay(component, doc, clipping, index) {
 }
 
 function createTwitterUrl(hashtags, url, text) {
-  return `${TWITTER_BASE_URL}?text=${text}&hashtags=${hashtags.join(',')}&url=${url}`;
+  const hashtagsEncoded = encodeLinkText(hashtags.join(','));
+  const urlEncoded = encodeLinkText(url);
+  const textEncoded = encodeLinkText(text);
+
+  return `${TWITTER_BASE_URL}?text=${textEncoded}&hashtags=${hashtagsEncoded}&url=${urlEncoded}`;
 }
 
-function createMailUrl(title, author, text) {
-  return `mailto:?subject=${title} by ${author}&body=${text}`;
+function createMailUrl(...args) {
+  const [
+    titleEncoded,
+    authorEncoded,
+    textEncoded,
+  ] = args.map(encodeLinkText);
+
+  return `mailto:?subject=${titleEncoded}%20by%20${authorEncoded}&body=${textEncoded}`;
 }
 
-})(k2e.util.Features);
+function createShareText(clipping, doc) {
+  const attributionSeparator =
+    clipping.contentText.length > MAX_NON_BREAKING_CONTENT_LENGTH ?
+      '\n\n' : ' ';
+  return `“${clipping.contentText}”${attributionSeparator}– ${doc.title} by ${doc.author}`;
+}
+
+function encodeLinkText(text) {
+  return encodeURIComponent(text.replace(/\n/g, '\r\n'));
+}
+
+})(k2e.util.Features, window.encodeURIComponent);

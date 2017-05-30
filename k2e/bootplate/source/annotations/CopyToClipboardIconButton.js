@@ -9,7 +9,7 @@ enyo.kind({
   kind: 'enyo.Control',
   classes: 'display-inline-block',
   published: {
-    clipping: undefined,
+    shareText: undefined,
   },
   components: [
     { name: 'iconButton', kind: 'k2e.IconButton',
@@ -24,7 +24,7 @@ enyo.kind({
 
 function handleClipboardTap(inSender, inEvent) {
   this.$.popup.showAtEvent(inEvent);
-  copyText(this.clipping.contentText);
+  copyText(this.shareText);
   this.startJob('hideCopiedPopup', () => {
     this.$.popup.hide();
   }, POPUP_TIMEOUT);
