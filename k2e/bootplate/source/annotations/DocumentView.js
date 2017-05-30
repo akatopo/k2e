@@ -44,7 +44,7 @@ function appendClippingToDisplay(component, doc, clipping, index) {
   const {
     loc,
     type,
-    timeStamp,
+    timestamp,
     contentText
   } = clipping;
   const contentComponents = [{ tag: null, content: ' ' }]
@@ -81,7 +81,7 @@ function appendClippingToDisplay(component, doc, clipping, index) {
   const footerComponents = [
     { tag: 'i', content: `${type}, ${loc}` },
     { tag: null, content: ' • ' },
-    { tag: 'i', content: `Added on ${timeStamp}` },
+    { tag: 'i', content: `Added on ${timestamp}` },
     { tag: 'span', classes: 'k2e-hide-print', content: ' • ' },
     { classes: 'display-inline-block k2e-hide-print k2e-document-view-clip-footer-action-container',
       components: actionComponents },

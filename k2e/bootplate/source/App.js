@@ -591,7 +591,7 @@ function parseKindleClippings(kindleClippings) {
     const subtitle = res[2].split(/\s+\|\s+/);
     const type = subtitle[0].substring(0, subtitle[0].indexOf(' '));
     const loc = subtitle[0].substring(subtitle[0].indexOf(' ') + 1);
-    const timeStamp = /^Added on (.*)$/.exec(subtitle[subtitle.length - 1])[1];
+    const timestamp = /^Added on (.*)$/.exec(subtitle[subtitle.length - 1])[1];
     const content =
       k2e.util.Linkify.toHtml(enyo.dom.escape(res[3]), { targetBlank: true });
     const contentComponents =
@@ -606,7 +606,7 @@ function parseKindleClippings(kindleClippings) {
         new k2e.annotations.Clipping({
           type,
           loc,
-          timeStamp,
+          timestamp,
           content,
           contentText,
           contentComponents,

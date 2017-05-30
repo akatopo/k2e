@@ -10,7 +10,7 @@ enyo.kind({
   published: {
     type: '',
     loc: '',
-    timeStamp: '',
+    timestamp: '',
     creationDate: undefined,
     content: '',
     contentText: '',
@@ -26,14 +26,14 @@ enyo.kind({
 
 function create() {
   this.inherited(arguments);
-  this.creationDate = moment(this.timeStamp, DATE_FORMAT);
+  this.creationDate = moment(this.timestamp, DATE_FORMAT);
 }
 
 function exportObject() {
   return {
     type: this.type,
     loc: this.loc,
-    timeStamp: this.timeStamp,
+    timestamp: this.timestamp,
     content: this.content,
     suggestedTitle: this.suggestedTitle,
     suggestedUrl: this.suggestedUrl,
