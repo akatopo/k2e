@@ -413,6 +413,15 @@ body,
   }
 }
 
+.k2e-settings-item .k2e-button {
+  line-height: 34px;
+  padding: 0 16px;
+}
+
+.k2e-settings-radio-group .k2e-button {
+  padding: 0 12px;
+}
+
 .k2e-settings-item.k2e-settings-item-caution {
   border-color: lighten($color-error, 10%);
 
@@ -544,3 +553,4 @@ body,
     margin-right: 1px;
   }
 }
+

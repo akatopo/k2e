@@ -3,6 +3,7 @@
 enyo.kind({
   name: 'k2e.settings.SettingsRadioGroup',
   kind: 'enyo.Control',
+  classes: 'k2e-settings-radio-group',
   published: {
     value: undefined,
     disabled: false,
