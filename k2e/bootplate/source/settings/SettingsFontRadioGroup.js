@@ -21,6 +21,7 @@ enyo.kind({
       items: Constants.FONT_INFO
         .map((font) => ({
           kind: 'k2e.KeyedRadioButton',
+          style: `font-family:'${(Array.isArray(font) ? font[0] : font).family}'`,
           key: (Array.isArray(font) ? font[0] : font).name,
         })) },
   ],
@@ -56,7 +57,11 @@ function rendered() {
         return fonts.filter((f) => (webFontsLoaded && f.webFont) || detector.detect(f.family));
       })
       .filter((fonts) => fonts.length)
-      .map((font) => ({ kind: 'k2e.KeyedRadioButton', key: font[0].name }))
+      .map((font) => ({
+        kind: 'k2e.KeyedRadioButton',
+        key: font[0].name,
+        style: `font-family:'${font[0].family}'`,
+      }))
       .filter((font) => {
         const hasFont = fontNames.has(font.key);
         fontNames.add(font.key);
