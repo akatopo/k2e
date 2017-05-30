@@ -10,7 +10,7 @@ enyo.kind({
     { from: '.key', to: '.$.label.content' },
   ],
   components: [
-    { name: 'label' },
+    { tag: null, name: 'label' },
   ],
 });
 

@@ -17,7 +17,7 @@ const SQUAREISH_RATIO = 1.3;
 function create(sup) {
   this.kindComponents = this.kindComponents ? Array.from(this.kindComponents) : [];
   this.kindComponents.unshift(
-    { name: 'overlay', classes: 'k2e-button-activation-layer' }
+    { tag: 'span', name: 'overlay', classes: 'k2e-button-activation-layer' }
   );
   sup.apply(this, arguments);
 }
