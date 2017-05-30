@@ -45,7 +45,6 @@ function appendClippingToDisplay(component, doc, clipping, index) {
     loc,
     type,
     timestamp,
-    contentText
   } = clipping;
   const contentComponents = [{ tag: null, content: ' ' }]
     .concat(clipping.contentComponents);
