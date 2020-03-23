@@ -37,6 +37,7 @@ enyo.kind({
     fontSize: undefined,
     margin: undefined,
     theme: undefined,
+    scrollingToTop: false,
   },
   events: {
     onFullscreenRequest: '',
@@ -53,46 +54,45 @@ enyo.kind({
         { name: 'toggleFullscreenButton', kind: 'k2e.IconButton',
           classes: 'k2e-toggle-fullscreen-button k2e-hidden',
           ontap: 'handleFullscreenButtonTap', iconClasses: 'icon-resize-small icon-large' },
-        { name: 'toTopButton', kind: 'k2e.IconButton',
-          classes: 'k2e-to-top-button k2e-hidden',
-          ontap: 'scrollDocumentToTop', iconClasses: 'icon-chevron-up icon-large' },
       ] },
   ],
   handleScroll,
   handleFullscreenButtonTap() { this.doFullscreenRequest(); },
-  scrollDocumentToTop,
   fullscreenChanged,
   documentChanged,
   fontSizeChanged,
   marginChanged,
   themeChanged,
   fontChanged,
+  scrollingToTopChanged,
   create,
   rendered,
 });
 
 /////////////////////////////////////////////////////////////
 
-function handleScroll(inSender, inEvent) {
-  const scrollBounds = this.$.scroller.getScrollBounds();
+function handleScroll(inSender, { scrollBounds }) {
   const isNotAtTop = scrollBounds.top !== 0;
+  const isAtBottom = scrollBounds.top === scrollBounds.maxTop;
 
-  this.$.toTopButton.addRemoveClass('visible', isNotAtTop);
-  this.doDocumentScrolled(inEvent);
+  this.doDocumentScrolled({
+    isNotAtTop,
+    isAtBottom,
+    scrollBounds: Object.assign({}, scrollBounds) }
+  );
 }
 
-function scrollDocumentToTop() {
+function scrollingToTopChanged(oldValue, newValue) {
   const container = this.$.scroller.hasNode();
   const target = this.$.documentView.hasNode();
   if (!container || !target) {
     this.warn('DOM Node for container and/or scroll target does not exist');
     return;
   }
-  if (this.isScrollingToTop) {
+  if (!newValue) {
     return;
   }
 
-  this.isScrollingToTop = true;
   velocity(target, 'scroll', { container, duration: 1000 })
     .then(() => {
       const scrollBounds = this.$.scroller.getScrollBounds();
@@ -100,7 +100,7 @@ function scrollDocumentToTop() {
     })
     .catch(() => {})
     .then(() => {
-      this.isScrollingToTop = false;
+      this.scrollingToTop = false;
     });
 }
 

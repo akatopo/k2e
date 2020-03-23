@@ -262,7 +262,9 @@ body,
   position: relative; }
 
 .onyx-toolbar .k2e-icon-button,
-.k2e-document-scroller .k2e-icon-button {
+.k2e-document-scroller .k2e-icon-button,
+.k2e-icon-button.k2e-to-top-button,
+.k2e-icon-button.k2e-toggle-fullscreen-button {
   background-image: none;
   background-color: transparent;
   border-color: transparent;
@@ -271,6 +273,10 @@ body,
   -webkit-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out; }
+
+.k2e-icon-button.k2e-to-top-button,
+.k2e-icon-button.k2e-toggle-fullscreen-button {
+  color: #F2F2F2; }
 
 .k2e-app-toolbar:not(.has-touch) .onyx-toolbar .k2e-icon-button:hover {
   background-color: rgba(112, 112, 112, 0.5); }
@@ -652,7 +658,7 @@ body,
   font-size: 80%; }
 
 .k2e-clipping-picker-popup.onyx-blue .cancel-button {
-  background-color: transparent; }
+  background-color: rgba(0, 0, 0, 0); }
 
 /***********************************************************************************************/
 /* Popup */

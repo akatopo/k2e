@@ -50,6 +50,9 @@ enyo.kind({
     { kind: 'enyo.Signals', onkeydown: 'handleKeydown' },
     { name: 'clippingPickerPopup', kind: 'k2e.ClippingPickerPopup' },
     { name: 'exportPopup', kind: 'k2e.ProgressPopup' },
+    { name: 'toTopButton', kind: 'k2e.IconButton',
+      classes: 'k2e-to-top-button k2e-hidden',
+      ontap: 'scrollDocumentToTop', iconClasses: 'icon-chevron-up icon-large' },
     { kind: 'Slideable', min: -100, max: 0, value: 0,
       unit: '%', axis: 'v', draggable: false, name: 'appToolbarSlideable', components: [
         { name: 'appToolbar', kind: 'k2e.AppToolbar',
@@ -105,6 +108,7 @@ enyo.kind({
   settingsActiveChanged,
   currentMainPanelChanged,
   currentAppToolbarChanged,
+  scrollDocumentToTop,
   reflow,
   rendered,
   create,
@@ -398,11 +402,16 @@ function handleDocumentMultiSelected(/*inSender, inEvent*/) {
   this.$.appToolbar.set('selectedCount', Object.keys(selectionKeys).length);
 }
 
-function handleDocumentScrolled(inSender, inEvent) {
+function handleDocumentScrolled(inSender, { scrollBounds, isNotAtTop, isAtBottom }) {
   const [TO_TOP, TO_BOTTOM, NEUTRAL] = [-1, 1, 0];
-  const verticalDirection = inEvent.scrollBounds.yDir;
+  const verticalDirection = scrollBounds.yDir;
   const appToolbarHeight = this.$.appToolbar.hasNode().scrollHeight;
-  const top = inEvent.scrollBounds.top;
+  const top = scrollBounds.top;
+
+  this.$.toTopButton.addRemoveClass(
+    'visible',
+    (isNotAtTop && verticalDirection === TO_TOP) || isAtBottom
+  );
 
   if (
     verticalDirection === NEUTRAL ||
@@ -421,8 +430,14 @@ function handleDocumentScrolled(inSender, inEvent) {
   ) {
     this.$.appToolbarSlideable.animateToMin();
   }
+}
 
+function scrollDocumentToTop() {
+  if (!this.$.documentControl) {
+    return;
+  }
 
+  this.$.documentControl.set('scrollingToTop', true);
 }
 
 function handleExportBegin(/*inSender, inEvent*/) {
@@ -686,10 +701,16 @@ function currentMainPanelChanged(old, newIndex) {
 }
 
 function currentAppToolbarChanged(oldToolbar) {
-  if (oldToolbar === k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR) {
-    this.$.mainPanels.set('index', SIDEBAR_PANEL);
-    this.$.appToolbarSlideable.animateToMax();
+  this.log(oldToolbar);
+  if (oldToolbar !== k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR) {
+    return;
   }
+
+  const appToolbarHeight = this.$.appToolbar.hasNode().scrollHeight;
+  this.$.toTopButton.addRemoveClass('visible', false);
+  this.$.fittableColumns.applyStyle('padding-bottom', `${appToolbarHeight}px`);
+  this.$.mainPanels.set('index', SIDEBAR_PANEL);
+  this.$.appToolbarSlideable.animateToMax();
 }
 
 function reflow() {
@@ -704,6 +725,14 @@ function reflow() {
   else if (this.$.appToolbar.currentState === k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR) {
     this.$.appToolbar.popState();
   }
+
+  if (this.$.mainPanels.index === SIDEBAR_PANEL && isScreenNarrow) {
+    const appToolbarHeight = this.$.appToolbar.hasNode().scrollHeight;
+    const fittableColumnsHeight = this.$.fittableColumns.hasNode().scrollHeight;
+    this.$.fittableColumns.applyStyle('padding-bottom', `${appToolbarHeight}px`);
+    this.$.fittableColumns.applyStyle('height', `${fittableColumnsHeight + appToolbarHeight}px`);
+  }
+
   this.$.documentControl.set('fullscreen', isFullscreen);
   this.$.appToolbar.set('form', (isScreenNarrow && 'short') || 'long');
 }

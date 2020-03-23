@@ -197,12 +197,19 @@ body,
 }
 
 .onyx-toolbar .k2e-icon-button,
-.k2e-document-scroller .k2e-icon-button {
+.k2e-document-scroller .k2e-icon-button,
+.k2e-icon-button.k2e-to-top-button,
+.k2e-icon-button.k2e-toggle-fullscreen-button {
   background-image: none;
   background-color: transparent;
   border-color: transparent;
   box-shadow: none;
   transition: all 0.2s ease-in-out;
+}
+
+.k2e-icon-button.k2e-to-top-button,
+.k2e-icon-button.k2e-toggle-fullscreen-button {
+  color: $color-light;
 }
 
 .k2e-app-toolbar:not(.has-touch) .onyx-toolbar .k2e-icon-button:hover {
