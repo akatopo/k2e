@@ -11,7 +11,6 @@ import path from 'path';
 import gulp from 'gulp';
 import livereload from 'gulp-livereload';
 import rename from 'gulp-rename';
-import runSequence from 'run-sequence';
 import sass from 'gulp-sass';
 import msbuild from 'gulp-msbuild';
 import cached from 'gulp-cached';
@@ -101,13 +100,13 @@ gulp.task('compile-sass', compileSass);
 
 gulp.task('compile-babel', compileBabel);
 
-gulp.task('watch', ['compile-babel', 'compile-sass'], watch);
+gulp.task('watch', gulp.series(gulp.parallel('compile-babel', 'compile-sass'), watch));
 
 gulp.task('build-backend', buildBackend);
 
 gulp.task('build-backend-debug', buildBackendDebug);
 
-gulp.task('dist-bin', ['build-backend'], distBin);
+gulp.task('dist-bin', gulp.series('build-backend', distBin));
 
 gulp.task('dist-aspx', distAspx);
 
@@ -115,9 +114,9 @@ gulp.task('dist-config', distConfig);
 
 gulp.task('dist-clean', (cb) => { del('dist/*', { dot: true }, cb); });
 
-gulp.task('dist-scripts', ['compile-babel'], distScripts);
+gulp.task('dist-scripts', gulp.series('compile-babel', distScripts));
 
-gulp.task('dist-css', ['compile-sass'], distCss);
+gulp.task('dist-css', gulp.series('compile-sass', distCss));
 
 gulp.task('dist-assets', distAssets);
 
@@ -133,28 +132,22 @@ gulp.task('rev-default-aspx', revDefaultAspx);
 
 gulp.task('dist-service-worker', distServiceWorker);
 
-gulp.task('dist', (cb) => {
-  runSequence(
-    ['lint', 'dist-clean'],
-    ['dist-scripts', 'dist-css', 'dist-assets', 'dist-aspx', 'dist-config', 'dist-bin'],
-    ['rev-assets', 'rev-lib'],
-    ['rev-scripts'],
-    ['rev-css'],
-    ['rev-default-aspx'],
-    ['dist-service-worker'],
-    cb
-  );
-});
+gulp.task('dist', gulp.series(
+  gulp.parallel('lint', 'dist-clean'),
+  gulp.parallel('dist-scripts', 'dist-css', 'dist-assets', 'dist-aspx', 'dist-config', 'dist-bin'),
+  gulp.parallel('rev-assets', 'rev-lib'),
+  'rev-scripts',
+  'rev-css',
+  'rev-default-aspx',
+  'dist-service-worker'
+));
 
-gulp.task('build', (cb) => {
-  runSequence(
-    ['lint'],
-    ['compile-babel', 'compile-sass', 'build-backend-debug'],
-    cb
-  );
-});
+gulp.task('build', gulp.series(
+  'lint',
+  gulp.parallel('compile-babel', 'compile-sass', 'build-backend-debug')
+));
 
-gulp.task('deploy', ['dist'], deploy);
+gulp.task('deploy', gulp.series('dist', deploy));
 
 //////////////////////////////////////////////////////////////
 
@@ -217,8 +210,8 @@ function watch() {
   isWatching = true;
 
   livereload.listen({ port: LIVERELOAD_PORT });
-  gulp.watch(`${sourcePath}/scss/*.scss`, ['compile-sass']);
-  gulp.watch(`${sourcePath}/**/*.js`, ['compile-babel']);
+  gulp.watch(`${sourcePath}/scss/*.scss`, gulp.series('compile-sass'));
+  gulp.watch(`${sourcePath}/**/*.js`, gulp.series('compile-babel'));
 }
 
 function buildBackend() {
