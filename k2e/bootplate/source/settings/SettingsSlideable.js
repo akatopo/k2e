@@ -11,6 +11,10 @@ enyo.kind({
   draggable: true,
   overMoving: false,
   cookieModel: undefined,
+  pendingToggle: undefined,
+  events: {
+    onToggleAnimateFinish: '',
+  },
   components: [
     { name: 'scroller', kind: 'enyo.Scroller', strategyKind: 'ScrollStrategy',
       classes: 'full-height', components: [
@@ -30,15 +34,21 @@ enyo.kind({
 
 /////////////////////////////////////////////////////////////
 
-function toggle() {
+function toggle(emitAnimateEvent = false) {
   this.addClass('transition');
 
   if (this.isAtMin()) {
     this.animateToMax();
+    if (emitAnimateEvent) {
+      this.pendingToggle = { active: true };
+    }
+    return true;
   }
-  else {
-    this.animateToMin();
+  this.animateToMin();
+  if (emitAnimateEvent) {
+    this.pendingToggle = { active: false };
   }
+  return false;
 }
 
 function handleAnimateFinish(/*inSender, inEvent*/) {
@@ -46,9 +56,17 @@ function handleAnimateFinish(/*inSender, inEvent*/) {
   if (this.isAtMin()) {
     this.removeClass('active');
     this.$.scroller.scrollToTop();
+    if (this.pendingToggle && this.pendingToggle.active === false) {
+      this.pendingToggle = undefined;
+      this.doToggleAnimateFinish();
+    }
   }
   else {
     this.addClass('active');
+    if (this.pendingToggle && this.pendingToggle.active) {
+      this.pendingToggle = undefined;
+      this.doToggleAnimateFinish();
+    }
   }
 }
 
