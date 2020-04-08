@@ -22,7 +22,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
         <script src="http://localhost:10666/livereload.js"></script>
-        <script src="bootplate/source-compiled/polyfill.js" charset="utf-8"></script>
+        <script src="/bootplate/source-compiled/polyfill.js" charset="utf-8"></script>
         <script src="https://use.typekit.net/lop6oji.js"></script>
         <script>
             try {
@@ -39,10 +39,10 @@
         <!-- Less.js (uncomment for client-side rendering of less stylesheets; leave commented to use only CSS) -->
         <!-- <script src="enyo/tools/minifier/node_modules/less/dist/less-1.3.0e.min.js"></script> -->
         <!-- enyo (debug) -->
-        <script src="bootplate/lib/enyo/enyo.js" charset="utf-8"></script>
+        <script src="/bootplate/lib/enyo/enyo.js" charset="utf-8"></script>
         <!-- application (debug) -->
-        <script src="bootplate/source-compiled/package.js" charset="utf-8"></script>
-        <link href="bootplate/source-compiled/print.css" rel="stylesheet" type="text/css" media="print">
+        <script src="/bootplate/source-compiled/package.js" charset="utf-8"></script>
+        <link href="/bootplate/source-compiled/print.css" rel="stylesheet" type="text/css" media="print">
         <script type="text/template" id="sample-clippings">
 The 4-Hour Workweek: Escape 9–5, Live Anywhere, and Join the New Rich - Expanded and Updated (Timothy Ferriss)
 - Highlight Loc. 1539-41  | Added on Wednesday, December 29, 2010, 01:02 AM
