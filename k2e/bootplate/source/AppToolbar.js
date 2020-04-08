@@ -2,7 +2,7 @@
 
 (function (Features) {
 
-const THROTLE_INTERVAL = 200; // ms
+const THROTTLE_INTERVAL = 200; // ms
 
 const statics = {
   MAIN_TOOLBAR: 0,
@@ -98,6 +98,7 @@ enyo.kind({
     onSettingsToggled: '',
     onReloadClippingRequested: '',
     onMultiSelectionToggled: '',
+    onToolbarStateToggled: '',
   },
   handlers: {
     onTransitionStart: 'handleTransitionStart',
@@ -110,37 +111,40 @@ enyo.kind({
       { name: 'reloadClippingsButton', kind: 'k2e.IconButton',
         iconClasses: 'icon-upload icon-large', ontap: 'doReloadClippingRequested' },
       { name: 'multiSelectButton', kind: 'k2e.IconButton',
-        iconClasses: 'icon-check icon-large', ontap: 'tryPushMultiSelectToolbar' },
+        iconClasses: 'icon-check icon-large', ontap: 'handleMultiSelectTap' },
       { name: 'searchButton', kind: 'k2e.IconButton',
-        iconClasses: 'icon-search icon-large', ontap: 'tryPushSearchToolbar' },
+        iconClasses: 'icon-search icon-large', ontap: 'handleSearchTap' },
       { name: 'exportButton', kind: 'k2e.ExportButton', ontap: 'doExportRequested' },
     ] },
     { name: 'searchToolbar', kind: 'onyx.Toolbar',
       layoutKind: 'FittableColumnsLayout', components: [
         { kind: 'k2e.IconButton', iconClasses: 'icon-left-big icon-large',
-          ontap: 'popState' },
+          ontap: 'handleBackButtonTap' },
         { kind: 'onyx.InputDecorator', oninput: 'handleSearchInput',
           fit: true, components: [
             { name: 'input', kind: 'onyx.Input', classes: 'full-width' },
           ] },
         { name: 'searchMultiSelectButton', kind: 'k2e.IconButton',
-          iconClasses: 'icon-check icon-large', ontap: 'tryPushMultiSelectToolbar' },
+          iconClasses: 'icon-check icon-large', ontap: 'handleMultiSelectTap' },
       ] },
     { name: 'multiSelectToolbar', kind: 'onyx.Toolbar',
       layoutKind: 'FittableColumnsLayout', components: [
         { kind: 'k2e.IconButton', iconClasses: 'icon-left-big icon-large',
-          ontap: 'popState' },
+          ontap: 'handleBackButtonTap' },
         { name: 'multiSelectLabel', classes: 'overflow-ellipsis', content: '', fit: true },
         { name: 'multiSelectExportButton', kind: 'k2e.ExportButton', ontap: 'doExportRequested' },
       ] },
     { name: 'selectedDocumentToolbar', kind: 'onyx.Toolbar',
       layoutKind: 'FittableColumnsLayout', components: [
         { kind: 'k2e.IconButton', iconClasses: 'icon-left-big icon-large',
-          ontap: 'popState' },
+          ontap: 'handleBackButtonTap' },
         { name: 'documentLabel', content: '', classes: 'overflow-ellipsis', fit: true },
       ] },
   ],
   toggleSettings,
+  handleSearchTap,
+  handleMultiSelectTap,
+  handleBackButtonTap,
   tryPushState,
   tryPushMultiSelectToolbar() { return this.tryPushState(k2e.AppToolbar.MULTI_SELECT_TOOLBAR); },
   tryPushSearchToolbar() { return this.tryPushState(k2e.AppToolbar.SEARCH_TOOLBAR); },
@@ -154,6 +158,28 @@ enyo.kind({
 });
 
 /////////////////////////////////////////////////////////////
+
+function handleSearchTap() {
+  const oldState = this.currentState;
+  const pushed = this.tryPushSearchToolbar();
+  if (pushed) {
+    this.doToolbarStateToggled({ newState: this.currentState, oldState });
+  }
+}
+
+function handleMultiSelectTap() {
+  const oldState = this.currentState;
+  const pushed = this.tryPushMultiSelectToolbar();
+  if (pushed) {
+    this.doToolbarStateToggled({ newState: this.currentState, oldState });
+  }
+}
+
+function handleBackButtonTap() {
+  const oldState = this.currentState;
+  const newState = this.popState();
+  this.doToolbarStateToggled({ newState, oldState });
+}
 
 function tryPushState(stateIndex) {
   if (
@@ -185,7 +211,7 @@ function popState() {
 function handleSearchInput(inSender, inEvent) {
   enyo.job('k2e.AppToolbar.filterJob', () => {
     this.set('searchFilter', inEvent.originator.value);
-  }, THROTLE_INTERVAL);
+  }, THROTTLE_INTERVAL);
 
   return true;
 }
