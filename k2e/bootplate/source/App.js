@@ -1,6 +1,6 @@
-/* global k2e:false */
+/* globals k2e */
 
-(function () {
+((Router) => {
 
 let exportPreparationSem;
 let docsExport;
@@ -12,12 +12,14 @@ enyo.kind({
   name: 'k2e.App',
   kind: 'FittableRows',
   cookieModel: undefined,
+  destroyClipListRouteHandler: undefined,
+  destroyClipRouteHandler: undefined,
+  settingsActive: undefined,
   published: {
     periodicalTitleSet: undefined,
     ignoredTitleSet: undefined,
     documents: undefined,
     currentThemeClass: 'k2e-document-view-dark',
-    settingsActive: false,
     currentMainPanel: undefined,
     currentAppToolbar: undefined,
   },
@@ -29,6 +31,8 @@ enyo.kind({
     { from: '.$.mainPanels.index', to: '.currentMainPanel' },
     { from: '.$.appToolbar.index', to: '.currentAppToolbar' },
     { from: '.$.appToolbarSlideable.value', to: '.appToolbarSlidePercentage' },
+    { from: '.$.settings.slidedToMin', to: '.settingsActive',
+      transform: (slidedToMin) => !slidedToMin },
   ],
   observers: [
     { method: 'appToolbarSearchFilterChanged', path: ['$.appToolbar.searchFilter'] },
@@ -58,9 +62,11 @@ enyo.kind({
         { name: 'appToolbar', kind: 'k2e.AppToolbar',
           onExportRequested: 'prepareDocumentsAndExport',
           onReloadClippingRequested: 'reloadClippings',
-          onMultiSelectionToggled: 'handleMultiSelectionToggled' },
+          onMultiSelectionToggled: 'handleMultiSelectionToggled',
+          onToolbarStateToggled: 'handleToolbarStateToggled' },
       ] },
-    { name: 'settings', kind: 'k2e.settings.SettingsSlideable' },
+    { name: 'settings', kind: 'k2e.settings.SettingsSlideable',
+      onToggleAnimateFinish: 'handleToggleAnimateFinish' },
     { kind: 'FittableColumns', fit: true, components: [
       { name: 'mainPanels', kind: 'Panels', fit: true, arrangerKind: 'CollapsingArranger',
         realtimeFit: true, wrap: false, components: [
@@ -78,6 +84,7 @@ enyo.kind({
 
   appToolbarSearchFilterChanged,
   appToolbarSlidePercentageChanged,
+  handleToolbarStateToggled,
   handleMultiSelectionToggled,
   toggleFullscreen,
   exportDocuments,
@@ -97,6 +104,7 @@ enyo.kind({
   handleClippingsTextChanged,
   handleKeydown,
   handleSettingsToggled,
+  handleToggleAnimateFinish,
   handleThemeChanged,
   handleFontSizeChanged,
   handleFontChanged,
@@ -105,19 +113,31 @@ enyo.kind({
   parseKindleClippings,
   reloadClippings,
   loadClippings,
-  settingsActiveChanged,
   currentMainPanelChanged,
   currentAppToolbarChanged,
   scrollDocumentToTop,
   reflow,
   rendered,
   create,
+  destroy,
 });
 
 /////////////////////////////////////////////////////////////
 
 function appToolbarSearchFilterChanged(/*previous, current, property*/) {
   this.$.documentSelectorList.scrollToTop();
+}
+
+function handleToolbarStateToggled(inSender, { oldState, newState }) {
+  if (
+    oldState === this.$.appToolbar.SELECTED_DOCUMENT_TOOLBAR &&
+    newState === this.$.appToolbar.MAIN_TOOLBAR
+  ) {
+    // currentMainPanelChanged will handle this
+    return;
+  }
+
+  changeRoute(this);
 }
 
 function appToolbarSlidePercentageChanged(oldValue, newValue) {
@@ -153,10 +173,6 @@ function arrayToSet(array) {
 function handleMultiSelectionToggled(inSender, inEvent) {
   const active = inEvent.multiSelect;
   this.$.documentSelectorList.set('multiSelected', active);
-}
-
-function settingsActiveChanged(/*old, active*/) {
-  this.$.settings.toggle();
 }
 
 function toggleFullscreen() {
@@ -372,16 +388,18 @@ function processQueryError(/*inSender, inResponse*/) {
   this.handleQueryEnd();
 }
 
-function handleDocumentSelected(inSender, inEvent) {
+function handleDocumentSelected(inSender, { reSelected, originator }) {
+  // Routing: react on document selection
   const isScreenNarrow = enyo.Panels.isScreenNarrow();
   if (isScreenNarrow) {
     this.$.mainPanels.set('index', DOCUMENT_PANEL);
+    this.$.fittableColumns.applyStyle('padding-bottom', '0');
   }
-  if (inEvent.reSelected) {
+  if (reSelected) {
     return;
   }
 
-  const docSelector = inEvent.originator;
+  const docSelector = originator;
   const doc = this.documents.getDocumentByKey(docSelector.getKey());
   this.log(docSelector.get('key'));
   this.log(docSelector.get('index'));
@@ -389,6 +407,14 @@ function handleDocumentSelected(inSender, inEvent) {
   this.$.documentControl.set('document', doc);
   this.$.appToolbar.set('selectedDocumentTitle', doc.title);
   this.$.appToolbarSlideable.animateToMax();
+
+  // on narrow screens the route change will happen in
+  // currentMainPanelChanged since the panel also changes
+  // along w/ the selected doc
+
+  if (!Router.isNavigating && !isScreenNarrow) {
+    changeRoute(this, this.$.mainPanels.index);
+  }
 }
 
 function handleDocumentMultiSelected(/*inSender, inEvent*/) {
@@ -481,13 +507,9 @@ function loadClippings(clippingsText) {
     throw ex;
   }
 
-  const isScreenNarrow = enyo.Panels.isScreenNarrow();
   const settings = k2e.settings.SettingsStorage;
   settings.setSetting('clippingsText', clippingsText);
   this.$.documentSelectorList.set('documentsRef', this.documents);
-  if (this.$.mainPanels.index === SIDEBAR_PANEL && !isScreenNarrow) {
-    this.$.documentSelectorList.selectNextDocument();
-  }
 }
 
 function handleKeydown(inSender, inEvent) {
@@ -538,8 +560,12 @@ function handleKeydown(inSender, inEvent) {
   return true;
 }
 
-function handleSettingsToggled(/*inSender, inEvent*/) {
-  this.$.settings.toggle();
+function handleSettingsToggled(/* inSender, inEvent */) {
+  this.$.settings.toggle(true);
+}
+
+function handleToggleAnimateFinish() {
+  changeRoute(this);
 }
 
 function handleThemeChanged(inSender, inEvent) {
@@ -682,7 +708,7 @@ function reloadClippings() {
 
 function handleClippingsCleared() {
   if (this.$.settings.isAtMax()) {
-    this.set('settingsActive', false);
+    // this.set('settingsActive', false);
   }
 
   this.$.clippingPickerPopup.show({ autoDismiss: false });
@@ -698,17 +724,18 @@ function currentMainPanelChanged(old, newIndex) {
   ) {
     this.$.appToolbar.popState();
   }
+
+  changeRoute(this, newIndex);
 }
 
-function currentAppToolbarChanged(oldToolbar) {
-  this.log(oldToolbar);
+function currentAppToolbarChanged(oldToolbar/* , newToolbar */) {
   if (oldToolbar !== k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR) {
     return;
   }
 
-  const appToolbarHeight = this.$.appToolbar.hasNode().scrollHeight;
+  // const appToolbarHeight = this.$.appToolbar.hasNode().scrollHeight;
   this.$.toTopButton.addRemoveClass('visible', false);
-  this.$.fittableColumns.applyStyle('padding-bottom', `${appToolbarHeight}px`);
+  // this.$.fittableColumns.applyStyle('padding-bottom', `${appToolbarHeight}px`);
   this.$.mainPanels.set('index', SIDEBAR_PANEL);
   this.$.appToolbarSlideable.animateToMax();
 }
@@ -739,16 +766,37 @@ function reflow() {
 
 function rendered() {
   this.inherited(arguments);
+  const isScreenNarrow = enyo.Panels.isScreenNarrow();
   if (!this.documents) {
     this.$.clippingPickerPopup.show({ autoDismiss: false });
   }
   this.reflow();
   this.$.sidebar.resize();
+  Router.resolve();
+
+  // Select the first doc in the doc list on non-narrow displays
+  // if none is already selected
+
+  if (
+    !isScreenNarrow &&
+    !this.$.documentSelectorList.get('selDocumentSelectorItem') &&
+    this.$.mainPanels.index === SIDEBAR_PANEL
+  ) {
+    this.$.documentSelectorList.selectNextDocument();
+  }
 }
 
 function create() {
   this.inherited(arguments);
   const settings = k2e.settings.SettingsStorage;
+
+  this.destroyClipListRouteHandler = Router.onClipListRouteChanged(
+    handleRouteChange(this, SIDEBAR_PANEL, k2e.AppToolbar.MAIN_TOOLBAR)
+  );
+
+  this.destroyClipRouteHandler = Router.onClipRouteChanged(
+    handleRouteChange(this, DOCUMENT_PANEL, k2e.AppToolbar.SELECTED_DOCUMENT_TOOLBAR)
+  );
 
   const cookieModel = new k2e.CookieModel();
   cookieModel.fetch();
@@ -771,4 +819,47 @@ function create() {
   exportPreparationSem = new k2e.util.AsyncSemaphore({ func: this.exportDocuments.bind(this) });
 }
 
-})();
+function handleRouteChange(app, panelId, defaultToolbarId) {
+  return (key, { settings: settingsActive, toolbar: toolbarId }) => {
+    settingsActive = settingsActive === 'true';
+    app.$.mainPanels.set('index', panelId);
+    if (key !== undefined) {
+      app.$.documentSelectorList.selectDocument(key);
+    }
+    if (app.get('settingsActive') !== settingsActive) {
+      app.$.settings.toggle();
+    }
+    toolbarId = toolbarId !== undefined ?
+      Number.parseInt(toolbarId, 10) :
+      defaultToolbarId;
+    if (app.$.appToolbar.currentState !== toolbarId) {
+      const pushed = app.$.appToolbar.tryPushState(toolbarId);
+      if (!pushed) {
+        app.$.appToolbar.popState();
+      }
+    }
+  };
+}
+
+function changeRoute(app, panelId) {
+  panelId = panelId !== undefined ? panelId : app.$.mainPanels.index;
+  const doc = app.$.documentSelectorList.get('selDocumentSelectorItem');
+  if (!doc) {
+    return;
+  }
+  (panelId === DOCUMENT_PANEL ?
+    Router.tryClipChanged : Router.tryClipListChanged
+  )(doc.get('key'), {
+    settings: app.settingsActive,
+    toolbar: app.$.appToolbar.currentState,
+  });
+}
+
+function destroy() {
+  this.inherited(arguments);
+
+  this.destroyClipListRouteHandler();
+  this.destroyClipRouteHandler();
+}
+
+})(k2e.util.Router);
