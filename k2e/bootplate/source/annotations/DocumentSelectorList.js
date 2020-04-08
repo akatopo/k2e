@@ -33,6 +33,7 @@ enyo.kind({
   handleSetupItem,
   multiSelectedChanged,
   getMultiSelectionKeys,
+  selectDocument,
   selectNextDocument,
   selectPrevDocument,
   documentsRefChanged,
@@ -130,6 +131,13 @@ function selectNextDocument() {
       selDocument = this.items[curIndex];
       selDocument.doDocumentSelected();
     }
+  }
+}
+
+function selectDocument(key) {
+  const found = this.items.find((item) => item.get('key') === key);
+  if (found) {
+    found.doDocumentSelected();
   }
 }
 
