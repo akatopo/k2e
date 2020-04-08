@@ -1,5 +1,6 @@
 enyo.depends(
   'AsyncSemaphore.js',
   'Linkify.js',
-  'Features.js'
+  'Features.js',
+  'Router.js'
 );
