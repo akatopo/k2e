@@ -5,6 +5,7 @@ enyo.depends(
   '../lib/moment/moment.js',
   '../lib/fuzzy/lib/fuzzy.js',
   '../lib/velocity/velocity.js',
+  '../lib/navigo/lib/navigo.js',
   'Constants.js',
   'ButtonActivationMixin.js',
   'RadioButton.js',
